@@ -54,7 +54,7 @@ const PromoCarousel = () => {
           <div className="relative overflow-hidden rounded-3xl shadow-xl" style={{ background: "#4A0D4F" }}>
           <div
             key={index}
-            className="h-[260px] w-full bg-cover bg-center transition-all duration-500 animate-slide-left"
+            className="h-[300px] w-full bg-cover bg-center transition-all duration-500 animate-slide-left"
             style={{ backgroundImage: `url(${slide.img})` }}
           >
             <div className="flex h-full w-full items-center gap-8 bg-gradient-to-r from-[#4A0D4F]/85 via-[#B35FA3]/55 to-[#B35FA3]/25 px-8 md:px-12">

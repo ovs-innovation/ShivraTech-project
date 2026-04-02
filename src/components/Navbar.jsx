@@ -31,7 +31,8 @@ const Navbar = () => {
 
   useEffect(() => {
     const handler = (e) => {
-      if (dropRef.current && !dropRef.current.contains(e.target)) setCatOpen(false);
+      if (dropRef.current && !dropRef.current.contains(e.target))
+        setCatOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -42,14 +43,17 @@ const Navbar = () => {
       <nav
         className="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl shadow-sm"
         style={{
-          background: `linear-gradient(135deg,${PRIMARY},${ACCENT})`,
+          background: `linear-gradient(135deg,${ACCENT},${PRIMARY})`,
           borderColor: `${ACCENT}33`,
         }}
       >
         <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-4 px-6">
           {/* Brand */}
-          <a href="#" className="flex flex-shrink-0 items-center gap-2 no-underline -ml-2">
-            <img src={logo} alt="Logo" className="h-32 w-32 object-contain" />
+          <a
+            href="#"
+            className="flex flex-shrink-0 items-center gap-2 no-underline -ml-2"
+          >
+            <img src={logo} alt="Logo" className="h-36 w-36 object-contain" />
           </a>
 
           {/* Desktop Links */}
@@ -60,8 +64,12 @@ const Navbar = () => {
                 href="#"
                 className="rounded-xl px-3.5 py-2 text-[13px] font-semibold text-white/90 no-underline transition"
                 style={{ boxShadow: "none" }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${ACCENT}55`)}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = `${ACCENT}55`)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
                 {l}
               </a>
@@ -106,8 +114,12 @@ const Navbar = () => {
                           {cat.icon}
                         </div>
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold text-slate-900">{cat.name}</p>
-                          <p className="text-[12px] text-slate-600">{cat.desc}</p>
+                          <p className="text-[14px] font-bold text-slate-900">
+                            {cat.name}
+                          </p>
+                          <p className="text-[12px] text-slate-600">
+                            {cat.desc}
+                          </p>
                         </div>
                         <ArrowRight
                           size={15}
@@ -122,11 +134,15 @@ const Navbar = () => {
                       <p className="text-[11px] font-bold uppercase tracking-[.1em] text-[#4A0D4F]">
                         Limited time
                       </p>
-                      <p className="text-[15px] font-black text-slate-900">First ad slot FREE this week 🔥</p>
+                      <p className="text-[15px] font-black text-slate-900">
+                        First ad slot FREE this week 🔥
+                      </p>
                     </div>
                     <button
                       className="flex-shrink-0 rounded-full px-5 py-2.5 text-[12px] font-black text-white shadow-sm transition hover:-translate-y-px"
-                      style={{ background: `linear-gradient(135deg,${PRIMARY},${ACCENT})` }}
+                      style={{
+                        background: `linear-gradient(135deg,${PRIMARY},${ACCENT})`,
+                      }}
                     >
                       Advertise now
                     </button>
@@ -143,7 +159,12 @@ const Navbar = () => {
               borderColor: `${ACCENT}80`,
             }}
           >
-            <Search size={15} className="flex-shrink-0" style={{ color: PRIMARY }} strokeWidth={2} />
+            <Search
+              size={15}
+              className="flex-shrink-0"
+              style={{ color: PRIMARY }}
+              strokeWidth={2}
+            />
             <input
               type="text"
               placeholder="Search products…"
@@ -164,8 +185,12 @@ const Navbar = () => {
                   style={{
                     color: PRIMARY,
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <Icon size={17} strokeWidth={2} />
                 </button>
@@ -173,11 +198,18 @@ const Navbar = () => {
               <button
                 className="relative flex h-8 w-8 items-center justify-center rounded-full transition"
                 style={{ color: PRIMARY }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
                 <ShoppingCart size={17} strokeWidth={2} />
-                <span className="absolute right-0.5 top-0.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border-[1.5px] border-white bg-white text-[9px] font-black" style={{ color: PRIMARY }}>
+                <span
+                  className="absolute right-0.5 top-0.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border-[1.5px] border-white bg-white text-[9px] font-black"
+                  style={{ color: PRIMARY }}
+                >
                   2
                 </span>
               </button>
@@ -218,8 +250,12 @@ const Navbar = () => {
                 href="#"
                 className="block rounded-xl px-4 py-3 text-[14px] font-semibold no-underline transition"
                 style={{ color: PRIMARY }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${ACCENT}10`)}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = `${ACCENT}10`)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
                 {l}
               </a>

@@ -1,8 +1,11 @@
 import Categories from "./components/Categories";
+import Footer from "./components/Footer";
 import Features from "./components/Features";
+import FloatingContactButtons from "./components/FloatingContactButtons";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import PromoCarousel from "./components/PromoCarousel";
+import ProductsShowcase from "./components/ProductsShowcase";
 
 function App() {
   return (
@@ -12,10 +15,9 @@ function App() {
       <Features />
       <Categories />
       <PromoCarousel />
-
-      <footer className="border-t bg-white px-6 py-6 text-center text-sm text-slate-600" style={{ borderColor: "#B35FA3" }}>
-        © 2026 ShivraTech. All rights reserved.
-      </footer>
+      <ProductsShowcase />
+      <FloatingContactButtons />
+      <Footer />
     </div>
   );
 }
