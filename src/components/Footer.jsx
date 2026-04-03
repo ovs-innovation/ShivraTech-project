@@ -9,6 +9,7 @@ import {
   Send,
   Share2,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import {
   SITE_EMAIL,
@@ -19,26 +20,34 @@ import {
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
 
-const companyLinks = ["About us", "Contact us", "Our Blog"];
+const companyLinks = [
+  { label: "About us", to: "/about" },
+  { label: "Contact us", to: "/contact" },
+  { label: "Our Blog", to: "/shop#insights" },
+];
+
 const shopLinks = [
-  "Mobile Accessories",
-  "PC Accessories",
-  "Car Accessories",
-  "Lifestyle Accessories",
+  { label: "Mobile Accessories", to: "/categories#mobile-accessories" },
+  { label: "PC Accessories", to: "/categories#pc-accessories" },
+  { label: "Car Accessories", to: "/categories#car-accessories" },
+  { label: "Lifestyle Accessories", to: "/categories#lifestyle" },
 ];
+
 const supportLinks = [
-  "Privacy Policy",
-  "Terms of Service",
-  "Contact Us",
-  "FAQs",
-  "Refund Policy",
+  { label: "Privacy Policy", to: "/support/privacy" },
+  { label: "Terms of Service", to: "/support/terms" },
+  { label: "Contact Us", to: "/contact" },
+  { label: "FAQs", to: "/support/faqs" },
+  { label: "Refund Policy", to: "/support/refund" },
 ];
+
 const paymentBadges = ["PayPal", "VISA", "Mastercard", "Stripe"];
+
 const socialLinks = [
-  { label: "Website", Icon: Globe },
-  { label: "Updates", Icon: Send },
-  { label: "Email", Icon: AtSign },
-  { label: "Share", Icon: Share2 },
+  { label: "Website", Icon: Globe, to: "/", internal: true },
+  { label: "Updates", Icon: Send, to: "/shop#insights", internal: true },
+  { label: "Email", Icon: AtSign, to: `mailto:${SITE_EMAIL}` },
+  { label: "Share", Icon: Share2, to: "/contact", internal: true },
 ];
 
 const Footer = () => {
@@ -54,11 +63,13 @@ const Footer = () => {
               Rare Tech. Real Impact.
             </span>
 
-            <img
-              src={logo}
-              alt="ShivraTech"
-              className="h-16 w-auto object-contain"
-            />
+            <Link to="/" className="block w-fit">
+              <img
+                src={logo}
+                alt="ShivraTech"
+                className="h-16 w-auto object-contain"
+              />
+            </Link>
 
             <p className="max-w-sm text-[17px] leading-8 text-slate-600">
               The home and elements needed to create beautiful gadget buying and
@@ -66,21 +77,37 @@ const Footer = () => {
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              {socialLinks.map(({ label, Icon }) => (
-                <a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition hover:-translate-y-0.5"
-                  style={{
-                    borderColor: "#eadbe6",
-                    color: PRIMARY,
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  <Icon size={18} strokeWidth={2} />
-                </a>
-              ))}
+              {socialLinks.map(({ label, Icon, to, internal }) =>
+                internal ? (
+                  <Link
+                    key={label}
+                    to={to}
+                    aria-label={label}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition hover:-translate-y-0.5"
+                    style={{
+                      borderColor: "#eadbe6",
+                      color: PRIMARY,
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    {React.createElement(Icon, { size: 18, strokeWidth: 2 })}
+                  </Link>
+                ) : (
+                  <a
+                    key={label}
+                    href={to}
+                    aria-label={label}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border transition hover:-translate-y-0.5"
+                    style={{
+                      borderColor: "#eadbe6",
+                      color: PRIMARY,
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    {React.createElement(Icon, { size: 18, strokeWidth: 2 })}
+                  </a>
+                ),
+              )}
             </div>
           </div>
 
@@ -96,13 +123,13 @@ const Footer = () => {
             </div>
             <div className="space-y-4 text-[17px] text-slate-600">
               {companyLinks.map((item) => (
-                <a
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.label}
+                  to={item.to}
                   className="block transition hover:text-slate-900"
                 >
-                  {item}
-                </a>
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>
@@ -119,13 +146,13 @@ const Footer = () => {
             </div>
             <div className="space-y-4 text-[17px] text-slate-600">
               {shopLinks.map((item) => (
-                <a
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.label}
+                  to={item.to}
                   className="block transition hover:text-slate-900"
                 >
-                  {item}
-                </a>
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>
@@ -142,13 +169,13 @@ const Footer = () => {
             </div>
             <div className="space-y-4 text-[17px] text-slate-600">
               {supportLinks.map((item) => (
-                <a
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.label}
+                  to={item.to}
                   className="block transition hover:text-slate-900"
                 >
-                  {item}
-                </a>
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>
@@ -175,13 +202,13 @@ const Footer = () => {
                   Find a location nearest you.
                   <br />
                   See{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to="/contact"
                     style={{ color: ACCENT }}
                     className="font-semibold underline underline-offset-4"
                   >
                     Our Stores
-                  </a>
+                  </Link>
                 </p>
               </div>
 

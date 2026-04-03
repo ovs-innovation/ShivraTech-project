@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Heart, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 import categoryCar from "../assets/categoryCar.jpg";
 import categorySpeaker from "../assets/categorySpeaker.jpg";
 import categoryWatch from "../assets/categoryWatch.jpg";
@@ -9,8 +10,10 @@ import rightHero2 from "../assets/rightHero2.png";
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
-const SECTION_BG = "linear-gradient(180deg, #fbf5f9 0%, #ffffff 48%, #f7eef5 100%)";
-const IMAGE_PANEL_BG = "linear-gradient(180deg, rgba(179,95,163,0.14) 0%, rgba(244,232,243,0.5) 36%, #ffffff 100%)";
+const SECTION_BG =
+  "linear-gradient(180deg, #fbf5f9 0%, #ffffff 48%, #f7eef5 100%)";
+const IMAGE_PANEL_BG =
+  "linear-gradient(180deg, rgba(179,95,163,0.14) 0%, rgba(244,232,243,0.5) 36%, #ffffff 100%)";
 
 const blogSlides = [
   [
@@ -80,6 +83,7 @@ const sections = [
     key: "audio-pc",
     label: "Audio & PC Accessories",
     title: "Popular picks",
+    viewAllLink: "/categories#audio",
     cards: [
       {
         title: "Wireless Audio Bundle with premium over-ear sound experience",
@@ -92,7 +96,8 @@ const sections = [
         img: rightHero,
       },
       {
-        title: "Smart Drive Media Kit, 256 GB storage with dashboard-ready setup",
+        title:
+          "Smart Drive Media Kit, 256 GB storage with dashboard-ready setup",
         price: "Rs. 21,999.00",
         mrp: "Rs. 24,000.00",
         off: "8% OFF",
@@ -127,6 +132,7 @@ const sections = [
     key: "lifestyle",
     label: "Lifestyle Accessories",
     title: "Recommended for shoppers",
+    viewAllLink: "/categories#lifestyle",
     cards: [
       {
         title: "Daily Wear Smart Set with sleek finish for everyday styling",
@@ -184,15 +190,21 @@ const ProductsShowcase = () => {
   }, []);
 
   return (
-    <section className="px-6 py-16" style={{ background: SECTION_BG }}>
+    <section id="featured" className="px-6 py-16" style={{ background: SECTION_BG }}>
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="space-y-2 text-left">
-          <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: PRIMARY }}>
+          <p
+            className="text-xs font-bold uppercase tracking-[0.18em]"
+            style={{ color: PRIMARY }}
+          >
             Product showcase
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Best deals for your customers</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+            Best deals for your customers
+          </h2>
           <p className="max-w-2xl text-sm leading-6 text-slate-500">
-            Professional ecommerce cards with cleaner sizing, stronger images, and aligned product details.
+            Professional ecommerce cards with cleaner sizing, stronger images,
+            and aligned product details.
           </p>
         </div>
 
@@ -200,17 +212,23 @@ const ProductsShowcase = () => {
           <div key={section.key} className="space-y-5">
             <div className="flex items-end justify-between gap-4">
               <div className="space-y-1">
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: PRIMARY }}>
+                <p
+                  className="text-[11px] font-bold uppercase tracking-[0.18em]"
+                  style={{ color: PRIMARY }}
+                >
                   {section.label}
                 </p>
-                <h3 className="text-2xl font-bold text-slate-900">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  {section.title}
+                </h3>
               </div>
-              <button
+              <Link
+                to={section.viewAllLink}
                 className="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em]"
                 style={{ borderColor: ACCENT, color: PRIMARY }}
               >
                 View all
-              </button>
+              </Link>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -222,19 +240,25 @@ const ProductsShowcase = () => {
                 >
                   <div
                     className="absolute left-0 top-0 z-10 max-w-[78%] rounded-br-xl px-3 py-2 text-[11px] font-bold uppercase tracking-[0.04em] text-white"
-                    style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)` }}
+                    style={{
+                      background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
+                    }}
                   >
                     {card.promo}
                   </div>
 
                   <button
+                    type="button"
                     className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-white text-slate-400 shadow-sm"
                     aria-label={`Save ${card.title}`}
                   >
                     <Heart size={16} strokeWidth={2} />
                   </button>
 
-                  <div className="mt-9 rounded-2xl" style={{ background: IMAGE_PANEL_BG }}>
+                  <div
+                    className="mt-9 rounded-2xl"
+                    style={{ background: IMAGE_PANEL_BG }}
+                  >
                     <div className="flex h-[12.75rem] items-center justify-center px-3 py-3">
                       <img
                         src={card.img}
@@ -252,10 +276,16 @@ const ProductsShowcase = () => {
 
                     <div className="space-y-1.5">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-[17px] font-bold text-slate-900">{card.price}</span>
-                        <span className="text-sm font-semibold text-emerald-600">{card.off}</span>
+                        <span className="text-[17px] font-bold text-slate-900">
+                          {card.price}
+                        </span>
+                        <span className="text-sm font-semibold text-emerald-600">
+                          {card.off}
+                        </span>
                       </div>
-                      <p className="text-sm text-slate-400 line-through">MRP {card.mrp}</p>
+                      <p className="text-sm text-slate-400 line-through">
+                        MRP {card.mrp}
+                      </p>
                     </div>
 
                     <div className="flex items-center gap-1 pt-1">
@@ -263,26 +293,38 @@ const ProductsShowcase = () => {
                         <Star
                           key={starIdx}
                           size={15}
-                          fill={starIdx < card.rating ? "#f59e0b" : "transparent"}
+                          fill={
+                            starIdx < card.rating ? "#f59e0b" : "transparent"
+                          }
                           color={starIdx < card.rating ? "#f59e0b" : "#d1d5db"}
                         />
                       ))}
-                      <span className="ml-1 text-[13px] font-semibold text-slate-600">({card.reviews})</span>
+                      <span className="ml-1 text-[13px] font-semibold text-slate-600">
+                        ({card.reviews})
+                      </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 pt-2">
-                      <button
-                        className="rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.1em]"
-                        style={{ borderColor: ACCENT, color: PRIMARY, backgroundColor: "#fff" }}
+                      <Link
+                        to="/login"
+                        className="rounded-full border px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em]"
+                        style={{
+                          borderColor: ACCENT,
+                          color: PRIMARY,
+                          backgroundColor: "#fff",
+                        }}
                       >
                         Add to cart
-                      </button>
-                      <button
-                        className="rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-white"
-                        style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)` }}
+                      </Link>
+                      <Link
+                        to="/contact"
+                        className="rounded-full px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-white"
+                        style={{
+                          background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
+                        }}
                       >
                         Buy now
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -306,14 +348,21 @@ const ProductsShowcase = () => {
                       <h4 className="text-3xl font-black uppercase tracking-[0.04em] text-slate-900 sm:text-4xl">
                         Order Today
                       </h4>
-                      <span className="hidden h-8 w-px md:block" style={{ backgroundColor: "#eadbe6" }} />
-                      <h4 className="text-3xl font-black uppercase tracking-[0.04em] sm:text-4xl" style={{ color: ACCENT }}>
+                      <span
+                        className="hidden h-8 w-px md:block"
+                        style={{ backgroundColor: "#eadbe6" }}
+                      />
+                      <h4
+                        className="text-3xl font-black uppercase tracking-[0.04em] sm:text-4xl"
+                        style={{ color: ACCENT }}
+                      >
                         Get It Today
                       </h4>
                     </div>
                   </div>
                   <p className="max-w-md text-center text-sm font-medium leading-6 text-slate-500 md:text-right">
-                    Fast local delivery on selected gadgets from trusted sellers across your city.
+                    Fast local delivery on selected gadgets from trusted sellers
+                    across your city.
                   </p>
                 </div>
               </div>
@@ -321,21 +370,34 @@ const ProductsShowcase = () => {
           </div>
         ))}
 
-        <div className="space-y-6 border-t pt-12" style={{ borderColor: "#eadbe6" }}>
+        <div
+          id="insights"
+          className="space-y-6 border-t pt-12 scroll-mt-28"
+          style={{ borderColor: "#eadbe6" }}
+        >
           <div className="space-y-2 text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: PRIMARY }}>
+            <p
+              className="text-xs font-bold uppercase tracking-[0.18em]"
+              style={{ color: PRIMARY }}
+            >
               Blog posts
             </p>
-            <h3 className="text-3xl font-bold tracking-tight text-slate-900">Insights for sellers and shoppers</h3>
+            <h3 className="text-3xl font-bold tracking-tight text-slate-900">
+              Insights for sellers and shoppers
+            </h3>
             <p className="max-w-2xl text-sm leading-6 text-slate-500">
-              Fresh ideas from ShivraTech on selling smarter, delivering faster, and growing gadget demand locally.
+              Fresh ideas from ShivraTech on selling smarter, delivering faster,
+              and growing gadget demand locally.
             </p>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
             {blogSlides[activeBlogSlide].map((post) => (
               <article key={post.title} className="space-y-4">
-                <div className="group overflow-hidden rounded-[22px] border bg-white p-2" style={{ borderColor: "#eadbe6" }}>
+                <div
+                  className="group overflow-hidden rounded-[22px] border bg-white p-2"
+                  style={{ borderColor: "#eadbe6" }}
+                >
                   <div className="relative overflow-hidden rounded-[18px]">
                     <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/55 via-slate-900/10 to-transparent" />
                     <img
@@ -347,21 +409,29 @@ const ProductsShowcase = () => {
                     <div className="absolute left-4 top-4 z-20">
                       <span
                         className="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-white"
-                        style={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)` }}
+                        style={{
+                          background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
+                        }}
                       >
                         {post.tag}
                       </span>
                     </div>
                     <div className="absolute inset-x-4 bottom-4 z-20">
-                      <span className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: PRIMARY }}>
+                      <Link
+                        to="/contact"
+                        className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]"
+                        style={{ color: PRIMARY }}
+                      >
                         Read now
-                      </span>
+                      </Link>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2 text-center">
-                  <h4 className="text-[15px] font-semibold leading-7 text-slate-800 line-clamp-2">{post.title}</h4>
+                  <h4 className="text-[15px] font-semibold leading-7 text-slate-800 line-clamp-2">
+                    {post.title}
+                  </h4>
                   <p className="text-sm text-slate-400">{post.date}</p>
                 </div>
               </article>

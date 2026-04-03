@@ -1,89 +1,100 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Search,
-  Heart,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
   ArrowRight,
+  CarFront,
   ChevronDown,
+  Headphones,
+  Heart,
+  LaptopMinimal,
+  Menu,
+  Search,
+  ShoppingCart,
+  Smartphone,
+  Sparkles,
+  User,
+  X,
 } from "lucide-react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { categories } from "../data/catalog";
 
-const links = ["Home", "About", "Shop", "Contact"];
-
-const categories = [
-  { name: "Audio", desc: "Earbuds, speakers, headphones", icon: "🎧" },
-  { name: "Mobile Accessories", desc: "Chargers, holders, cases", icon: "📱" },
-  { name: "PC Accessories", desc: "Keyboards, mice, hubs, stands", icon: "🖥️" },
-  { name: "Car Accessories", desc: "Chargers, mounts, BT kits", icon: "🚗" },
-  { name: "Lifestyle", desc: "Smart glasses, fitness", icon: "🕶️" },
+const navLinks = [
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Shop", to: "/shop" },
+  { label: "Contact", to: "/contact" },
 ];
+
+const categoryIcons = {
+  audio: Headphones,
+  "mobile-accessories": Smartphone,
+  "pc-accessories": LaptopMinimal,
+  "car-accessories": CarFront,
+  lifestyle: Sparkles,
+};
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
+
+const navLinkClassName = ({ isActive }) =>
+  `rounded-xl px-3.5 py-2 text-[13px] font-semibold no-underline transition ${
+    isActive ? "bg-white/15 text-white" : "text-white/90 hover:bg-white/10"
+  }`;
 
 const Navbar = () => {
   const [catOpen, setCatOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const dropRef = useRef(null);
+  const location = useLocation();
 
   useEffect(() => {
-    const handler = (e) => {
-      if (dropRef.current && !dropRef.current.contains(e.target))
+    const handler = (event) => {
+      if (dropRef.current && !dropRef.current.contains(event.target)) {
         setCatOpen(false);
+      }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      setCatOpen(false);
+      setMobileOpen(false);
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [location.hash, location.pathname]);
+
   return (
     <>
       <nav
-        className="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl shadow-sm"
+        className="fixed inset-x-0 top-0 z-50 border-b shadow-sm backdrop-blur-xl"
         style={{
-          background: `linear-gradient(135deg,${ACCENT},${PRIMARY})`,
+          background: `linear-gradient(135deg, ${ACCENT}, ${PRIMARY})`,
           borderColor: `${ACCENT}33`,
         }}
       >
         <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-4 px-6">
-          {/* Brand */}
-          <a
-            href="#"
-            className="flex flex-shrink-0 items-center gap-2 no-underline -ml-2"
-          >
-            <img src={logo} alt="Logo" className="h-36 w-36 object-contain" />
-          </a>
+          <Link to="/" className="-ml-2 flex flex-shrink-0 items-center gap-2">
+            <img src={logo} alt="ShivraTech" className="h-36 w-36 object-contain" />
+          </Link>
 
-          {/* Desktop Links */}
           <div className="hidden items-center gap-1 lg:flex">
-            {links.map((l) => (
-              <a
-                key={l}
-                href="#"
-                className="rounded-xl px-3.5 py-2 text-[13px] font-semibold text-white/90 no-underline transition"
-                style={{ boxShadow: "none" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = `${ACCENT}55`)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
-              >
-                {l}
-              </a>
+            {navLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} end={link.to === "/"} className={navLinkClassName}>
+                {link.label}
+              </NavLink>
             ))}
 
-            {/* Categories dropdown */}
             <div className="relative" ref={dropRef}>
               <button
-                onClick={() => setCatOpen((p) => !p)}
-                className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[13px] font-semibold transition"
-                style={{
-                  color: catOpen ? "#fff" : "rgba(255,255,255,0.9)",
-                  backgroundColor: catOpen ? `${ACCENT}44` : "transparent",
-                }}
+                type="button"
+                onClick={() => setCatOpen((previous) => !previous)}
+                className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[13px] font-semibold transition ${
+                  catOpen ? "bg-white/15 text-white" : "text-white/90 hover:bg-white/10"
+                }`}
               >
                 Categories
                 <ChevronDown
@@ -103,61 +114,62 @@ const Navbar = () => {
                   </p>
 
                   <div className="grid grid-cols-2 gap-2">
-                    {categories.map((cat) => (
-                      <a
-                        key={cat.name}
-                        href="#"
-                        className="group flex items-center gap-3.5 rounded-[14px] border border-transparent px-4 py-3.5 no-underline transition hover:bg-[#B35FA3]/10"
-                        style={{}}
-                      >
-                        <div className="flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-xl bg-[#F8F0FA] text-[26px] text-[var(--tw-text-opacity,#4A0D4F)]">
-                          {cat.icon}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold text-slate-900">
-                            {cat.name}
-                          </p>
-                          <p className="text-[12px] text-slate-600">
-                            {cat.desc}
-                          </p>
-                        </div>
-                        <ArrowRight
-                          size={15}
-                          className="flex-shrink-0 text-slate-500 transition group-hover:translate-x-1 group-hover:text-[#B35FA3]"
-                        />
-                      </a>
-                    ))}
+                    {categories.map((category) => {
+                      const Icon = categoryIcons[category.slug] ?? Sparkles;
+
+                      return (
+                        <Link
+                          key={category.slug}
+                          to={`/categories#${category.slug}`}
+                          className="group flex items-center gap-3.5 rounded-[14px] border border-transparent px-4 py-3.5 transition hover:bg-[#B35FA3]/10"
+                        >
+                          <div className="flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-xl bg-[#F8F0FA] text-[#4A0D4F]">
+                            <Icon size={24} strokeWidth={2} />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-[14px] font-bold text-slate-900">
+                              {category.name}
+                            </p>
+                            <p className="text-[12px] text-slate-600">
+                              {category.desc}
+                            </p>
+                          </div>
+                          <ArrowRight
+                            size={15}
+                            className="flex-shrink-0 text-slate-500 transition group-hover:translate-x-1 group-hover:text-[#B35FA3]"
+                          />
+                        </Link>
+                      );
+                    })}
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between rounded-[14px] border px-5 py-3.5 bg-gradient-to-r from-[#4A0D4F]/10 via-white to-[#B35FA3]/10">
+                  <div className="mt-3 flex items-center justify-between rounded-[14px] border bg-gradient-to-r from-[#4A0D4F]/10 via-white to-[#B35FA3]/10 px-5 py-3.5">
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-[.1em] text-[#4A0D4F]">
                         Limited time
                       </p>
                       <p className="text-[15px] font-black text-slate-900">
-                        First ad slot FREE this week 🔥
+                        First ad slot free this week.
                       </p>
                     </div>
-                    <button
+                    <Link
+                      to="/login"
                       className="flex-shrink-0 rounded-full px-5 py-2.5 text-[12px] font-black text-white shadow-sm transition hover:-translate-y-px"
                       style={{
-                        background: `linear-gradient(135deg,${PRIMARY},${ACCENT})`,
+                        background: `linear-gradient(135deg, ${PRIMARY}, ${ACCENT})`,
                       }}
                     >
-                      Advertise now
-                    </button>
+                      Sell with us
+                    </Link>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Search */}
           <div
-            className="hidden items-center gap-2 rounded-full border bg-white px-4 py-2 transition md:flex shadow-sm"
-            style={{
-              borderColor: `${ACCENT}80`,
-            }}
+            className="hidden items-center gap-2 rounded-full border bg-white px-4 py-2 shadow-sm md:flex"
+            style={{ borderColor: `${ACCENT}80` }}
           >
             <Search
               size={15}
@@ -167,43 +179,37 @@ const Navbar = () => {
             />
             <input
               type="text"
-              placeholder="Search products…"
+              placeholder="Search products..."
               className="w-36 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400"
             />
           </div>
 
-          {/* Right icons */}
           <div className="flex items-center gap-2">
             <div
               className="flex items-center gap-1 rounded-full border bg-white px-2.5 py-1.5 shadow-sm"
               style={{ borderColor: `${ACCENT}80` }}
             >
-              {[User, Heart].map((Icon, idx) => (
-                <button
-                  key={idx}
-                  className="flex h-8 w-8 items-center justify-center rounded-full transition"
-                  style={{
-                    color: PRIMARY,
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  <Icon size={17} strokeWidth={2} />
-                </button>
-              ))}
-              <button
-                className="relative flex h-8 w-8 items-center justify-center rounded-full transition"
+              <Link
+                to="/login"
+                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
                 style={{ color: PRIMARY }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = `${ACCENT}1A`)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
+                aria-label="Login"
+              >
+                <User size={17} strokeWidth={2} />
+              </Link>
+              <Link
+                to="/shop#featured"
+                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
+                style={{ color: PRIMARY }}
+                aria-label="Wishlist"
+              >
+                <Heart size={17} strokeWidth={2} />
+              </Link>
+              <Link
+                to="/shop"
+                className="relative flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
+                style={{ color: PRIMARY }}
+                aria-label="Cart"
               >
                 <ShoppingCart size={17} strokeWidth={2} />
                 <span
@@ -212,53 +218,55 @@ const Navbar = () => {
                 >
                   2
                 </span>
-              </button>
+              </Link>
             </div>
 
-            <button
-              className="hidden items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-black transition md:flex bg-white"
+            <Link
+              to="/contact"
+              className="hidden items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12px] font-black transition md:flex"
               style={{
                 color: PRIMARY,
                 boxShadow: "0 8px 20px rgba(74,13,79,0.15)",
               }}
             >
-              Advertise with us <ArrowRight size={13} strokeWidth={2.5} />
-            </button>
+              Advertise with us
+              <ArrowRight size={13} strokeWidth={2.5} />
+            </Link>
 
             <button
-              onClick={() => setMobileOpen((p) => !p)}
+              type="button"
+              onClick={() => setMobileOpen((previous) => !previous)}
               className="flex h-9 w-9 items-center justify-center rounded-full border bg-white transition lg:hidden"
               style={{
                 color: PRIMARY,
                 borderColor: `${ACCENT}80`,
               }}
+              aria-label="Open menu"
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {mobileOpen && (
           <div
-            className="border-t bg-white px-5 py-4 lg:hidden shadow-inner"
+            className="border-t bg-white px-5 py-4 shadow-inner lg:hidden"
             style={{ borderColor: `${ACCENT}80` }}
           >
-            {[...links, "Categories"].map((l) => (
-              <a
-                key={l}
-                href="#"
-                className="block rounded-xl px-4 py-3 text-[14px] font-semibold no-underline transition"
+            {[...navLinks, { label: "Categories", to: "/categories" }].map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/"}
+                className={({ isActive }) =>
+                  `block rounded-xl px-4 py-3 text-[14px] font-semibold transition ${
+                    isActive ? "bg-[#f4e8f3]" : "hover:bg-[#B35FA3]/10"
+                  }`
+                }
                 style={{ color: PRIMARY }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = `${ACCENT}10`)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
               >
-                {l}
-              </a>
+                {link.label}
+              </NavLink>
             ))}
             <div
               className="mt-3 flex items-center gap-2 rounded-full border bg-white px-4 py-2.5"
@@ -267,7 +275,7 @@ const Navbar = () => {
               <Search size={15} style={{ color: PRIMARY }} />
               <input
                 type="text"
-                placeholder="Search products…"
+                placeholder="Search products..."
                 className="flex-1 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-500"
               />
             </div>
@@ -275,7 +283,7 @@ const Navbar = () => {
         )}
       </nav>
 
-      <div className="h-[48px]" />
+      <div className="h-[68px]" />
     </>
   );
 };

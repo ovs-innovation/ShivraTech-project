@@ -1,15 +1,20 @@
-import React from "react";
-import Navbar from "../components/Navbar";
+import Categories from "../components/Categories";
+import Features from "../components/Features";
 import Hero from "../components/Hero";
-import Footer from "../components/Footer";
+import PageExplorer from "../components/PageExplorer";
+import ProductsShowcase from "../components/ProductsShowcase";
+import PromoCarousel from "../components/PromoCarousel";
 
 const Home = () => {
   return (
-    <div className="bg-[#f7f7fb] text-slate-900">
-      <Navbar />
+    <>
       <Hero />
-      <Footer />
-    </div>
+      <PageExplorer />
+      <Features />
+      <Categories />
+      <PromoCarousel />
+      <ProductsShowcase />
+    </>
   );
 };
 

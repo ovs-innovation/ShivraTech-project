@@ -1,24 +1,30 @@
-import Categories from "./components/Categories";
-import Footer from "./components/Footer";
-import Features from "./components/Features";
-import FloatingContactButtons from "./components/FloatingContactButtons";
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import PromoCarousel from "./components/PromoCarousel";
-import ProductsShowcase from "./components/ProductsShowcase";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SiteLayout from "./components/SiteLayout";
+import About from "./pages/About";
+import CategoriesPage from "./pages/CategoriesPage";
+import ContactForm from "./pages/ContactForm";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Shop from "./pages/Shop";
+import SupportPage from "./pages/SupportPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <Navbar />
-      <Hero />
-      <Features />
-      <Categories />
-      <PromoCarousel />
-      <ProductsShowcase />
-      <FloatingContactButtons />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<SiteLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/contact" element={<ContactForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/support/:topic" element={<SupportPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
