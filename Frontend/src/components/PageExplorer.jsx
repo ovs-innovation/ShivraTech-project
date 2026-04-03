@@ -46,7 +46,7 @@ const ACCENT = "#B35FA3";
 
 const PageExplorer = () => {
   return (
-    <section className="bg-white px-6 py-16">
+    <section className="bg-white px-4 py-12 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
@@ -56,7 +56,7 @@ const PageExplorer = () => {
             >
               Quick actions
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               What do you want to do today?
             </h2>
             <p className="max-w-2xl text-sm leading-6 text-slate-600">
@@ -68,7 +68,7 @@ const PageExplorer = () => {
 
           <Link
             to="/shop"
-            className="inline-flex items-center gap-2 rounded-full border bg-white px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border bg-white px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
             style={{ borderColor: ACCENT, color: PRIMARY }}
           >
             Start shopping
@@ -76,12 +76,12 @@ const PageExplorer = () => {
           </Link>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
           {quickActions.map(({ title, desc, to, Icon, badge }) => (
             <Link
               key={to}
               to={to}
-              className="group rounded-[24px] border bg-white p-6 shadow-[0_18px_50px_rgba(74,13,79,0.08)] transition hover:-translate-y-1"
+              className="group rounded-[24px] border bg-white p-5 shadow-[0_18px_50px_rgba(74,13,79,0.08)] transition hover:-translate-y-1 sm:p-6"
               style={{ borderColor: "#eadbe6" }}
             >
               <div className="flex items-start justify-between gap-3">
@@ -105,7 +105,9 @@ const PageExplorer = () => {
 
               <div className="mt-5 space-y-3">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-xl font-bold text-slate-900">{title}</h3>
+                  <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
+                    {title}
+                  </h3>
                   <ArrowRight
                     size={18}
                     className="text-slate-400 transition group-hover:translate-x-1"

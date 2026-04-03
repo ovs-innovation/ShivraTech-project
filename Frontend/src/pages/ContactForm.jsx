@@ -29,11 +29,11 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="px-6 py-10 md:py-14">
+    <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div
-            className="rounded-[32px] px-8 py-10 text-white md:px-10 md:py-12"
+            className="rounded-[32px] px-5 py-8 text-white sm:px-8 sm:py-10 md:px-10 md:py-12"
             style={{
               background: `linear-gradient(160deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
             }}
@@ -41,7 +41,7 @@ const ContactForm = () => {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
               Contact route
             </p>
-            <h1 className="mt-4 text-4xl font-black leading-tight">
+            <h1 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
               Tell us what you want to sell or buy.
             </h1>
             <p className="mt-4 text-sm leading-7 text-white/80">
@@ -77,14 +77,14 @@ const ContactForm = () => {
           </div>
 
           <div
-            className="rounded-[32px] border bg-white px-8 py-10 shadow-[0_24px_70px_rgba(74,13,79,0.08)] md:px-10 md:py-12"
+            className="rounded-[32px] border bg-white px-5 py-8 shadow-[0_24px_70px_rgba(74,13,79,0.08)] sm:px-8 sm:py-10 md:px-10 md:py-12"
             style={{ borderColor: "#eadbe6" }}
           >
             <div className="space-y-3">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
                 Send a message
               </p>
-              <h2 className="text-3xl font-black text-slate-900">
+              <h2 className="text-2xl font-black text-slate-900 sm:text-3xl">
                 Contact the ShivraTech team
               </h2>
               <p className="text-sm leading-7 text-slate-600">
@@ -138,7 +138,7 @@ const ContactForm = () => {
               </label>
 
               <button
-                className="rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                className="w-full rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
                 style={{
                   background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                 }}

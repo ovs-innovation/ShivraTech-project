@@ -28,14 +28,14 @@ const Login = () => {
   const primaryButtonLabel = isSignup ? "Create account" : "Login";
 
   return (
-    <section className="px-6 py-10 md:py-14">
+    <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-5xl">
         <div
           className="overflow-hidden rounded-[32px] border bg-white shadow-[0_24px_70px_rgba(74,13,79,0.08)] lg:grid lg:grid-cols-[0.9fr_1.1fr]"
           style={{ borderColor: "#eadbe6" }}
         >
           <div
-            className="flex flex-col justify-between gap-8 px-8 py-10 text-white md:px-10 md:py-12"
+            className="flex flex-col justify-between gap-8 px-5 py-8 text-white sm:px-8 sm:py-10 md:px-10 md:py-12"
             style={{
               background: `linear-gradient(160deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
             }}
@@ -44,13 +44,15 @@ const Login = () => {
               <span className="inline-flex w-fit rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em]">
                 Account access
               </span>
-              <h1 className="text-4xl font-black leading-tight">{heading}</h1>
+              <h1 className="text-3xl font-black leading-tight sm:text-4xl">
+                {heading}
+              </h1>
               <p className="max-w-md text-sm leading-7 text-white/80">
                 {heroCopy}
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {[
                 {
                   label: "Shopper ready",
@@ -80,7 +82,7 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="px-8 py-10 md:px-10 md:py-12">
+          <div className="px-5 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12">
             <div className="space-y-4">
               <div className="flex rounded-full bg-[#f7eef6] p-1">
                 <button
@@ -119,7 +121,7 @@ const Login = () => {
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">
                   {formEyebrow}
                 </p>
-                <h2 className="mt-2 text-3xl font-black text-slate-900">
+                <h2 className="mt-2 text-2xl font-black text-slate-900 sm:text-3xl">
                   {formTitle}
                 </h2>
                 <p className="mt-3 text-sm text-slate-600">
@@ -205,7 +207,7 @@ const Login = () => {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
                     style={{
                       background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                     }}
@@ -215,7 +217,7 @@ const Login = () => {
                   </button>
                   <Link
                     to={isSignup ? "/contact" : "/support/faqs"}
-                    className="text-sm font-semibold"
+                    className="text-center text-sm font-semibold sm:text-left"
                     style={{ color: PRIMARY }}
                   >
                     {isSignup ? "Need onboarding help?" : "Forgot password?"}

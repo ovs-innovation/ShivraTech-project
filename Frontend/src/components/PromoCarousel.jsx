@@ -54,29 +54,31 @@ const PromoCarousel = () => {
   const slide = slides[index];
 
   return (
-    <section className="px-6 py-10">
+    <section className="px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
         <div
-          className="relative overflow-hidden rounded-3xl shadow-xl"
+          className="relative overflow-hidden rounded-[26px] shadow-xl sm:rounded-3xl"
           style={{ background: "#4A0D4F" }}
         >
           <div
             key={index}
-            className="h-[300px] w-full animate-slide-left bg-cover bg-center transition-all duration-500"
+            className="h-[260px] w-full animate-slide-left bg-cover bg-center transition-all duration-500 sm:h-[300px] lg:h-[320px]"
             style={{ backgroundImage: `url(${slide.img})` }}
           >
-            <div className="flex h-full w-full items-center gap-8 bg-gradient-to-r from-[#4A0D4F]/85 via-[#B35FA3]/55 to-[#B35FA3]/25 px-8 md:px-12">
+            <div className="flex h-full w-full items-end gap-8 bg-gradient-to-r from-[#4A0D4F]/85 via-[#B35FA3]/55 to-[#B35FA3]/25 px-5 pb-12 pt-10 sm:items-center sm:px-8 sm:py-0 md:px-12">
               <div className="max-w-xl space-y-3 text-white">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-200">
                   Spotlight
                 </p>
-                <h3 className="text-3xl font-bold md:text-4xl">{slide.title}</h3>
+                <h3 className="text-2xl font-bold sm:text-3xl md:text-4xl">
+                  {slide.title}
+                </h3>
                 <p className="text-sm text-white/80 md:text-base">
                   {slide.subtitle}
                 </p>
                 <Link
                   to={slide.to}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold shadow-md transition hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold shadow-md transition hover:-translate-y-0.5 sm:px-5 sm:text-sm"
                   style={{ color: "#4A0D4F" }}
                 >
                   {slide.cta}
@@ -90,7 +92,7 @@ const PromoCarousel = () => {
             type="button"
             aria-label="Previous slide"
             onClick={() => goTo(index - 1)}
-            className="absolute left-4 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#4A0D4F] shadow hover:bg-white"
+            className="absolute left-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#4A0D4F] shadow hover:bg-white sm:left-4 sm:h-9 sm:w-9"
           >
             {"<"}
           </button>
@@ -98,12 +100,12 @@ const PromoCarousel = () => {
             type="button"
             aria-label="Next slide"
             onClick={() => goTo(index + 1)}
-            className="absolute right-4 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#4A0D4F] shadow hover:bg-white"
+            className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#4A0D4F] shadow hover:bg-white sm:right-4 sm:h-9 sm:w-9"
           >
             {">"}
           </button>
 
-          <div className="absolute inset-x-0 bottom-4 flex items-center justify-center gap-2">
+          <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2 sm:bottom-4">
             {slides.map((_, slideIndex) => (
               <button
                 key={slideIndex}

@@ -101,7 +101,7 @@ const Hero = () => {
 
   return (
     <section
-      className="relative flex min-h-screen flex-col overflow-hidden bg-white"
+      className="relative flex min-h-[calc(100svh-68px)] flex-col overflow-hidden bg-white"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <video
@@ -131,7 +131,7 @@ const Hero = () => {
         }}
       />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 px-12 pb-20 pt-28 lg:grid-cols-[1fr_400px] lg:pt-32">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 items-center gap-8 px-4 pb-14 pt-16 sm:px-6 sm:pb-16 sm:pt-20 md:px-8 lg:grid-cols-[1fr_400px] lg:gap-10 lg:px-12 lg:pb-20 lg:pt-24">
         <div className="flex flex-col gap-7">
           <div
             className="flex w-fit items-center gap-2 rounded-full px-4 py-2 shadow-sm"
@@ -168,7 +168,7 @@ const Hero = () => {
             </span>
           </h1>
 
-          <p className="max-w-[540px] text-[17px] leading-[1.7] text-slate-700">
+          <p className="max-w-[540px] text-[15px] leading-[1.7] text-slate-700 sm:text-[17px]">
             List your products. Run{" "}
             <span className="font-semibold text-slate-900">hyper-local ads</span>
             . Deliver within hours. ShivraTech connects your store with{" "}
@@ -179,10 +179,10 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-[15px] font-black text-white shadow-lg transition hover:-translate-y-[3px]"
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full px-8 py-4 text-[15px] font-black text-white shadow-lg transition hover:-translate-y-[3px] sm:w-auto"
                 style={{
                   background: "linear-gradient(135deg,#4A0D4F,#B35FA3)",
                   boxShadow: "0 12px 28px rgba(74,13,79,0.35)",
@@ -193,7 +193,7 @@ const Hero = () => {
               </Link>
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2.5 rounded-full border px-7 py-4 text-[15px] font-semibold transition hover:bg-[#f4e8f3]"
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full border px-7 py-4 text-[15px] font-semibold transition hover:bg-[#f4e8f3] sm:w-auto"
                 style={{ borderColor: ACCENT, color: PRIMARY }}
               >
                 Browse products
@@ -201,7 +201,7 @@ const Hero = () => {
               </Link>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               {sellerHighlights.map((item, index) => (
                 <Fragment key={item}>
                   <div className="flex items-center gap-2 text-[13px]">
@@ -215,7 +215,7 @@ const Hero = () => {
                   </div>
                   {index < sellerHighlights.length - 1 ? (
                     <div
-                      className="h-3.5 w-px"
+                      className="hidden h-3.5 w-px sm:block"
                       style={{ backgroundColor: "#f4e8f3" }}
                     />
                   ) : null}
@@ -227,13 +227,13 @@ const Hero = () => {
 
         <div className="flex justify-center">
           <div
-            className="relative w-full max-w-lg overflow-hidden rounded-3xl p-5 shadow-[0_20px_48px_rgba(74,13,79,0.22)]"
+            className="relative w-full max-w-sm overflow-hidden rounded-3xl p-4 shadow-[0_20px_48px_rgba(74,13,79,0.22)] sm:max-w-md sm:p-5 lg:max-w-lg"
             style={{
               background: `linear-gradient(150deg, ${PRIMARY} 0%, ${ACCENT} 65%, ${PRIMARY} 100%)`,
             }}
           >
             <div className="absolute inset-6 rounded-2xl border border-white/15" />
-            <div className="relative z-10 h-[420px] w-full overflow-hidden">
+            <div className="relative z-10 h-[280px] w-full overflow-hidden sm:h-[340px] lg:h-[420px]">
               {heroSlides.map(({ src, alt }, index) =>
                 failedSlides[index] ? null : (
                   <img
@@ -269,7 +269,7 @@ const Hero = () => {
                 </div>
               ) : null}
             </div>
-            <div className="relative z-10 mt-4 flex items-center justify-between gap-3">
+            <div className="relative z-10 mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80">
                   Featured drop
@@ -281,7 +281,7 @@ const Hero = () => {
               </div>
               <Link
                 to="/shop"
-                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#4A0D4F] shadow-md transition hover:-translate-y-0.5"
+                className="w-full rounded-full bg-white px-5 py-2 text-center text-sm font-semibold text-[#4A0D4F] shadow-md transition hover:-translate-y-0.5 sm:w-auto"
               >
                 Buy now
               </Link>
@@ -301,7 +301,7 @@ const Hero = () => {
           {[...tickers, ...tickers].map((item, index) => (
             <span
               key={`${item}-${index}`}
-              className="inline-flex items-center gap-2.5 whitespace-nowrap px-8 text-[12px] font-bold uppercase tracking-[.07em]"
+              className="inline-flex items-center gap-2.5 whitespace-nowrap px-5 text-[11px] font-bold uppercase tracking-[.07em] sm:px-8 sm:text-[12px]"
               style={{ color: PRIMARY }}
             >
               {item}

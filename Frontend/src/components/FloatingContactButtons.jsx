@@ -30,13 +30,13 @@ const EmailIcon = () => (
 
 const FloatingContactButtons = () => {
   return (
-    <div className="fixed z-50 flex flex-col items-end gap-3 bottom-6 right-6">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2.5 sm:bottom-6 sm:right-6 sm:gap-3">
       <a
         href={SITE_WHATSAPP_LINK}
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_16px_34px_rgba(37,211,102,0.34)] ring-4 ring-white transition hover:-translate-y-0.5"
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_16px_34px_rgba(37,211,102,0.34)] ring-4 ring-white transition hover:-translate-y-0.5 sm:h-14 sm:w-14"
       >
         <WhatsAppIcon />
       </a>
@@ -44,7 +44,7 @@ const FloatingContactButtons = () => {
       <a
         href={SITE_EMAIL_LINK}
         aria-label="Email ShivraTech"
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-[0_16px_34px_rgba(74,13,79,0.18)] ring-4 ring-white transition hover:-translate-y-0.5"
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0_16px_34px_rgba(74,13,79,0.18)] ring-4 ring-white transition hover:-translate-y-0.5 sm:h-14 sm:w-14"
       >
         <EmailIcon />
       </a>

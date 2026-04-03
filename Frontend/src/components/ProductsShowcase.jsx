@@ -97,11 +97,11 @@ const ProductCard = ({ card }) => {
 
   return (
     <article
-      className="group relative overflow-hidden rounded-[18px] border bg-white p-3 shadow-[0_4px_16px_rgba(74,13,79,0.08)]"
+      className="group relative overflow-hidden rounded-[18px] border bg-white p-2.5 shadow-[0_4px_16px_rgba(74,13,79,0.08)] sm:p-3"
       style={{ borderColor: "#eadbe6" }}
     >
       <div
-        className="absolute left-0 top-0 z-10 max-w-[78%] rounded-br-xl px-3 py-2 text-[11px] font-bold uppercase tracking-[0.04em] text-white"
+        className="absolute left-0 top-0 z-10 max-w-[72%] rounded-br-xl px-3 py-2 text-[10px] font-bold uppercase tracking-[0.04em] text-white sm:max-w-[78%] sm:text-[11px]"
         style={{
           background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
         }}
@@ -122,7 +122,7 @@ const ProductCard = ({ card }) => {
         className="mt-9 block rounded-2xl"
         style={{ background: IMAGE_PANEL_BG }}
       >
-        <div className="flex h-[12.75rem] items-center justify-center px-3 py-3">
+        <div className="flex h-[11.5rem] items-center justify-center px-3 py-3 sm:h-[12.75rem]">
           <img
             src={card.img}
             alt={card.title}
@@ -142,7 +142,7 @@ const ProductCard = ({ card }) => {
         </Link>
 
         <Link to={productLink} className="block">
-          <h3 className="min-h-[3.5rem] text-[15px] font-medium leading-6 text-slate-800 line-clamp-2 transition group-hover:text-[#4A0D4F]">
+          <h3 className="min-h-[3.25rem] text-[15px] font-medium leading-6 text-slate-800 line-clamp-2 transition group-hover:text-[#4A0D4F] sm:min-h-[3.5rem]">
             {card.title}
           </h3>
         </Link>
@@ -173,11 +173,11 @@ const ProductCard = ({ card }) => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
           <button
             type="button"
             onClick={handleAddToCart}
-            className="rounded-full border px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em]"
+            className="rounded-full border px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.1em] sm:text-[11px]"
             style={{
               borderColor: ACCENT,
               color: PRIMARY,
@@ -189,7 +189,7 @@ const ProductCard = ({ card }) => {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="rounded-full px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-white"
+            className="rounded-full px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.1em] text-white sm:text-[11px]"
             style={{
               background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
             }}
@@ -238,7 +238,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
     return (
       <section
         id="featured"
-        className="px-6 py-16"
+        className="px-4 py-12 sm:px-6 sm:py-16"
         style={{ background: SECTION_BG }}
       >
         <div className="mx-auto max-w-6xl space-y-10">
@@ -249,7 +249,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
             >
               Shop
             </p>
-            <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+            <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
               {normalizedSearchQuery ? `Search: ${normalizedSearchQuery}` : "All products"}
             </h1>
             <p className="max-w-2xl text-sm leading-6 text-slate-500">
@@ -337,7 +337,11 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
   }
 
   return (
-    <section id="featured" className="px-6 py-16" style={{ background: SECTION_BG }}>
+    <section
+      id="featured"
+      className="px-4 py-12 sm:px-6 sm:py-16"
+      style={{ background: SECTION_BG }}
+    >
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="space-y-2 text-left">
           <p
@@ -346,7 +350,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
           >
             Product showcase
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Best deals for your customers
           </h2>
           <p className="max-w-2xl text-sm leading-6 text-slate-500">
@@ -356,7 +360,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
         </div>
 
         <div className="space-y-5">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-1">
               <p
                 className="text-[11px] font-bold uppercase tracking-[0.18em]"
@@ -384,7 +388,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
           </div>
 
           <div
-            className="rounded-[20px] border bg-white px-6 py-5"
+            className="rounded-[20px] border bg-white px-4 py-5 sm:px-6"
             style={{ borderColor: "#eadbe6" }}
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -396,7 +400,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
                   ShivraTech Promise
                 </span>
                 <div className="flex flex-col gap-2 text-center md:flex-row md:items-center md:text-left">
-                  <h4 className="text-3xl font-black uppercase tracking-[0.04em] text-slate-900 sm:text-4xl">
+                  <h4 className="text-2xl font-black uppercase tracking-[0.04em] text-slate-900 sm:text-4xl">
                     Order Today
                   </h4>
                   <span
@@ -404,7 +408,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
                     style={{ backgroundColor: "#eadbe6" }}
                   />
                   <h4
-                    className="text-3xl font-black uppercase tracking-[0.04em] sm:text-4xl"
+                    className="text-2xl font-black uppercase tracking-[0.04em] sm:text-4xl"
                     style={{ color: ACCENT }}
                   >
                     Get It Today
@@ -452,7 +456,7 @@ const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
                     <img
                       src={post.img}
                       alt={post.title}
-                      className="h-[17rem] w-full object-cover transition duration-300 group-hover:scale-105"
+                      className="h-[15rem] w-full object-cover transition duration-300 group-hover:scale-105 sm:h-[17rem]"
                       loading="lazy"
                     />
                     <div className="absolute left-4 top-4 z-20">

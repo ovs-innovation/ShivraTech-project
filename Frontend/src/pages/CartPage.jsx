@@ -27,9 +27,9 @@ const CartPage = () => {
 
   if (cartItems.length === 0) {
     return (
-      <section className="px-6 py-16">
+      <section className="px-4 py-12 sm:px-6 sm:py-16">
         <div
-          className="mx-auto max-w-3xl rounded-[30px] border px-8 py-12 text-center"
+          className="mx-auto max-w-3xl rounded-[30px] border px-6 py-10 text-center sm:px-8 sm:py-12"
           style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
         >
           <div
@@ -75,7 +75,7 @@ const CartPage = () => {
   }
 
   return (
-    <section className="px-6 py-10 md:py-14">
+      <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
@@ -85,7 +85,7 @@ const CartPage = () => {
             >
               Cart
             </p>
-            <h1 className="text-4xl font-black text-slate-900">
+            <h1 className="text-3xl font-black text-slate-900 sm:text-4xl">
               Your selected products
             </h1>
             <p className="text-sm leading-7 text-slate-600">
@@ -95,7 +95,7 @@ const CartPage = () => {
 
           <Link
             to="/orders"
-            className="rounded-full border px-5 py-3 text-sm font-semibold"
+            className="w-full rounded-full border px-5 py-3 text-center text-sm font-semibold sm:w-auto"
             style={{ borderColor: ACCENT, color: PRIMARY }}
           >
             Track orders
@@ -107,19 +107,19 @@ const CartPage = () => {
             {cartItems.map((item) => (
               <article
                 key={item.slug}
-                className="rounded-[28px] border bg-white p-5 shadow-[0_16px_42px_rgba(74,13,79,0.06)]"
+                className="rounded-[28px] border bg-white p-4 shadow-[0_16px_42px_rgba(74,13,79,0.06)] sm:p-5"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div className="flex flex-col gap-5 md:flex-row">
                   <Link
                     to={`/product/${item.slug}`}
-                    className="flex h-40 w-full items-center justify-center rounded-[22px] md:w-44"
+                    className="flex h-32 w-full items-center justify-center rounded-[22px] sm:h-40 md:w-44"
                     style={{ backgroundColor: "#fbf6fa" }}
                   >
                     <img
                       src={item.img}
                       alt={item.title}
-                      className="h-32 w-32 object-contain"
+                      className="h-24 w-24 object-contain sm:h-32 sm:w-32"
                     />
                   </Link>
 
@@ -132,7 +132,7 @@ const CartPage = () => {
                         {item.categoryName}
                       </p>
                       <Link to={`/product/${item.slug}`}>
-                        <h2 className="text-xl font-bold leading-7 text-slate-900">
+                        <h2 className="text-lg font-bold leading-7 text-slate-900 sm:text-xl">
                           {item.title}
                         </h2>
                       </Link>
@@ -146,7 +146,7 @@ const CartPage = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                       <div
                         className="flex items-center gap-3 rounded-full border px-3 py-2"
                         style={{ borderColor: "#eadbe6" }}
@@ -191,7 +191,7 @@ const CartPage = () => {
           </div>
 
           <aside
-            className="rounded-[30px] border bg-white p-6 shadow-[0_16px_42px_rgba(74,13,79,0.06)]"
+            className="rounded-[30px] border bg-white p-5 shadow-[0_16px_42px_rgba(74,13,79,0.06)] sm:p-6"
             style={{ borderColor: "#eadbe6" }}
           >
             <p

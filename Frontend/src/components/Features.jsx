@@ -27,7 +27,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="bg-white px-6 py-16 lg:py-20">
+    <section className="bg-white px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
@@ -37,7 +37,7 @@ const Features = () => {
             >
               Why ShivraTech
             </p>
-            <h2 className="text-3xl font-semibold text-slate-900">
+            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
               Built to be reliable
             </h2>
             <p className="text-sm text-slate-600">
@@ -47,18 +47,18 @@ const Features = () => {
           </div>
           <Link
             to="/support/faqs"
-            className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
             style={{ borderColor: "#B35FA3", color: "#4A0D4F" }}
           >
             View service levels
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {features.map((item) => (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-2xl border bg-white p-5 shadow-lg shadow-[#B35FA3]/20 transition hover:-translate-y-1 hover:border-[#B35FA3] hover:shadow-[#B35FA3]/30"
+              className="group relative overflow-hidden rounded-2xl border bg-white p-4 shadow-lg shadow-[#B35FA3]/20 transition hover:-translate-y-1 hover:border-[#B35FA3] hover:shadow-[#B35FA3]/30 sm:p-5"
               style={{ borderColor: "#B35FA3" }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-[#4A0D4F]/25 via-[#B35FA3]/12 to-[#4A0D4F]/25 opacity-0 blur-3xl transition group-hover:opacity-100 group-hover:blur-2xl" />

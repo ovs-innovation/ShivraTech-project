@@ -53,8 +53,8 @@ const socialLinks = [
 const Footer = () => {
   return (
     <footer className="bg-white" style={{ borderTop: `3px solid ${ACCENT}` }}>
-      <div className="mx-auto max-w-6xl px-6 pb-8 pt-16">
-        <div className="grid gap-12 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr_1.05fr]">
+      <div className="mx-auto max-w-6xl px-4 pb-8 pt-12 sm:px-6 sm:pt-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr_1.05fr] lg:gap-12">
           <div className="space-y-5">
             <span
               className="inline-flex rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]"
@@ -71,7 +71,7 @@ const Footer = () => {
               />
             </Link>
 
-            <p className="max-w-sm text-[17px] leading-8 text-slate-600">
+            <p className="max-w-sm text-[15px] leading-7 text-slate-600 sm:text-[17px] sm:leading-8">
               The home and elements needed to create beautiful gadget buying and
               selling experiences across local markets.
             </p>
@@ -113,7 +113,7 @@ const Footer = () => {
 
           <div className="space-y-5">
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-900">Company</h3>
+              <h3 className="text-lg font-bold text-slate-900 sm:text-xl">Company</h3>
               <span
                 className="block h-1 w-10 rounded-full"
                 style={{
@@ -121,7 +121,7 @@ const Footer = () => {
                 }}
               />
             </div>
-            <div className="space-y-4 text-[17px] text-slate-600">
+            <div className="space-y-3 text-[15px] text-slate-600 sm:space-y-4 sm:text-[17px]">
               {companyLinks.map((item) => (
                 <Link
                   key={item.label}
@@ -136,7 +136,7 @@ const Footer = () => {
 
           <div className="space-y-5">
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-900">Shop</h3>
+              <h3 className="text-lg font-bold text-slate-900 sm:text-xl">Shop</h3>
               <span
                 className="block h-1 w-10 rounded-full"
                 style={{
@@ -144,7 +144,7 @@ const Footer = () => {
                 }}
               />
             </div>
-            <div className="space-y-4 text-[17px] text-slate-600">
+            <div className="space-y-3 text-[15px] text-slate-600 sm:space-y-4 sm:text-[17px]">
               {shopLinks.map((item) => (
                 <Link
                   key={item.label}
@@ -159,7 +159,7 @@ const Footer = () => {
 
           <div className="space-y-5">
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-900">Support</h3>
+              <h3 className="text-lg font-bold text-slate-900 sm:text-xl">Support</h3>
               <span
                 className="block h-1 w-10 rounded-full"
                 style={{
@@ -167,7 +167,7 @@ const Footer = () => {
                 }}
               />
             </div>
-            <div className="space-y-4 text-[17px] text-slate-600">
+            <div className="space-y-3 text-[15px] text-slate-600 sm:space-y-4 sm:text-[17px]">
               {supportLinks.map((item) => (
                 <Link
                   key={item.label}
@@ -182,7 +182,7 @@ const Footer = () => {
 
           <div className="space-y-5">
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-900">Talk To Us</h3>
+              <h3 className="text-lg font-bold text-slate-900 sm:text-xl">Talk To Us</h3>
               <span
                 className="block h-1 w-10 rounded-full"
                 style={{
@@ -191,7 +191,7 @@ const Footer = () => {
               />
             </div>
 
-            <div className="space-y-5 text-[16px] leading-7 text-slate-600">
+            <div className="space-y-5 text-[15px] leading-7 text-slate-600 sm:text-[16px]">
               <div className="flex items-start gap-3">
                 <MapPin
                   size={19}
@@ -220,7 +220,7 @@ const Footer = () => {
                 />
                 <a
                   href={`tel:${SITE_PHONE_TEL}`}
-                  className="whitespace-nowrap text-[22px] font-semibold leading-none text-slate-900"
+                  className="break-words text-[18px] font-semibold leading-tight text-slate-900 sm:text-[22px] sm:leading-none"
                 >
                   {SITE_PHONE_DISPLAY}
                 </a>
@@ -232,7 +232,7 @@ const Footer = () => {
                   className="mt-1 shrink-0"
                   style={{ color: PRIMARY }}
                 />
-                <a href={`mailto:${SITE_EMAIL}`} className="whitespace-nowrap">
+                <a href={`mailto:${SITE_EMAIL}`} className="break-words">
                   {SITE_EMAIL}
                 </a>
               </div>
@@ -241,10 +241,10 @@ const Footer = () => {
         </div>
 
         <div
-          className="mt-14 flex flex-col gap-6 border-t pt-8 md:flex-row md:items-center md:justify-between"
+          className="mt-12 flex flex-col gap-6 border-t pt-8 md:mt-14 md:flex-row md:items-center md:justify-between"
           style={{ borderColor: "#eee2eb" }}
         >
-          <p className="text-[17px] text-slate-500">
+          <p className="text-[15px] text-slate-500 sm:text-[17px]">
             Copyright &copy; 2026 by{" "}
             <span style={{ color: ACCENT }}>ShivraTech</span> All rights
             reserved.
@@ -254,7 +254,7 @@ const Footer = () => {
             {paymentBadges.map((item) => (
               <span
                 key={item}
-                className="inline-flex min-w-[76px] items-center justify-center rounded-xl border px-4 py-2 text-sm font-bold text-slate-600"
+                className="inline-flex min-w-[68px] items-center justify-center rounded-xl border px-3 py-2 text-xs font-bold text-slate-600 sm:min-w-[76px] sm:px-4 sm:text-sm"
                 style={{ borderColor: "#e6e4ea", backgroundColor: "#fff" }}
               >
                 {item}
@@ -263,7 +263,7 @@ const Footer = () => {
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="ml-1 inline-flex h-14 w-14 items-center justify-center rounded-full text-white shadow-[0_14px_32px_rgba(74,13,79,0.28)] transition hover:-translate-y-0.5"
+              className="ml-1 inline-flex h-12 w-12 items-center justify-center rounded-full text-white shadow-[0_14px_32px_rgba(74,13,79,0.28)] transition hover:-translate-y-0.5 sm:h-14 sm:w-14"
               style={{
                 background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
               }}

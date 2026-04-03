@@ -6,9 +6,9 @@ const ACCENT = "#B35FA3";
 
 const NotFound = () => {
   return (
-    <section className="px-6 py-16">
+    <section className="px-4 py-12 sm:px-6 sm:py-16">
       <div
-        className="mx-auto max-w-3xl rounded-[32px] border px-8 py-12 text-center md:px-12"
+        className="mx-auto max-w-3xl rounded-[32px] border px-6 py-10 text-center sm:px-8 sm:py-12 md:px-12"
         style={{
           borderColor: "#eadbe6",
           background:
@@ -21,7 +21,9 @@ const NotFound = () => {
         >
           404 route
         </p>
-        <h1 className="mt-4 text-4xl font-black text-slate-900">Page not found</h1>
+        <h1 className="mt-4 text-3xl font-black text-slate-900 sm:text-4xl">
+          Page not found
+        </h1>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-600">
           That route does not exist yet. You can jump back to the home page or
           continue reviewing the storefront from the shop route.

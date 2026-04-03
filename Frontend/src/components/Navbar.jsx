@@ -93,9 +93,13 @@ const Navbar = () => {
           borderColor: `${ACCENT}33`,
         }}
       >
-        <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-4 px-6">
+        <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
           <Link to="/" className="-ml-2 flex flex-shrink-0 items-center gap-2">
-            <img src={logo} alt="ShivraTech" className="h-36 w-36 object-contain" />
+            <img
+              src={logo}
+              alt="ShivraTech"
+              className="h-24 w-24 object-contain sm:h-28 sm:w-28 md:h-32 md:w-32"
+            />
           </Link>
 
           <div className="hidden items-center gap-1 lg:flex">
@@ -201,13 +205,13 @@ const Navbar = () => {
                 value={searchValue}
                 onChange={(event) => setSearchValue(event.target.value)}
                 placeholder="Search products..."
-                className="w-36 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400"
+                className="w-32 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400 lg:w-36 xl:w-44"
               />
             </form>
 
             {suggestions.length > 0 && (
               <div
-                className="absolute right-0 top-[calc(100%+10px)] w-[360px] rounded-2xl border bg-white p-3 shadow-[0_18px_42px_rgba(74,13,79,0.16)]"
+                className="absolute right-0 top-[calc(100%+10px)] w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl border bg-white p-3 shadow-[0_18px_42px_rgba(74,13,79,0.16)]"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div className="space-y-2">
@@ -254,9 +258,9 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <div
-              className="flex items-center gap-1 rounded-full border bg-white px-2.5 py-1.5 shadow-sm"
+              className="flex items-center gap-1 rounded-full border bg-white px-2 py-1.5 shadow-sm sm:px-2.5"
               style={{ borderColor: `${ACCENT}80` }}
             >
               <Link
@@ -320,7 +324,7 @@ const Navbar = () => {
 
         {mobileOpen && (
           <div
-            className="border-t bg-white px-5 py-4 shadow-inner lg:hidden"
+            className="border-t bg-white px-4 py-4 shadow-inner sm:px-5 lg:hidden"
             style={{ borderColor: `${ACCENT}80` }}
           >
             {[...navLinks, { label: "Categories", to: "/categories" }].map((link) => (
@@ -360,7 +364,7 @@ const Navbar = () => {
                   <Link
                     key={product.slug}
                     to={`/product/${product.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-[16px] border px-4 py-3"
+                    className="flex items-start justify-between gap-3 rounded-[16px] border px-4 py-3"
                     style={{ borderColor: "#eadbe6" }}
                   >
                     <div className="min-w-0">
@@ -371,7 +375,10 @@ const Navbar = () => {
                         {product.categoryName}
                       </p>
                     </div>
-                    <span className="text-sm font-semibold" style={{ color: PRIMARY }}>
+                    <span
+                      className="shrink-0 text-sm font-semibold"
+                      style={{ color: PRIMARY }}
+                    >
                       {product.price}
                     </span>
                   </Link>

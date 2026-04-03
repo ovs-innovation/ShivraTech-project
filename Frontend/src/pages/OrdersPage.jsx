@@ -36,9 +36,9 @@ const OrdersPage = () => {
 
   if (orders.length === 0) {
     return (
-      <section className="px-6 py-16">
+      <section className="px-4 py-12 sm:px-6 sm:py-16">
         <div
-          className="mx-auto max-w-3xl rounded-[30px] border px-8 py-12 text-center"
+          className="mx-auto max-w-3xl rounded-[30px] border px-6 py-10 text-center sm:px-8 sm:py-12"
           style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
         >
           <p
@@ -78,7 +78,7 @@ const OrdersPage = () => {
   }
 
   return (
-    <section className="px-6 py-10 md:py-14">
+      <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
@@ -88,7 +88,7 @@ const OrdersPage = () => {
             >
               Orders
             </p>
-            <h1 className="text-4xl font-black text-slate-900">
+            <h1 className="text-3xl font-black text-slate-900 sm:text-4xl">
               Track your order list
             </h1>
             <p className="text-sm leading-7 text-slate-600">
@@ -98,7 +98,7 @@ const OrdersPage = () => {
 
           <Link
             to="/shop"
-            className="rounded-full border px-5 py-3 text-sm font-semibold"
+            className="w-full rounded-full border px-5 py-3 text-center text-sm font-semibold sm:w-auto"
             style={{ borderColor: ACCENT, color: PRIMARY }}
           >
             Continue shopping
@@ -113,7 +113,7 @@ const OrdersPage = () => {
             return (
               <article
                 key={order.id}
-                className="rounded-[30px] border bg-white p-6 shadow-[0_16px_42px_rgba(74,13,79,0.06)]"
+                className="rounded-[30px] border bg-white p-4 shadow-[0_16px_42px_rgba(74,13,79,0.06)] sm:p-6"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -167,7 +167,7 @@ const OrdersPage = () => {
                       {order.items.map((item) => (
                         <div
                           key={`${order.id}-${item.slug}`}
-                          className="flex items-center gap-4 rounded-[20px] border p-4"
+                          className="flex flex-col gap-4 rounded-[20px] border p-4 sm:flex-row sm:items-center"
                           style={{ borderColor: "#eadbe6" }}
                         >
                           <div
@@ -188,7 +188,7 @@ const OrdersPage = () => {
                               {item.categoryName}
                             </p>
                           </div>
-                          <div className="text-right">
+                          <div className="sm:text-right">
                             <p className="text-sm font-semibold text-slate-900">
                               {item.price}
                             </p>
@@ -208,7 +208,10 @@ const OrdersPage = () => {
                     >
                       Tracking
                     </p>
-                    <div className="space-y-4 rounded-[24px] border p-5" style={{ borderColor: "#eadbe6" }}>
+                    <div
+                      className="space-y-4 rounded-[24px] border p-4 sm:p-5"
+                      style={{ borderColor: "#eadbe6" }}
+                    >
                       {trackingSteps.map((step, index) => {
                         const active = index <= trackingIndex;
 

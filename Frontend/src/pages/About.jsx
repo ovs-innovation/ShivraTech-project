@@ -71,10 +71,10 @@ const trustPoints = [
 const About = () => {
   return (
     <>
-      <section className="px-6 pb-14 pt-10">
+      <section className="px-4 pb-12 pt-8 sm:px-6 sm:pb-14 sm:pt-10">
         <div className="mx-auto max-w-6xl">
           <div
-            className="overflow-hidden rounded-[32px] border px-8 py-10 shadow-[0_24px_70px_rgba(74,13,79,0.10)] md:px-12 md:py-14"
+            className="overflow-hidden rounded-[32px] border px-5 py-8 shadow-[0_24px_70px_rgba(74,13,79,0.10)] sm:px-8 sm:py-10 md:px-12 md:py-14"
             style={{
               borderColor: "#eadbe6",
               background:
@@ -90,10 +90,10 @@ const About = () => {
                   About ShivraTech
                 </span>
                 <div className="space-y-4">
-                  <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+                  <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
                     Building a more visual gadget marketplace for local sellers.
                   </h1>
-                  <p className="max-w-2xl text-base leading-8 text-slate-600">
+                  <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
                     ShivraTech is designed to help electronics sellers show
                     their products better, advertise them locally, and convert
                     more buyers with a storefront that feels modern from the
@@ -101,10 +101,10 @@ const About = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <Link
                     to="/shop"
-                    className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
                     style={{
                       background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                     }}
@@ -114,7 +114,7 @@ const About = () => {
                   </Link>
                   <Link
                     to="/contact"
-                    className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
                     style={{ borderColor: ACCENT, color: PRIMARY }}
                   >
                     Talk to our team
@@ -126,7 +126,7 @@ const About = () => {
                 {storyStats.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-[24px] border bg-white p-6"
+                    className="rounded-[24px] border bg-white p-5 sm:p-6"
                     style={{ borderColor: "#eadbe6" }}
                   >
                     <p className="text-sm font-semibold text-slate-500">
@@ -147,11 +147,11 @@ const About = () => {
             </div>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:mt-10 md:grid-cols-3">
             {highlights.map(({ title, desc, Icon }) => (
               <article
                 key={title}
-                className="rounded-[24px] border bg-white p-6 shadow-[0_18px_44px_rgba(74,13,79,0.06)]"
+                className="rounded-[24px] border bg-white p-5 shadow-[0_18px_44px_rgba(74,13,79,0.06)] sm:p-6"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div
@@ -170,10 +170,10 @@ const About = () => {
         </div>
       </section>
 
-      <section className="px-6 pb-16">
+      <section className="px-4 pb-12 sm:px-6 sm:pb-16">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_0.85fr]">
           <div
-            className="rounded-[30px] border bg-white p-8 shadow-[0_18px_44px_rgba(74,13,79,0.05)] md:p-10"
+            className="rounded-[30px] border bg-white p-6 shadow-[0_18px_44px_rgba(74,13,79,0.05)] sm:p-8 md:p-10"
             style={{ borderColor: "#eadbe6" }}
           >
             <p
@@ -182,7 +182,7 @@ const About = () => {
             >
               Our story
             </p>
-            <h2 className="mt-3 text-3xl font-black text-slate-900">
+            <h2 className="mt-3 text-2xl font-black text-slate-900 sm:text-3xl">
               We want local tech stores to look as strong online as they do in person.
             </h2>
             <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600">
@@ -206,7 +206,7 @@ const About = () => {
             {trustPoints.map(({ title, desc, Icon }) => (
               <article
                 key={title}
-                className="rounded-[30px] border bg-[#fbf6fa] p-8"
+                className="rounded-[30px] border bg-[#fbf6fa] p-6 sm:p-8"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div
@@ -225,7 +225,7 @@ const About = () => {
 
       <Features />
 
-      <section className="px-6 pb-16">
+      <section className="px-4 pb-12 sm:px-6 sm:pb-16">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 space-y-2 text-center">
             <p
@@ -234,7 +234,7 @@ const About = () => {
             >
               How we work
             </p>
-            <h2 className="text-3xl font-black text-slate-900">
+            <h2 className="text-2xl font-black text-slate-900 sm:text-3xl">
               Three ideas behind the marketplace
             </h2>
           </div>
@@ -243,7 +243,7 @@ const About = () => {
             {howItWorks.map(({ title, desc, Icon }) => (
               <article
                 key={title}
-                className="rounded-[28px] border bg-white p-7 shadow-[0_18px_44px_rgba(74,13,79,0.05)]"
+                className="rounded-[28px] border bg-white p-6 shadow-[0_18px_44px_rgba(74,13,79,0.05)] sm:p-7"
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div
@@ -260,9 +260,9 @@ const About = () => {
         </div>
       </section>
 
-      <section className="px-6 pb-16">
+      <section className="px-4 pb-12 sm:px-6 sm:pb-16">
         <div
-          className="mx-auto max-w-6xl rounded-[30px] border px-8 py-10 text-center"
+          className="mx-auto max-w-6xl rounded-[30px] border px-5 py-8 text-center sm:px-8 sm:py-10"
           style={{
             borderColor: "#eadbe6",
             background:
@@ -272,24 +272,24 @@ const About = () => {
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
             Next step
           </p>
-          <h2 className="mt-3 text-3xl font-black text-white md:text-4xl">
+          <h2 className="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">
             Ready to see the routed storefront in action?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/80">
             Browse the shop flow, open the categories screen, or jump straight
             into the contact page and test the full navigation.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
             <Link
               to="/categories"
-              className="rounded-full bg-white px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+              className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
               style={{ color: PRIMARY }}
             >
               View categories
             </Link>
             <Link
               to="/login"
-              className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              className="w-full rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
             >
               Open login
             </Link>

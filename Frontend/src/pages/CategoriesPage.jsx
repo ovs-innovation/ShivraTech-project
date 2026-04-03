@@ -24,10 +24,10 @@ const iconMap = {
 
 const CategoriesPage = () => {
   return (
-    <section className="px-6 pb-16 pt-10">
+    <section className="px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
       <div className="mx-auto max-w-6xl space-y-10">
         <div
-          className="rounded-[32px] border px-8 py-10 md:px-12 md:py-12"
+          className="rounded-[32px] border px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-12"
           style={{
             borderColor: "#eadbe6",
             background:
@@ -42,16 +42,16 @@ const CategoriesPage = () => {
               >
                 Category routing
               </p>
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+              <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
                 Explore every category visually.
               </h1>
-              <p className="max-w-3xl text-base leading-8 text-slate-600">
+              <p className="max-w-3xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
                 Each category now has a stronger visual card, clearer purpose,
                 and a more polished route target for browsing products.
               </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
               {categories.map((category) => {
                 const count = allProducts.filter(
                   (product) => product.categorySlug === category.slug,
@@ -96,7 +96,7 @@ const CategoriesPage = () => {
                 style={{ borderColor: "#eadbe6" }}
               >
                 <div className="grid gap-0 lg:grid-cols-[390px_1fr]">
-                  <div className="relative min-h-[320px] overflow-hidden">
+                  <div className="relative min-h-[280px] overflow-hidden sm:min-h-[320px]">
                     <img
                       src={category.img}
                       alt={category.name}
@@ -122,7 +122,7 @@ const CategoriesPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col justify-between gap-6 p-8 md:p-10">
+                  <div className="flex flex-col justify-between gap-6 p-5 sm:p-8 md:p-10">
                     <div className="space-y-5">
                       <div className="flex flex-wrap items-center gap-3">
                         <span
@@ -137,7 +137,7 @@ const CategoriesPage = () => {
                       </div>
 
                       <div className="space-y-3">
-                        <h3 className="text-3xl font-black text-slate-900">
+                        <h3 className="text-2xl font-black text-slate-900 sm:text-3xl">
                           {category.desc}
                         </h3>
                         <p className="max-w-2xl text-sm leading-7 text-slate-600">
@@ -145,7 +145,7 @@ const CategoriesPage = () => {
                         </p>
                       </div>
 
-                      <div className="grid gap-4 md:grid-cols-2">
+                      <div className="grid gap-4 sm:grid-cols-2">
                         <div
                           className="rounded-[22px] p-5"
                           style={{ backgroundColor: "#fbf6fa" }}
@@ -177,10 +177,10 @@ const CategoriesPage = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                       <Link
                         to={`/shop`}
-                        className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
                         style={{
                           background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                         }}
@@ -190,7 +190,7 @@ const CategoriesPage = () => {
                       </Link>
                       <Link
                         to="/contact"
-                        className="rounded-full border px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                        className="w-full rounded-full border px-5 py-3 text-center text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
                         style={{ borderColor: ACCENT, color: PRIMARY }}
                       >
                         Advertise this category

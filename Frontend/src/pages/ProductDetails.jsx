@@ -14,9 +14,9 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <section className="px-6 py-16">
+      <section className="px-4 py-12 sm:px-6 sm:py-16">
         <div
-          className="mx-auto max-w-3xl rounded-[30px] border px-8 py-12 text-center"
+          className="mx-auto max-w-3xl rounded-[30px] border px-6 py-10 text-center sm:px-8 sm:py-12"
           style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
         >
           <p
@@ -61,9 +61,9 @@ const ProductDetails = () => {
   };
 
   return (
-    <section className="px-6 py-10 md:py-14">
+      <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-6xl space-y-10">
-        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 sm:gap-3">
           <Link to="/" className="hover:text-slate-900">
             Home
           </Link>
@@ -79,7 +79,7 @@ const ProductDetails = () => {
 
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div
-            className="rounded-[32px] border p-8"
+            className="rounded-[32px] border p-5 sm:p-8"
             style={{
               borderColor: "#eadbe6",
               background:
@@ -89,7 +89,7 @@ const ProductDetails = () => {
             <img
               src={product.img}
               alt={product.title}
-              className="mx-auto h-[420px] w-full object-contain"
+              className="mx-auto h-[280px] w-full object-contain sm:h-[360px] lg:h-[420px]"
             />
           </div>
 
@@ -102,7 +102,7 @@ const ProductDetails = () => {
               >
                 {product.categoryName}
               </Link>
-              <h1 className="text-4xl font-black leading-tight text-slate-900">
+              <h1 className="text-3xl font-black leading-tight text-slate-900 sm:text-4xl">
                 {product.title}
               </h1>
               <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ const ProductDetails = () => {
             </div>
 
             <div
-              className="rounded-[24px] border p-6"
+              className="rounded-[24px] border p-5 sm:p-6"
               style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
             >
               <div className="flex flex-wrap items-end gap-3">
@@ -158,11 +158,11 @@ const ProductDetails = () => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={handleBuyNow}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
                 style={{
                   background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                 }}
@@ -173,7 +173,7 @@ const ProductDetails = () => {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                className="w-full rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
                 style={{ borderColor: ACCENT, color: PRIMARY }}
               >
                 Add to cart
@@ -184,7 +184,7 @@ const ProductDetails = () => {
 
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div
-            className="rounded-[28px] border p-6"
+            className="rounded-[28px] border p-5 sm:p-6"
             style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
           >
             <p
@@ -197,11 +197,11 @@ const ProductDetails = () => {
               {product.specs.map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex items-center justify-between gap-4 border-b pb-4 text-sm"
+                  className="flex flex-col gap-2 border-b pb-4 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                   style={{ borderColor: "#f0e7ef" }}
                 >
                   <span className="font-semibold text-slate-500">{label}</span>
-                  <span className="text-right font-semibold text-slate-900">
+                  <span className="font-semibold text-slate-900 sm:text-right">
                     {value}
                   </span>
                 </div>
@@ -210,7 +210,7 @@ const ProductDetails = () => {
           </div>
 
           <div
-            className="rounded-[28px] border p-6"
+            className="rounded-[28px] border p-5 sm:p-6"
             style={{ borderColor: "#eadbe6", backgroundColor: "#fff" }}
           >
             <p
