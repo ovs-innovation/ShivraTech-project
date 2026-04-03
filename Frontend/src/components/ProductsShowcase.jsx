@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Heart, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import categoryCar from "../assets/categoryCar.jpg";
 import categorySpeaker from "../assets/categorySpeaker.jpg";
 import categoryWatch from "../assets/categoryWatch.jpg";
+import { useShop } from "../context/useShop";
 import { categories } from "../data/catalog";
 import {
   allProducts,
@@ -81,7 +82,18 @@ const blogSlides = [
 ];
 
 const ProductCard = ({ card }) => {
+  const navigate = useNavigate();
+  const { addToCart } = useShop();
   const productLink = `/product/${card.slug}`;
+
+  const handleAddToCart = () => {
+    addToCart(card);
+  };
+
+  const handleBuyNow = () => {
+    addToCart(card);
+    navigate("/cart");
+  };
 
   return (
     <article
@@ -162,8 +174,9 @@ const ProductCard = ({ card }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-2">
-          <Link
-            to="/login"
+          <button
+            type="button"
+            onClick={handleAddToCart}
             className="rounded-full border px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em]"
             style={{
               borderColor: ACCENT,
@@ -172,16 +185,17 @@ const ProductCard = ({ card }) => {
             }}
           >
             Add to cart
-          </Link>
-          <Link
-            to="/contact"
+          </button>
+          <button
+            type="button"
+            onClick={handleBuyNow}
             className="rounded-full px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-white"
             style={{
               background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
             }}
           >
             Buy now
-          </Link>
+          </button>
         </div>
       </div>
     </article>

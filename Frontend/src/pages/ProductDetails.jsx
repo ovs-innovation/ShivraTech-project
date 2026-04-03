@@ -1,5 +1,6 @@
 import { ArrowRight, Star } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useShop } from "../context/useShop";
 import { allProducts, findProductBySlug } from "../data/products";
 
 const PRIMARY = "#4A0D4F";
@@ -7,6 +8,8 @@ const ACCENT = "#B35FA3";
 
 const ProductDetails = () => {
   const { productSlug = "" } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useShop();
   const product = findProductBySlug(productSlug);
 
   if (!product) {
@@ -47,6 +50,15 @@ const ProductDetails = () => {
         item.categorySlug === product.categorySlug && item.slug !== product.slug,
     )
     .slice(0, 4);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
+  const handleBuyNow = () => {
+    addToCart(product);
+    navigate("/cart");
+  };
 
   return (
     <section className="px-6 py-10 md:py-14">
@@ -147,8 +159,9 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Link
-                to="/contact"
+              <button
+                type="button"
+                onClick={handleBuyNow}
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
                 style={{
                   background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
@@ -156,14 +169,15 @@ const ProductDetails = () => {
               >
                 Buy now
                 <ArrowRight size={16} />
-              </Link>
-              <Link
-                to="/login"
+              </button>
+              <button
+                type="button"
+                onClick={handleAddToCart}
                 className="rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
                 style={{ borderColor: ACCENT, color: PRIMARY }}
               >
                 Add to cart
-              </Link>
+              </button>
             </div>
           </div>
         </div>

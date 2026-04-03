@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useShop } from "../context/useShop";
 import { categories } from "../data/catalog";
 import { searchProducts } from "../data/products";
 
@@ -49,6 +50,7 @@ const Navbar = () => {
   const dropRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { cartCount } = useShop();
   const deferredSearchValue = useDeferredValue(searchValue);
   const trimmedSearch = deferredSearchValue.trim();
   const suggestions = trimmedSearch
@@ -274,7 +276,7 @@ const Navbar = () => {
                 <Heart size={17} strokeWidth={2} />
               </Link>
               <Link
-                to="/shop"
+                to="/cart"
                 className="relative flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
                 style={{ color: PRIMARY }}
                 aria-label="Cart"
@@ -284,7 +286,7 @@ const Navbar = () => {
                   className="absolute right-0.5 top-0.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border-[1.5px] border-white bg-white text-[9px] font-black"
                   style={{ color: PRIMARY }}
                 >
-                  2
+                  {cartCount}
                 </span>
               </Link>
             </div>

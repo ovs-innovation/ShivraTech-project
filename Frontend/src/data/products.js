@@ -414,6 +414,15 @@ export const allProducts = productSections.flatMap((section) =>
   })),
 );
 
+export const parsePrice = (price) =>
+  Number(price.replace(/[^0-9.]/g, "")) || 0;
+
+export const formatPrice = (value) =>
+  `Rs. ${value.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
 export const findProductBySlug = (slug) =>
   allProducts.find((product) => product.slug === slug);
 
