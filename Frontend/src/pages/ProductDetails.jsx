@@ -1,7 +1,9 @@
-import { ArrowRight, Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Heart, Star } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useShop } from "../context/useShop";
-import { allProducts, findProductBySlug } from "../data/products";
+import { allProducts, findProductBySlug, normalizeApiProduct } from "../data/products";
+import { apiGetProductBySlug } from "../services/api";
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
@@ -9,10 +11,48 @@ const ACCENT = "#B35FA3";
 const ProductDetails = () => {
   const { productSlug = "" } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useShop();
-  const product = findProductBySlug(productSlug);
+  const { addToCart, isInWishlist, toggleWishlist } = useShop();
+  const staticProduct = findProductBySlug(productSlug);
+  const [liveProduct, setLiveProduct] = useState({ slug: "", product: null, loading: false });
+  const [selectedImage, setSelectedImage] = useState({ slug: "", url: "" });
+
+  useEffect(() => {
+    if (staticProduct) return;
+
+    let isCurrent = true;
+    apiGetProductBySlug(productSlug)
+      .then((response) => {
+        if (isCurrent) {
+          setLiveProduct({
+            slug: productSlug,
+            product: normalizeApiProduct(response.data),
+            loading: false,
+          });
+        }
+      })
+      .catch(() => {
+        if (isCurrent) {
+          setLiveProduct({ slug: productSlug, product: null, loading: false });
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [productSlug, staticProduct]);
+
+  const product = staticProduct || (liveProduct.slug === productSlug ? liveProduct.product : null);
+  const isLoadingProduct = !staticProduct && (liveProduct.slug !== productSlug || liveProduct.loading);
 
   if (!product) {
+    if (isLoadingProduct) {
+      return (
+        <div className="flex min-h-[50vh] items-center justify-center text-sm font-semibold text-slate-600">
+          Loading product...
+        </div>
+      );
+    }
+
     return (
       <section className="px-4 py-12 sm:px-6 sm:py-16">
         <div
@@ -50,6 +90,8 @@ const ProductDetails = () => {
         item.categorySlug === product.categorySlug && item.slug !== product.slug,
     )
     .slice(0, 4);
+  const productImages = [...new Set([product.img, ...(product.images || [])].filter(Boolean))];
+  const displayedImage = selectedImage.slug === product.slug ? selectedImage.url : product.img;
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -61,7 +103,7 @@ const ProductDetails = () => {
   };
 
   return (
-      <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
+    <section className="px-4 py-8 sm:px-6 sm:py-10 md:py-14">
       <div className="mx-auto max-w-6xl space-y-10">
         <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 sm:gap-3">
           <Link to="/" className="hover:text-slate-900">
@@ -79,18 +121,60 @@ const ProductDetails = () => {
 
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div
-            className="rounded-[32px] border p-5 sm:p-8"
+            className="relative rounded-[32px] border p-5 sm:p-8"
             style={{
               borderColor: "#eadbe6",
               background:
                 "linear-gradient(180deg, rgba(251,246,250,1) 0%, rgba(255,255,255,1) 100%)",
             }}
           >
-            <img
-              src={product.img}
-              alt={product.title}
-              className="mx-auto h-[280px] w-full object-contain sm:h-[360px] lg:h-[420px]"
-            />
+            <button
+              type="button"
+              onClick={() => toggleWishlist(product)}
+              className={`absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-all hover:scale-105 active:scale-95 ${isInWishlist(product.slug)
+                ? "border-rose-200 bg-rose-50 text-rose-500 shadow-md"
+                : "border-purple-200/80 bg-white/90 text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-500"
+                }`}
+              title={isInWishlist(product.slug) ? "Remove from Liked Products" : "Save as Liked Product"}
+              aria-label="Wishlist"
+            >
+              <Heart
+                size={20}
+                fill={isInWishlist(product.slug) ? "currentColor" : "none"}
+                strokeWidth={2.2}
+              />
+            </button>
+            <div className="grid h-[280px] grid-cols-[52px_minmax(0,1fr)] items-center gap-3 sm:h-[360px] sm:grid-cols-[64px_minmax(0,1fr)] lg:h-[420px]">
+              <div className="flex h-full flex-col items-center justify-center gap-2 overflow-y-auto py-1">
+                {productImages.map((image, index) => {
+                  const isSelected = displayedImage === image;
+                  return (
+                    <button
+                      key={`${image}-${index}`}
+                      type="button"
+                      onClick={() => setSelectedImage({ slug: product.slug, url: image })}
+                      aria-label={`Show product image ${index + 1}`}
+                      aria-pressed={isSelected}
+                      className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border bg-white p-1 transition sm:h-14 sm:w-14 ${isSelected
+                          ? "border-[#4A0D4F] ring-2 ring-[#4A0D4F]/15"
+                          : "border-purple-100 hover:border-[#B35FA3]"
+                        }`}
+                    >
+                      <img
+                        src={image}
+                        alt=""
+                        className="h-full w-full object-contain"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+              <img
+                src={displayedImage}
+                alt={product.title}
+                className="h-full w-full object-contain"
+              />
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -162,7 +246,7 @@ const ProductDetails = () => {
               <button
                 type="button"
                 onClick={handleBuyNow}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:w-auto shadow-md"
                 style={{
                   background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
                 }}
@@ -173,10 +257,27 @@ const ProductDetails = () => {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="w-full rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto"
+                className="w-full rounded-full border px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto hover:bg-purple-50"
                 style={{ borderColor: ACCENT, color: PRIMARY }}
               >
                 Add to cart
+              </button>
+              <button
+                type="button"
+                onClick={() => toggleWishlist(product)}
+                className={`inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5 sm:w-auto ${isInWishlist(product.slug)
+                  ? "border-rose-200 bg-rose-50 text-rose-600 shadow-xs"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-purple-300 hover:bg-purple-50/50"
+                  }`}
+                title="Save product"
+              >
+                <Heart
+                  size={16}
+                  fill={isInWishlist(product.slug) ? "currentColor" : "none"}
+                  strokeWidth={2.2}
+                  className={isInWishlist(product.slug) ? "text-rose-500" : "text-slate-400"}
+                />
+                <span>{isInWishlist(product.slug) ? "Liked Product" : "Save for Later"}</span>
               </button>
             </div>
           </div>
@@ -194,6 +295,11 @@ const ProductDetails = () => {
               Product details
             </p>
             <div className="mt-5 space-y-4">
+              {(product.fullDescription || product.description) && (
+                <p className="border-b pb-4 text-sm leading-6 text-slate-600" style={{ borderColor: "#f0e7ef" }}>
+                  {product.fullDescription || product.description}
+                </p>
+              )}
               {product.specs.map(([label, value]) => (
                 <div
                   key={label}

@@ -1,514 +1,446 @@
-import React, { useEffect, useState } from "react";
-import { Heart, Star } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, Plus, Sparkles, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import categoryCar from "../assets/categoryCar.jpg";
-import categorySpeaker from "../assets/categorySpeaker.jpg";
-import categoryWatch from "../assets/categoryWatch.jpg";
+import { motion } from "framer-motion";
 import { useShop } from "../context/useShop";
 import { categories } from "../data/catalog";
-import {
-  allProducts,
-  searchProducts,
-} from "../data/products";
+import categoryLaptop from "../assets/categoryLaptop.jpg";
+import categoryMouse from "../assets/categoryMouse.jpg";
+import categoryMonitor from "../assets/categoryMonitor.jpg";
+import categoryPhone from "../assets/categoryPhone.jpg";
+import categoryWatch from "../assets/categoryWatch.jpg";
+import heroCenterHeadphone from "../assets/heroCenterHeadphone.png";
+import rightHero from "../assets/rightHero.png";
+import rightHero1 from "../assets/rightHero1.png";
+import rightHero2 from "../assets/rightHero2.png";
+import floatingEarbudsCard from "../assets/floatingEarbudsCard.jpg";
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
-const SECTION_BG =
-  "linear-gradient(180deg, #fbf5f9 0%, #ffffff 48%, #f7eef5 100%)";
-const IMAGE_PANEL_BG =
-  "linear-gradient(180deg, rgba(179,95,163,0.14) 0%, rgba(244,232,243,0.5) 36%, #ffffff 100%)";
 
-const blogSlides = [
-  [
-    {
-      title: "How to make your gadget listings stand out in local search",
-      date: "March 28, 2026",
-      tag: "Seller guide",
-      img: categorySpeaker,
-    },
-    {
-      title: "Desk setup accessory bundles that increase add-on sales",
-      date: "March 22, 2026",
-      tag: "Sales tips",
-      img: categoryWatch,
-    },
-    {
-      title: "Smart ways to promote audio gadgets before festive weekends",
-      date: "March 16, 2026",
-      tag: "Marketing",
-      img: categoryCar,
-    },
-  ],
-  [
-    {
-      title: "Why same-day delivery builds trust for gadget buyers",
-      date: "March 12, 2026",
-      tag: "Delivery",
-      img: categoryWatch,
-    },
-    {
-      title: "Best product photo ideas for local electronics sellers",
-      date: "March 8, 2026",
-      tag: "Content",
-      img: categorySpeaker,
-    },
-    {
-      title: "Finance offers that help shoppers convert faster online",
-      date: "March 3, 2026",
-      tag: "Payments",
-      img: categoryCar,
-    },
-  ],
-  [
-    {
-      title: "How to build repeat customers with reliable gadget support",
-      date: "February 25, 2026",
-      tag: "Retention",
-      img: categoryCar,
-    },
-    {
-      title: "Top smartwatch and lifestyle accessories trending this month",
-      date: "February 19, 2026",
-      tag: "Trends",
-      img: categoryWatch,
-    },
-    {
-      title: "Hyper-local ad ideas for stores selling tech accessories",
-      date: "February 13, 2026",
-      tag: "Ads",
-      img: categorySpeaker,
-    },
-  ],
-];
+// Clean Product Card matching Reference Image 2 with Framer Motion 3D Hover
+export const ModernProductCard = ({
+  card,
+  spec = "16/512GB",
+  rating = "4.8/5",
+  index = 0,
+}) => {
+  const { addToCart, isInWishlist, toggleWishlist } = useShop();
+  const [added, setAdded] = useState(false);
+  const isLiked = isInWishlist(card.slug || card.key);
+  const productLink = `/product/${card.slug || "item"}`;
 
-const ProductCard = ({ card }) => {
-  const navigate = useNavigate();
-  const { addToCart } = useShop();
-  const productLink = `/product/${card.slug}`;
-
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     addToCart(card);
-  };
-
-  const handleBuyNow = () => {
-    addToCart(card);
-    navigate("/cart");
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1200);
   };
 
   return (
-    <article
-      className="group relative overflow-hidden rounded-[18px] border bg-white p-2.5 shadow-[0_4px_16px_rgba(74,13,79,0.08)] sm:p-3"
-      style={{ borderColor: "#eadbe6" }}
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45, delay: (index % 5) * 0.07 }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-100 bg-white p-2.5 sm:p-3 shadow-xs transition-shadow duration-300 hover:border-purple-200 hover:shadow-[0_14px_36px_rgba(74,13,79,0.11)]"
     >
-      <div
-        className="absolute left-0 top-0 z-10 max-w-[72%] rounded-br-xl px-3 py-2 text-[10px] font-bold uppercase tracking-[0.04em] text-white sm:max-w-[78%] sm:text-[11px]"
-        style={{
-          background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
-        }}
-      >
-        {card.promo}
+      
+      {/* Top Bar: Wishlist Heart on Top Right */}
+      <div className="flex justify-end mb-0.5 sm:mb-1">
+        <motion.button
+          type="button"
+          whileTap={{ scale: 0.8 }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(card);
+          }}
+          className={`flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border transition-all ${
+            isLiked
+              ? "border-rose-200 bg-rose-50 text-rose-500 shadow-xs"
+              : "border-slate-100 bg-white text-slate-400 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
+          }`}
+          aria-label={isLiked ? "Remove from liked products" : "Save as liked product"}
+          title={isLiked ? "Saved in Liked Products" : "Save as Liked Product"}
+        >
+          <Heart size={12} fill={isLiked ? "currentColor" : "none"} strokeWidth={2.2} className="sm:hidden" />
+          <Heart size={14} fill={isLiked ? "currentColor" : "none"} strokeWidth={2.2} className="hidden sm:block" />
+        </motion.button>
       </div>
 
-      <button
-        type="button"
-        className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-white text-slate-400 shadow-sm"
-        aria-label={`Save ${card.title}`}
-      >
-        <Heart size={16} strokeWidth={2} />
-      </button>
-
+      {/* Product Image Area */}
       <Link
         to={productLink}
-        className="mt-9 block rounded-2xl"
-        style={{ background: IMAGE_PANEL_BG }}
+        className="relative flex h-28 xs:h-32 sm:h-40 w-full items-center justify-center rounded-xl bg-[#F8F9FA] p-2 sm:p-2.5 transition-colors duration-300 group-hover:bg-[#FAF6FB]"
       >
-        <div className="flex h-[11.5rem] items-center justify-center px-3 py-3 sm:h-[12.75rem]">
-          <img
-            src={card.img}
-            alt={card.title}
-            className="h-[96%] w-[96%] object-contain transition duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-        </div>
+        <img
+          src={card.img}
+          alt={card.title}
+          className="h-full w-full object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
       </Link>
 
-      <div className="space-y-3 px-1 pb-1 pt-4 text-left">
-        <Link
-          to={`/categories#${card.categorySlug}`}
-          className="inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em]"
-          style={{ backgroundColor: "#f4e8f3", color: PRIMARY }}
-        >
-          {card.categoryName}
-        </Link>
+      {/* Product Details (Specs, Rating, Title, Price, Plus Button) */}
+      <div className="mt-2 sm:mt-3 flex-1 flex flex-col justify-between space-y-1.5 sm:space-y-2">
+        <div>
+          {/* Spec & Rating Row (Reference Image 2) */}
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-slate-400 mb-0.5 sm:mb-1">
+            <span className="truncate max-w-[55%]">{spec}</span>
+            <div className="flex items-center gap-0.5 sm:gap-1 text-amber-500 font-bold">
+              <Star size={10} fill="currentColor" />
+              <span>({rating})</span>
+            </div>
+          </div>
 
-        <Link to={productLink} className="block">
-          <h3 className="min-h-[3.25rem] text-[15px] font-medium leading-6 text-slate-800 line-clamp-2 transition group-hover:text-[#4A0D4F] sm:min-h-[3.5rem]">
-            {card.title}
-          </h3>
-        </Link>
+          <Link to={productLink} className="block">
+            <h3 className="line-clamp-2 text-[11.5px] xs:text-xs sm:text-[13px] font-bold text-slate-800 transition group-hover:text-[#4A0D4F] leading-snug">
+              {card.title}
+            </h3>
+          </Link>
+        </div>
 
-        <div className="space-y-1.5">
-          <div className="flex items-baseline gap-2">
-            <span className="text-[17px] font-bold text-slate-900">
+        {/* Price & Purple Plus Add-to-Cart Button (Reference Image 2) */}
+        <div className="pt-1.5 flex items-center justify-between border-t border-slate-50">
+          <div>
+            <span className="block text-xs xs:text-[13.5px] sm:text-base font-black text-slate-900">
               {card.price}
             </span>
-            <span className="text-sm font-semibold text-emerald-600">
-              {card.off}
-            </span>
+            {card.mrp && (
+              <span className="block text-[9px] xs:text-[10px] font-medium text-slate-400 line-through">
+                {card.mrp}
+              </span>
+            )}
           </div>
-          <p className="text-sm text-slate-400 line-through">MRP {card.mrp}</p>
-        </div>
 
-        <div className="flex items-center gap-1 pt-1">
-          {Array.from({ length: 5 }).map((_, starIdx) => (
-            <Star
-              key={starIdx}
-              size={15}
-              fill={starIdx < card.rating ? "#f59e0b" : "transparent"}
-              color={starIdx < card.rating ? "#f59e0b" : "#d1d5db"}
-            />
-          ))}
-          <span className="ml-1 text-[13px] font-semibold text-slate-600">
-            ({card.reviews})
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
+          {/* Purple Circular Plus Button */}
           <button
             type="button"
             onClick={handleAddToCart}
-            className="rounded-full border px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.1em] sm:text-[11px]"
-            style={{
-              borderColor: ACCENT,
-              color: PRIMARY,
-              backgroundColor: "#fff",
-            }}
+            className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full transition-all duration-200 active:scale-90 shadow-xs ${
+              added
+                ? "bg-emerald-600 text-white"
+                : "bg-[#26052B] text-white hover:bg-[#4A0D4F] hover:shadow-md"
+            }`}
+            aria-label="Add to cart"
+            title="Add to Cart"
           >
-            Add to cart
-          </button>
-          <button
-            type="button"
-            onClick={handleBuyNow}
-            className="rounded-full px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.1em] text-white sm:text-[11px]"
-            style={{
-              background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
-            }}
-          >
-            Buy now
+            {added ? (
+              <span className="text-[10px] sm:text-[11px] font-bold">✓</span>
+            ) : (
+              <Plus size={14} strokeWidth={2.5} className="sm:hidden" />
+            )}
+            {!added && <Plus size={16} strokeWidth={2.5} className="hidden sm:block" />}
           </button>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };
 
-const ProductsShowcase = ({ shopOnly = false, searchQuery = "" }) => {
-  const [activeBlogSlide, setActiveBlogSlide] = useState(0);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const homeProducts = allProducts.slice(0, 8);
-
-  const normalizedSearchQuery = searchQuery.trim();
-
-  const availableCategories = categories.filter((category) =>
-    allProducts.some((product) => product.categorySlug === category.slug),
-  );
-
-  const searchedProducts = normalizedSearchQuery
-    ? searchProducts(normalizedSearchQuery)
-    : allProducts;
-
-  const filteredProducts =
-    activeCategory === "all"
-      ? searchedProducts
-      : searchedProducts.filter((product) => product.categorySlug === activeCategory);
+// Red Timer Pill Badge matching Reference Image 2 Top
+const FlashSaleTimer = () => {
+  const [time, setTime] = useState({ d: "02", h: "08", m: "04", s: "21" });
 
   useEffect(() => {
-    if (shopOnly) {
-      return undefined;
-    }
-
-    const intervalId = setInterval(() => {
-      setActiveBlogSlide((current) => (current + 1) % blogSlides.length);
-    }, 4500);
-
-    return () => clearInterval(intervalId);
-  }, [shopOnly]);
-
-  if (shopOnly) {
-    return (
-      <section
-        id="featured"
-        className="px-4 py-12 sm:px-6 sm:py-16"
-        style={{ background: SECTION_BG }}
-      >
-        <div className="mx-auto max-w-6xl space-y-10">
-          <div className="space-y-3 text-left">
-            <p
-              className="text-xs font-bold uppercase tracking-[0.18em]"
-              style={{ color: PRIMARY }}
-            >
-              Shop
-            </p>
-            <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-              {normalizedSearchQuery ? `Search: ${normalizedSearchQuery}` : "All products"}
-            </h1>
-            <p className="max-w-2xl text-sm leading-6 text-slate-500">
-              {normalizedSearchQuery
-                ? "Matching products from across the ShivraTech catalog."
-                : "Browse every product with category filters in one place."}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => setActiveCategory("all")}
-              className="rounded-full border px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
-              style={{
-                borderColor: activeCategory === "all" ? PRIMARY : "#eadbe6",
-                backgroundColor: activeCategory === "all" ? "#f4e8f3" : "#fff",
-                color: PRIMARY,
-              }}
-            >
-              All ({searchedProducts.length})
-            </button>
-            {availableCategories.map((category) => {
-              const count = searchedProducts.filter(
-                (product) => product.categorySlug === category.slug,
-              ).length;
-
-              if (count === 0) {
-                return null;
-              }
-
-              return (
-                <button
-                  key={category.slug}
-                  type="button"
-                  onClick={() => setActiveCategory(category.slug)}
-                  className="rounded-full border px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
-                  style={{
-                    borderColor:
-                      activeCategory === category.slug ? PRIMARY : "#eadbe6",
-                    backgroundColor:
-                      activeCategory === category.slug ? "#f4e8f3" : "#fff",
-                    color: PRIMARY,
-                  }}
-                >
-                  {category.name} ({count})
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="text-sm font-medium text-slate-500">
-            Showing {filteredProducts.length} products
-          </p>
-
-          {filteredProducts.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {filteredProducts.map((card) => (
-                <ProductCard key={card.key} card={card} />
-              ))}
-            </div>
-          ) : (
-            <div
-              className="rounded-[28px] border bg-white px-8 py-10 text-center"
-              style={{ borderColor: "#eadbe6" }}
-            >
-              <p
-                className="text-xs font-bold uppercase tracking-[0.18em]"
-                style={{ color: PRIMARY }}
-              >
-                No matches
-              </p>
-              <h2 className="mt-3 text-2xl font-black text-slate-900">
-                No products found for "{normalizedSearchQuery}"
-              </h2>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">
-                Try product names like audio, power bank, keyboard, car charger,
-                or smartwatch.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-    );
-  }
+    const timer = setInterval(() => {
+      const now = new Date();
+      setTime({
+        d: "02",
+        h: String(now.getHours()).padStart(2, "0"),
+        m: String(now.getMinutes()).padStart(2, "0"),
+        s: String(now.getSeconds()).padStart(2, "0"),
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <section
-      id="featured"
-      className="px-4 py-12 sm:px-6 sm:py-16"
-      style={{ background: SECTION_BG }}
-    >
-      <div className="mx-auto max-w-6xl space-y-12">
-        <div className="space-y-2 text-left">
-          <p
-            className="text-xs font-bold uppercase tracking-[0.18em]"
-            style={{ color: PRIMARY }}
+    <div className="flex items-center gap-1 text-[11px] sm:text-xs font-black">
+      <span className="rounded-md bg-[#EF4444] text-white px-2 py-0.5 shadow-xs">
+        {time.d}D
+      </span>
+      <span className="rounded-md bg-[#EF4444] text-white px-2 py-0.5 shadow-xs">
+        {time.h}H
+      </span>
+      <span className="rounded-md bg-[#EF4444] text-white px-2 py-0.5 shadow-xs">
+        {time.m}M
+      </span>
+      <span className="rounded-md bg-[#EF4444] text-white px-2 py-0.5 shadow-xs">
+        {time.s}S
+      </span>
+    </div>
+  );
+};
+
+// Flash Sale Product Data
+const flashSaleList = [
+  {
+    slug: "asus-zenbook-14-oled",
+    title: "Asus Zenbook 14 OLED Core Ultra 7",
+    price: "Rs. 65,200",
+    mrp: "Rs. 70,200",
+    spec: "16/512GB",
+    rating: "4.8/5",
+    img: categoryLaptop,
+  },
+  {
+    slug: "macbook-air-m3",
+    title: "Ultra Slim Book 14 IPS Quad HD 16GB",
+    price: "Rs. 58,999",
+    mrp: "Rs. 64,500",
+    spec: "16/512GB",
+    rating: "4.9/5",
+    img: categoryLaptop,
+  },
+  {
+    slug: "hp-spectre-pro",
+    title: "Creator Studio Pro 15.6 FHD Ryzen 7",
+    price: "Rs. 62,400",
+    mrp: "Rs. 68,000",
+    spec: "16/1TB",
+    rating: "4.7/5",
+    img: categoryLaptop,
+  },
+  {
+    slug: "wireless-ergonomic-mouse",
+    title: "Titanium Precision Wireless Ergonomic Mouse",
+    price: "Rs. 3,499",
+    mrp: "Rs. 4,299",
+    spec: "4000 DPI",
+    rating: "4.8/5",
+    img: categoryMouse,
+  },
+  {
+    slug: "curved-gaming-monitor",
+    title: "27-inch Frameless Ultra-Wide 165Hz IPS Monitor",
+    price: "Rs. 24,900",
+    mrp: "Rs. 29,999",
+    spec: "165Hz 1ms",
+    rating: "4.8/5",
+    img: categoryMonitor,
+  },
+];
+
+// Featured Product Data
+const featuredList = [
+  {
+    slug: "wireless-studio-headphones",
+    title: "Shivra Aura Studio Wireless ANC Headphones",
+    price: "Rs. 18,999",
+    mrp: "Rs. 22,999",
+    spec: "Hi-Res ANC",
+    rating: "4.9/5",
+    img: heroCenterHeadphone,
+  },
+  {
+    slug: "pro-audio-headset",
+    title: "Deep Bass Bluetooth Headset with Spatial Mic",
+    price: "Rs. 12,499",
+    mrp: "Rs. 15,999",
+    spec: "40h Play",
+    rating: "4.8/5",
+    img: rightHero,
+  },
+  {
+    slug: "smart-watch-titanium",
+    title: "Aura Smart Watch Pro AMOLED with Heart Track",
+    price: "Rs. 14,999",
+    mrp: "Rs. 17,999",
+    spec: "AMOLED GPS",
+    rating: "4.8/5",
+    img: categoryWatch,
+  },
+  {
+    slug: "flagship-smartphone-pro",
+    title: "Titanium Pro 5G Flagship Dual SIM 256GB",
+    price: "Rs. 79,900",
+    mrp: "Rs. 89,900",
+    spec: "256GB 5G",
+    rating: "4.9/5",
+    img: categoryPhone,
+  },
+  {
+    slug: "precision-rgb-mouse",
+    title: "Optical Speed Sensor Gaming Mouse Silent Clicks",
+    price: "Rs. 2,999",
+    mrp: "Rs. 3,799",
+    spec: "Silent Click",
+    rating: "4.7/5",
+    img: categoryMouse,
+  },
+];
+
+// New Arrivals Data
+const newArrivalsList = [
+  {
+    slug: "aura-pods-anc",
+    title: "Aura Pods ANC Pro with Smart Case Display",
+    price: "Rs. 9,999",
+    mrp: "Rs. 12,999",
+    spec: "ANC 32dB",
+    rating: "4.9/5",
+    img: floatingEarbudsCard,
+  },
+  {
+    slug: "fast-charge-car-kit",
+    title: "Smart Drive Media Kit & Magnetic Car Power",
+    price: "Rs. 21,999",
+    mrp: "Rs. 24,000",
+    spec: "65W Fast",
+    rating: "4.8/5",
+    img: rightHero1,
+  },
+  {
+    slug: "desk-setup-bundle",
+    title: "Mechanical Pro Keypad & Creator Desk Hub",
+    price: "Rs. 18,499",
+    mrp: "Rs. 22,499",
+    spec: "Multi-Hub",
+    rating: "4.8/5",
+    img: rightHero2,
+  },
+  {
+    slug: "smart-audio-pod",
+    title: "Compact Room Sound Pod 360 Party Bass",
+    price: "Rs. 17,999",
+    mrp: "Rs. 19,999",
+    spec: "360 Audio",
+    rating: "4.7/5",
+    img: rightHero1,
+  },
+  {
+    slug: "travel-smart-watch-bundle",
+    title: "Endurance Lifestyle Watch with Braided Straps",
+    price: "Rs. 19,999",
+    mrp: "Rs. 21,999",
+    spec: "7-Day Bat",
+    rating: "4.9/5",
+    img: rightHero2,
+  },
+];
+
+const ProductsShowcase = ({ shopOnly = false }) => {
+  return (
+    <div className="bg-[#FAF8FC] py-10 sm:py-16 space-y-12 sm:space-y-16 overflow-hidden">
+      
+      {/* 1. FLASH SALE SECTION (MATCHING REFERENCE IMAGE 2 TOP) */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-2 border-b border-purple-100">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+              Flash Sale
+            </h2>
+            <FlashSaleTimer />
+          </div>
+
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#4A0D4F] hover:text-[#B35FA3] transition-colors"
           >
-            Product showcase
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Best deals for your customers
-          </h2>
-          <p className="max-w-2xl text-sm leading-6 text-slate-500">
-            Professional ecommerce cards with cleaner sizing, stronger images,
-            and aligned product details.
-          </p>
+            <span>View All</span>
+            <ArrowRight size={15} />
+          </Link>
         </div>
 
-        <div className="space-y-5">
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="space-y-1">
-              <p
-                className="text-[11px] font-bold uppercase tracking-[0.18em]"
-                style={{ color: PRIMARY }}
-              >
-                Featured products
-              </p>
-              <h3 className="text-2xl font-bold text-slate-900">
-                Two rows of top picks
-              </h3>
-            </div>
-            <Link
-              to="/shop"
-              className="rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em]"
-              style={{ borderColor: ACCENT, color: PRIMARY }}
-            >
-              View all
-            </Link>
+        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {flashSaleList.map((card, idx) => (
+            <ModernProductCard
+              key={card.slug}
+              card={card}
+              spec={card.spec}
+              rating={card.rating}
+              index={idx}
+            />
+          ))}
+        </div>
+      </motion.section>
+
+      {/* 2. FEATURED PRODUCT SECTION (MATCHING REFERENCE IMAGE 2 BOTTOM) */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      >
+        <div className="flex items-center justify-between gap-3 mb-6 pb-2 border-b border-purple-100">
+          <div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+              Featured Product
+            </h2>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {homeProducts.map((card) => (
-              <ProductCard key={card.key} card={card} />
-            ))}
-          </div>
-
-          <div
-            className="rounded-[20px] border bg-white px-4 py-5 sm:px-6"
-            style={{ borderColor: "#eadbe6" }}
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#4A0D4F] hover:text-[#B35FA3] transition-colors"
           >
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                <span
-                  className="w-fit rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]"
-                  style={{ backgroundColor: "#fbf5f9", color: PRIMARY }}
-                >
-                  ShivraTech Promise
-                </span>
-                <div className="flex flex-col gap-2 text-center md:flex-row md:items-center md:text-left">
-                  <h4 className="text-2xl font-black uppercase tracking-[0.04em] text-slate-900 sm:text-4xl">
-                    Order Today
-                  </h4>
-                  <span
-                    className="hidden h-8 w-px md:block"
-                    style={{ backgroundColor: "#eadbe6" }}
-                  />
-                  <h4
-                    className="text-2xl font-black uppercase tracking-[0.04em] sm:text-4xl"
-                    style={{ color: ACCENT }}
-                  >
-                    Get It Today
-                  </h4>
-                </div>
-              </div>
-              <p className="max-w-md text-center text-sm font-medium leading-6 text-slate-500 md:text-right">
-                Fast local delivery on selected gadgets from trusted sellers
-                across your city.
-              </p>
-            </div>
-          </div>
+            <span>View All</span>
+            <ArrowRight size={15} />
+          </Link>
         </div>
 
-        <div
-          id="insights"
-          className="space-y-6 border-t pt-12 scroll-mt-28"
-          style={{ borderColor: "#eadbe6" }}
-        >
-          <div className="space-y-2 text-left">
-            <p
-              className="text-xs font-bold uppercase tracking-[0.18em]"
-              style={{ color: PRIMARY }}
-            >
-              Blog posts
-            </p>
-            <h3 className="text-3xl font-bold tracking-tight text-slate-900">
-              Insights for sellers and shoppers
-            </h3>
-            <p className="max-w-2xl text-sm leading-6 text-slate-500">
-              Fresh ideas from ShivraTech on selling smarter, delivering faster,
-              and growing gadget demand locally.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {blogSlides[activeBlogSlide].map((post) => (
-              <article key={post.title} className="space-y-4">
-                <div
-                  className="group overflow-hidden rounded-[22px] border bg-white p-2"
-                  style={{ borderColor: "#eadbe6" }}
-                >
-                  <div className="relative overflow-hidden rounded-[18px]">
-                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/55 via-slate-900/10 to-transparent" />
-                    <img
-                      src={post.img}
-                      alt={post.title}
-                      className="h-[15rem] w-full object-cover transition duration-300 group-hover:scale-105 sm:h-[17rem]"
-                      loading="lazy"
-                    />
-                    <div className="absolute left-4 top-4 z-20">
-                      <span
-                        className="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-white"
-                        style={{
-                          background: `linear-gradient(135deg, ${PRIMARY} 0%, ${ACCENT} 100%)`,
-                        }}
-                      >
-                        {post.tag}
-                      </span>
-                    </div>
-                    <div className="absolute inset-x-4 bottom-4 z-20">
-                      <Link
-                        to="/contact"
-                        className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]"
-                        style={{ color: PRIMARY }}
-                      >
-                        Read now
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-center">
-                  <h4 className="text-[15px] font-semibold leading-7 text-slate-800 line-clamp-2">
-                    {post.title}
-                  </h4>
-                  <p className="text-sm text-slate-400">{post.date}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="flex justify-center gap-3">
-            {blogSlides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                aria-label={`Show blog slide ${idx + 1}`}
-                onClick={() => setActiveBlogSlide(idx)}
-                className="h-2.5 rounded-full transition-all"
-                style={{
-                  width: activeBlogSlide === idx ? "1.75rem" : "0.75rem",
-                  backgroundColor: activeBlogSlide === idx ? ACCENT : "#d7d3db",
-                }}
-              />
-            ))}
-          </div>
+        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {featuredList.map((card, idx) => (
+            <ModernProductCard
+              key={card.slug}
+              card={card}
+              spec={card.spec}
+              rating={card.rating}
+              index={idx}
+            />
+          ))}
         </div>
-      </div>
-    </section>
+      </motion.section>
+
+      {/* 3. NEW ARRIVALS SECTION */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      >
+        <div className="flex items-center justify-between gap-3 mb-6 pb-2 border-b border-purple-100">
+          <div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <span>New Arrivals</span>
+              <Sparkles size={18} className="text-[#B35FA3]" />
+            </h2>
+          </div>
+
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#4A0D4F] hover:text-[#B35FA3] transition-colors"
+          >
+            <span>View All</span>
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {newArrivalsList.map((card, idx) => (
+            <ModernProductCard
+              key={card.slug}
+              card={card}
+              spec={card.spec}
+              rating={card.rating}
+              index={idx}
+            />
+          ))}
+        </div>
+      </motion.section>
+
+    </div>
   );
 };
 

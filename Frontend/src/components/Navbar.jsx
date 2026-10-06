@@ -6,16 +6,21 @@ import {
   Headphones,
   Heart,
   LaptopMinimal,
+  LogOut,
   Menu,
+  Package,
   Search,
+  ShoppingBag,
   ShoppingCart,
   Smartphone,
   Sparkles,
+  Store,
   User,
   X,
 } from "lucide-react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useAuth } from "../context/AuthContext";
 import { useShop } from "../context/useShop";
 import { categories } from "../data/catalog";
 import { searchProducts } from "../data/products";
@@ -35,22 +40,19 @@ const categoryIcons = {
   lifestyle: Sparkles,
 };
 
-const PRIMARY = "#4A0D4F";
-const ACCENT = "#B35FA3";
-
-const navLinkClassName = ({ isActive }) =>
-  `rounded-xl px-3.5 py-2 text-[13px] font-semibold no-underline transition ${
-    isActive ? "bg-white/15 text-white" : "text-white/90 hover:bg-white/10"
-  }`;
-
 const Navbar = () => {
   const [catOpen, setCatOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const dropRef = useRef(null);
+  const userDropRef = useRef(null);
+  const searchRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartCount } = useShop();
+  const { cartCount, wishlistCount } = useShop();
+  const { user, isAuthenticated, isVendor, logout } = useAuth();
   const deferredSearchValue = useDeferredValue(searchValue);
   const trimmedSearch = deferredSearchValue.trim();
   const suggestions = trimmedSearch
@@ -62,6 +64,12 @@ const Navbar = () => {
       if (dropRef.current && !dropRef.current.contains(event.target)) {
         setCatOpen(false);
       }
+      if (userDropRef.current && !userDropRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
     };
 
     document.addEventListener("mousedown", handler);
@@ -72,324 +80,494 @@ const Navbar = () => {
     const frameId = window.requestAnimationFrame(() => {
       setCatOpen(false);
       setMobileOpen(false);
+      setUserDropdownOpen(false);
+      setShowSuggestions(false);
     });
 
     return () => window.cancelAnimationFrame(frameId);
-  }, [location.hash, location.pathname]);
+  }, [location.hash, location.pathname, location.search]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
+    setShowSuggestions(false);
     const query = searchValue.trim();
-
     navigate(query ? `/shop?q=${encodeURIComponent(query)}` : "/shop");
   };
 
   return (
     <>
-      <nav
-        className="fixed inset-x-0 top-0 z-50 border-b shadow-sm backdrop-blur-xl"
-        style={{
-          background: `linear-gradient(135deg, ${ACCENT}, ${PRIMARY})`,
-          borderColor: `${ACCENT}33`,
-        }}
-      >
-        <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
-          <Link to="/" className="-ml-2 flex flex-shrink-0 items-center gap-2">
-            <img
-              src={logo}
-              alt="ShivraTech"
-              className="h-24 w-24 object-contain sm:h-28 sm:w-28 md:h-32 md:w-32"
-            />
-          </Link>
-
-          <div className="hidden items-center gap-1 lg:flex">
-            {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} end={link.to === "/"} className={navLinkClassName}>
-                {link.label}
-              </NavLink>
-            ))}
-
-            <div className="relative" ref={dropRef}>
-              <button
-                type="button"
-                onClick={() => setCatOpen((previous) => !previous)}
-                className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[13px] font-semibold transition ${
-                  catOpen ? "bg-white/15 text-white" : "text-white/90 hover:bg-white/10"
-                }`}
-              >
-                Categories
-                <ChevronDown
-                  size={13}
-                  strokeWidth={2.5}
-                  className={`transition-transform duration-200 ${catOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {catOpen && (
-                <div
-                  className="absolute left-1/2 top-[calc(100%+10px)] w-[660px] -translate-x-1/2 rounded-2xl border bg-white p-5 shadow-[0_32px_80px_rgba(74,13,79,0.28)]"
-                  style={{ borderColor: `${ACCENT}66`, zIndex: 200 }}
-                >
-                  <p className="mb-3 text-[11px] font-bold uppercase tracking-[.12em] text-slate-500">
-                    Browse all categories
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    {categories.map((category) => {
-                      const Icon = categoryIcons[category.slug] ?? Sparkles;
-
-                      return (
-                        <Link
-                          key={category.slug}
-                          to={`/categories#${category.slug}`}
-                          className="group flex items-center gap-3.5 rounded-[14px] border border-transparent px-4 py-3.5 transition hover:bg-[#B35FA3]/10"
-                        >
-                          <div className="flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-xl bg-[#F8F0FA] text-[#4A0D4F]">
-                            <Icon size={24} strokeWidth={2} />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[14px] font-bold text-slate-900">
-                              {category.name}
-                            </p>
-                            <p className="text-[12px] text-slate-600">
-                              {category.desc}
-                            </p>
-                          </div>
-                          <ArrowRight
-                            size={15}
-                            className="flex-shrink-0 text-slate-500 transition group-hover:translate-x-1 group-hover:text-[#B35FA3]"
-                          />
-                        </Link>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-3 flex items-center justify-between rounded-[14px] border bg-gradient-to-r from-[#4A0D4F]/10 via-white to-[#B35FA3]/10 px-5 py-3.5">
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-[.1em] text-[#4A0D4F]">
-                        Limited time
-                      </p>
-                      <p className="text-[15px] font-black text-slate-900">
-                        First ad slot free this week.
-                      </p>
-                    </div>
-                    <Link
-                      to="/login"
-                      className="flex-shrink-0 rounded-full px-5 py-2.5 text-[12px] font-black text-white shadow-sm transition hover:-translate-y-px"
-                      style={{
-                        background: `linear-gradient(135deg, ${PRIMARY}, ${ACCENT})`,
-                      }}
-                    >
-                      Sell with us
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="relative hidden md:block">
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex items-center gap-2 rounded-full border bg-white px-4 py-2 shadow-sm"
-              style={{ borderColor: `${ACCENT}80` }}
-            >
-              <Search
-                size={15}
-                className="flex-shrink-0"
-                style={{ color: PRIMARY }}
-                strokeWidth={2}
-              />
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
-                placeholder="Search products..."
-                className="w-32 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400 lg:w-36 xl:w-44"
-              />
-            </form>
-
-            {suggestions.length > 0 && (
-              <div
-                className="absolute right-0 top-[calc(100%+10px)] w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl border bg-white p-3 shadow-[0_18px_42px_rgba(74,13,79,0.16)]"
-                style={{ borderColor: "#eadbe6" }}
-              >
-                <div className="space-y-2">
-                  {suggestions.map((product) => (
-                    <Link
-                      key={product.slug}
-                      to={`/product/${product.slug}`}
-                      className="flex items-center gap-3 rounded-[16px] px-3 py-3 transition hover:bg-[#fbf6fa]"
-                    >
-                      <div
-                        className="flex h-14 w-14 items-center justify-center rounded-[14px]"
-                        style={{ backgroundColor: "#fbf6fa" }}
-                      >
-                        <img
-                          src={product.img}
-                          alt={product.title}
-                          className="h-12 w-12 object-contain"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-slate-900">
-                          {product.title}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {product.categoryName}
-                        </p>
-                      </div>
-                      <span className="text-sm font-semibold" style={{ color: PRIMARY }}>
-                        {product.price}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-
-                <Link
-                  to={`/shop?q=${encodeURIComponent(trimmedSearch)}`}
-                  className="mt-3 inline-flex items-center gap-2 px-3 py-2 text-sm font-semibold"
-                  style={{ color: PRIMARY }}
-                >
-                  View all results
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div
-              className="flex items-center gap-1 rounded-full border bg-white px-2 py-1.5 shadow-sm sm:px-2.5"
-              style={{ borderColor: `${ACCENT}80` }}
-            >
-              <Link
-                to="/login"
-                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
-                style={{ color: PRIMARY }}
-                aria-label="Login"
-              >
-                <User size={17} strokeWidth={2} />
-              </Link>
-              <Link
-                to="/shop#featured"
-                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
-                style={{ color: PRIMARY }}
-                aria-label="Wishlist"
-              >
-                <Heart size={17} strokeWidth={2} />
-              </Link>
-              <Link
-                to="/cart"
-                className="relative flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#B35FA3]/10"
-                style={{ color: PRIMARY }}
-                aria-label="Cart"
-              >
-                <ShoppingCart size={17} strokeWidth={2} />
-                <span
-                  className="absolute right-0.5 top-0.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border-[1.5px] border-white bg-white text-[9px] font-black"
-                  style={{ color: PRIMARY }}
-                >
-                  {cartCount}
-                </span>
-              </Link>
-            </div>
-
+      <header className="fixed inset-x-0 top-0 z-[100] transition-all duration-300">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-2.5 sm:pt-3">
+          <nav className="flex h-[64px] items-center justify-between gap-4 rounded-full border border-purple-200/80 bg-white/95 px-4 sm:px-6 shadow-[0_8px_30px_rgba(74,13,79,0.06)] backdrop-blur-md transition-all duration-300 hover:border-purple-300/80">
+            {/* Logo */}
             <Link
-              to="/contact"
-              className="hidden items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12px] font-black transition md:flex"
-              style={{
-                color: PRIMARY,
-                boxShadow: "0 8px 20px rgba(74,13,79,0.15)",
-              }}
+              to="/"
+              className="group flex flex-shrink-0 items-center transition-transform duration-200 hover:scale-[1.02]"
             >
-              Advertise with us
-              <ArrowRight size={13} strokeWidth={2.5} />
+              <img
+                src={logo}
+                alt="Shivra"
+                className="h-8 sm:h-9 w-auto object-contain"
+              />
             </Link>
 
-            <button
-              type="button"
-              onClick={() => setMobileOpen((previous) => !previous)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border bg-white transition lg:hidden"
-              style={{
-                color: PRIMARY,
-                borderColor: `${ACCENT}80`,
-              }}
-              aria-label="Open menu"
-            >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
-          </div>
-        </div>
-
-        {mobileOpen && (
-          <div
-            className="border-t bg-white px-4 py-4 shadow-inner sm:px-5 lg:hidden"
-            style={{ borderColor: `${ACCENT}80` }}
-          >
-            {[...navLinks, { label: "Categories", to: "/categories" }].map((link) => (
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center gap-1">
               <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === "/"}
+                to="/"
+                end
                 className={({ isActive }) =>
-                  `block rounded-xl px-4 py-3 text-[14px] font-semibold transition ${
-                    isActive ? "bg-[#f4e8f3]" : "hover:bg-[#B35FA3]/10"
+                  `rounded-full px-3.5 py-1.5 text-[13.5px] font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#4A0D4F]/10 text-[#4A0D4F]"
+                      : "text-slate-600 hover:bg-[#4A0D4F]/5 hover:text-[#4A0D4F]"
                   }`
                 }
-                style={{ color: PRIMARY }}
               >
-                {link.label}
+                Home
               </NavLink>
-            ))}
 
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `rounded-full px-3.5 py-1.5 text-[13.5px] font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#4A0D4F]/10 text-[#4A0D4F]"
+                      : "text-slate-600 hover:bg-[#4A0D4F]/5 hover:text-[#4A0D4F]"
+                  }`
+                }
+              >
+                About
+              </NavLink>
+
+              <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                  `rounded-full px-3.5 py-1.5 text-[13.5px] font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#4A0D4F]/10 text-[#4A0D4F]"
+                      : "text-slate-600 hover:bg-[#4A0D4F]/5 hover:text-[#4A0D4F]"
+                  }`
+                }
+              >
+                Shop
+              </NavLink>
+
+              {/* Categories Dropdown */}
+              <div className="relative" ref={dropRef}>
+                <button
+                  type="button"
+                  onClick={() => setCatOpen((prev) => !prev)}
+                  className={`flex items-center gap-1 rounded-full px-3.5 py-1.5 text-[13.5px] font-semibold transition-all duration-200 ${
+                    catOpen
+                      ? "bg-[#4A0D4F]/10 text-[#4A0D4F]"
+                      : "text-slate-600 hover:bg-[#4A0D4F]/5 hover:text-[#4A0D4F]"
+                  }`}
+                >
+                  <span>Categories</span>
+                  <ChevronDown
+                    size={13}
+                    strokeWidth={2.5}
+                    className={`transition-transform duration-200 ${catOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {catOpen && (
+                  <div
+                    className="absolute left-1/2 top-[calc(100%+14px)] w-[600px] -translate-x-1/2 rounded-3xl border border-purple-200 bg-white p-5 shadow-[0_28px_70px_rgba(74,13,79,0.22)]"
+                    style={{ zIndex: 1000 }}
+                  >
+                    <div className="mb-3 flex items-center justify-between px-1">
+                      <p className="text-[11px] font-bold uppercase tracking-[.14em] text-[#4A0D4F]">
+                        Explore Categories
+                      </p>
+                      <span className="text-[11px] font-medium text-slate-400">
+                        Top Trending Gadgets
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      {categories.map((category) => {
+                        const Icon = categoryIcons[category.slug] ?? Sparkles;
+                        return (
+                          <Link
+                            key={category.slug}
+                            to={`/categories/${category.slug}`}
+                            onClick={() => setCatOpen(false)}
+                            className="group flex items-center gap-3 rounded-2xl border border-transparent p-2.5 transition-all duration-200 hover:border-purple-100 hover:bg-[#F9F2FB]"
+                          >
+                            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-purple-100/60 text-[#4A0D4F] transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#4A0D4F] group-hover:text-white">
+                              <Icon size={18} strokeWidth={2} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[13px] font-bold text-slate-900 group-hover:text-[#4A0D4F]">
+                                {category.name}
+                              </p>
+                              <p className="truncate text-[11px] text-slate-500">
+                                {category.desc}
+                              </p>
+                            </div>
+                            <ArrowRight
+                              size={13}
+                              className="flex-shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#B35FA3]"
+                            />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `rounded-full px-3.5 py-1.5 text-[13.5px] font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#4A0D4F]/10 text-[#4A0D4F]"
+                      : "text-slate-600 hover:bg-[#4A0D4F]/5 hover:text-[#4A0D4F]"
+                  }`
+                }
+              >
+                Contact
+              </NavLink>
+            </div>
+
+            {/* Right Action Section */}
+            <div className="flex items-center gap-2.5">
+              {/* Search Bar */}
+              <div className="relative hidden md:block" ref={searchRef}>
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center gap-2 rounded-full border border-purple-200/70 bg-purple-50/40 px-3.5 py-1.5 shadow-inner transition-all duration-200 hover:bg-white focus-within:border-[#B35FA3] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#B35FA3]/20"
+                >
+                  <Search
+                    size={14}
+                    className="flex-shrink-0 text-[#4A0D4F]/70"
+                    strokeWidth={2.2}
+                  />
+                  <input
+                    type="text"
+                    value={searchValue}
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => {
+                      if (trimmedSearch) setShowSuggestions(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        setShowSuggestions(false);
+                      }
+                    }}
+                    placeholder="Search gadgets..."
+                    className="w-24 xl:w-36 bg-transparent text-[12.5px] text-slate-800 outline-none placeholder:text-slate-400"
+                  />
+                  {searchValue && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchValue("");
+                        setShowSuggestions(false);
+                      }}
+                      className="flex h-4 w-4 items-center justify-center rounded-full text-slate-400 hover:bg-purple-100 hover:text-slate-700 transition"
+                      title="Clear search"
+                    >
+                      <X size={10} strokeWidth={2.5} />
+                    </button>
+                  )}
+                </form>
+
+                {showSuggestions && suggestions.length > 0 && (
+                  <div
+                    className="absolute right-0 top-[calc(100%+12px)] w-[320px] rounded-2xl border border-purple-200 bg-white p-2.5 shadow-[0_24px_60px_rgba(74,13,79,0.2)] animate-in fade-in duration-150"
+                    style={{ zIndex: 1000 }}
+                  >
+                    <div className="space-y-1">
+                      {suggestions.map((product) => (
+                        <Link
+                          key={product.slug}
+                          to={`/product/${product.slug}`}
+                          onClick={() => {
+                            setShowSuggestions(false);
+                            setSearchValue("");
+                          }}
+                          className="flex items-center gap-2.5 rounded-xl p-2 transition hover:bg-[#F9F2FB]"
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50/80 flex-shrink-0">
+                            <img
+                              src={product.img}
+                              alt={product.title}
+                              className="h-8 w-8 object-contain"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-xs font-bold text-slate-900">
+                              {product.title}
+                            </p>
+                            <p className="text-[10.5px] text-slate-500">
+                              {product.categoryName}
+                            </p>
+                          </div>
+                          <span className="text-xs font-bold text-[#4A0D4F]">
+                            {product.price}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+
+                    <Link
+                      to={`/shop?q=${encodeURIComponent(trimmedSearch)}`}
+                      onClick={() => {
+                        setShowSuggestions(false);
+                      }}
+                      className="mt-2 flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-[#4A0D4F] hover:bg-purple-50"
+                    >
+                      <span>View all matching results</span>
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Cluster (Wishlist, Cart, User) */}
+              <div className="flex items-center gap-1 rounded-full border border-purple-200/60 bg-purple-50/40 p-1">
+                {/* Wishlist */}
+                <Link
+                  to="/wishlist"
+                  className="relative flex h-8 w-8 items-center justify-center rounded-full text-slate-700 transition-all duration-200 hover:bg-white hover:text-[#4A0D4F] hover:shadow-xs"
+                  aria-label="Liked Products"
+                  title="Liked / Saved Products"
+                >
+                  <Heart
+                    size={16}
+                    strokeWidth={2}
+                    className={wishlistCount > 0 ? "text-rose-500 fill-rose-500" : ""}
+                  />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-extrabold text-white shadow-sm">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+
+                {/* Cart */}
+                <Link
+                  to="/cart"
+                  className="relative flex h-8 w-8 items-center justify-center rounded-full text-slate-700 transition-all duration-200 hover:bg-white hover:text-[#4A0D4F] hover:shadow-xs"
+                  aria-label="Shopping Cart"
+                >
+                  <ShoppingCart size={16} strokeWidth={2} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#4A0D4F] px-1 text-[9px] font-extrabold text-white shadow-sm">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+
+                {/* User Profile / Login Dropdown */}
+                <div className="relative" ref={userDropRef}>
+                  {isAuthenticated && user ? (
+                    <button
+                      type="button"
+                      onClick={() => setUserDropdownOpen((prev) => !prev)}
+                      className="flex h-8 items-center gap-1.5 rounded-full bg-white px-2.5 text-[#4A0D4F] shadow-xs transition hover:bg-purple-50"
+                      aria-label="User profile"
+                    >
+                      <User size={14} strokeWidth={2.2} />
+                      <span className="text-xs font-bold max-w-[70px] truncate">
+                        {user.name?.split(" ")[0]}
+                      </span>
+                      <ChevronDown size={11} className={`transition-transform duration-150 ${userDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="flex h-8 items-center gap-1.5 rounded-full bg-white px-3 text-xs font-bold text-[#4A0D4F] shadow-xs transition hover:bg-purple-50"
+                      aria-label="Account Login"
+                    >
+                      <User size={14} strokeWidth={2.2} />
+                      <span>Login</span>
+                    </Link>
+                  )}
+
+                  {/* Profile Menu Dropdown - SOLID OPAQUE WHITE */}
+                  {userDropdownOpen && isAuthenticated && user && (
+                    <div
+                      className="absolute right-0 top-[calc(100%+12px)] w-64 rounded-2xl border border-purple-200 bg-white p-3.5 shadow-[0_24px_60px_rgba(74,13,79,0.22)]"
+                      style={{ zIndex: 1000 }}
+                    >
+                      <div className="pb-2.5 mb-2.5 border-b border-purple-100">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4A0D4F] text-white font-bold text-xs flex-shrink-0">
+                            {user.name?.charAt(0)?.toUpperCase() || "U"}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-black text-slate-900 truncate">{user.name}</p>
+                            <p className="text-[10.5px] text-slate-500 truncate">{user.email}</p>
+                          </div>
+                        </div>
+                        <div className="mt-2">
+                          <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                            user.role === "seller"
+                              ? "bg-purple-100 text-[#4A0D4F] border border-purple-200"
+                              : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          }`}>
+                            {user.role === "seller" ? "Verified Vendor" : "Customer Account"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        {isVendor ? (
+                          <>
+                            <Link
+                              to="/vendor/dashboard"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[#4A0D4F] hover:bg-purple-50 transition"
+                            >
+                              <Store size={15} />
+                              <span>Vendor Dashboard</span>
+                            </Link>
+                            <Link
+                              to="/vendor/dashboard"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-purple-50 hover:text-[#4A0D4F] transition"
+                            >
+                              <Package size={15} />
+                              <span>My Inventory Catalog</span>
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            <Link
+                              to="/orders"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-purple-50 hover:text-[#4A0D4F] transition"
+                            >
+                              <ShoppingBag size={15} />
+                              <span>My Orders & Tracking</span>
+                            </Link>
+                            <Link
+                              to="/wishlist"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-purple-50 hover:text-[#4A0D4F] transition"
+                            >
+                              <Heart size={15} className="text-rose-500" />
+                              <span>Liked Products ({wishlistCount})</span>
+                            </Link>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="pt-2 mt-2 border-t border-purple-100">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            logout();
+                            setUserDropdownOpen(false);
+                            navigate("/login");
+                          }}
+                          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition"
+                        >
+                          <LogOut size={15} />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Role-Specific Clean Pill Button */}
+              {isVendor ? (
+                <Link
+                  to="/vendor/dashboard"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#380B3C] active:scale-95"
+                >
+                  <Store size={13} />
+                  <span>Vendor Hub</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/shop"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#380B3C] active:scale-95"
+                >
+                  <span>Explore Shop</span>
+                  <ArrowRight size={13} />
+                </Link>
+              )}
+
+              {/* Mobile Menu Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen((prev) => !prev)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-200/70 bg-purple-50/50 text-[#4A0D4F] transition lg:hidden hover:bg-white"
+                aria-label="Toggle menu"
+              >
+                {mobileOpen ? <X size={16} /> : <Menu size={16} />}
+              </button>
+            </div>
+          </nav>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {mobileOpen && (
+          <div className="mx-3 mt-2 rounded-3xl border border-purple-200/80 bg-white/95 p-4 shadow-2xl backdrop-blur-2xl lg:hidden animate-in fade-in slide-in-from-top-3 duration-200">
+            <div className="space-y-1">
+              {[
+                ...navLinks,
+                { label: "Categories", to: "/categories" },
+                { label: `Liked Products (${wishlistCount})`, to: "/wishlist" },
+              ].map((link) => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.to === "/"}
+                    className={({ isActive }) =>
+                      `block rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition ${
+                        isActive
+                          ? "bg-purple-100/70 text-[#4A0D4F]"
+                          : "text-slate-700 hover:bg-purple-50"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ),
+              )}
+              {isVendor && (
+                <NavLink
+                  to="/vendor/dashboard"
+                  className="flex items-center gap-2 rounded-2xl bg-purple-50 px-4 py-2 text-xs sm:text-sm font-bold text-[#4A0D4F]"
+                >
+                  <Store size={14} />
+                  <span>Vendor Dashboard</span>
+                </NavLink>
+              )}
+            </div>
+
+            {/* Mobile Search */}
             <form
               onSubmit={handleSearchSubmit}
-              className="mt-3 flex items-center gap-2 rounded-full border bg-white px-4 py-2.5"
-              style={{ borderColor: `${ACCENT}80` }}
+              className="mt-3 flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50/50 px-3.5 py-2"
             >
-              <Search size={15} style={{ color: PRIMARY }} />
+              <Search size={14} className="text-[#4A0D4F]" />
               <input
                 type="text"
                 value={searchValue}
                 onChange={(event) => setSearchValue(event.target.value)}
                 placeholder="Search products..."
-                className="flex-1 bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-500"
+                className="flex-1 bg-transparent text-xs text-slate-800 outline-none placeholder:text-slate-400"
               />
             </form>
-
-            {suggestions.length > 0 && (
-              <div className="mt-3 space-y-2">
-                {suggestions.map((product) => (
-                  <Link
-                    key={product.slug}
-                    to={`/product/${product.slug}`}
-                    className="flex items-start justify-between gap-3 rounded-[16px] border px-4 py-3"
-                    style={{ borderColor: "#eadbe6" }}
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-slate-900">
-                        {product.title}
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        {product.categoryName}
-                      </p>
-                    </div>
-                    <span
-                      className="shrink-0 text-sm font-semibold"
-                      style={{ color: PRIMARY }}
-                    >
-                      {product.price}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
         )}
-      </nav>
+      </header>
 
-      <div className="h-[68px]" />
+      {/* Spacing under fixed navbar */}
+      <div className="h-[76px] sm:h-[82px]" />
     </>
   );
 };

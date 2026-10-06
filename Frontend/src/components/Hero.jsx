@@ -1,312 +1,746 @@
-import { Fragment, useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Globe,
+  Quote,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import heroVideo from "../assets/hero.mp4";
-import rightHero from "../assets/rightHero.png";
-import rightHero1 from "../assets/rightHero1.png";
-import rightHero2 from "../assets/rightHero2.png";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import heroRobot from "../assets/heroRobot.png";
+import floatingEarbudsCard from "../assets/floatingEarbudsCard.jpg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
 
-const heroSlides = [
-  {
-    src: rightHero,
-    alt: "Featured ShivraTech audio and mobile accessories bundle",
-  },
-  {
-    src: rightHero1,
-    alt: "Featured ShivraTech gadget showcase",
-  },
-  {
-    src: rightHero2,
-    alt: "Featured ShivraTech electronics collection",
-  },
-];
-
 const sellerHighlights = [
   "No setup fee",
   "Same-day delivery",
-  "Buyer protection",
+  "100% Buyer protection",
 ];
 
 const tickers = [
   "FREE first ad slot this week",
-  "Wearables trending +38%",
+  "Smart Audio demand up 38%",
   "500+ orders delivered today",
   "New: Sponsored listings now live",
-  "Smart Audio demand up 22%",
-  "Car Tech low-competition ad slots open",
+  "Wearables & ANC Tech trending +24%",
+  "Car Tech ad slots open",
   "4.9-star average seller rating",
 ];
 
-const getNextAvailableSlide = (currentIndex, failedSlides) => {
-  for (let step = 1; step <= heroSlides.length; step += 1) {
-    const nextIndex = (currentIndex + step) % heroSlides.length;
-
-    if (!failedSlides[nextIndex]) {
-      return nextIndex;
-    }
-  }
-
-  return -1;
-};
+const channelIcons = [
+  { icon: Globe, label: "Verified Network" },
+  { icon: ShieldCheck, label: "Buyer Protection" },
+  { icon: Zap, label: "Express Delivery" },
+  { icon: Sparkles, label: "Rare Tech Drops" },
+];
 
 const Hero = () => {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [failedSlides, setFailedSlides] = useState({});
+  const [robotLoaded, setRobotLoaded] = useState(true);
+  const heroRef = useRef(null);
+  const headphoneStageRef = useRef(null);
+  const headphoneBoxRef = useRef(null);
+  const shadowRef = useRef(null);
+  const badgeRef = useRef(null);
+  const headlineRef = useRef(null);
+  const ctaRef = useRef(null);
+  const leftCardRef = useRef(null);
+  const rightCardRef = useRef(null);
+  const highlightsRef = useRef(null);
+  const tickerRef = useRef(null);
 
-  const availableSlideCount = heroSlides.filter(
-    (_, index) => !failedSlides[index],
-  ).length;
+  // Mouse Parallax Refs (Desktop only)
+  const mouseHeadphoneRef = useRef(null);
+  const mouseHeadlineRef = useRef(null);
+  const mouseLeftCardRef = useRef(null);
+  const mouseRightCardRef = useRef(null);
 
+  // ── Desktop Subtle Mouse Parallax Effect (3–6px movement, disabled on mobile) ──
   useEffect(() => {
-    if (availableSlideCount <= 1) {
-      return undefined;
-    }
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const intervalId = window.setInterval(() => {
-      setActiveSlide((currentSlide) => {
-        const nextSlide = getNextAvailableSlide(currentSlide, failedSlides);
-        return nextSlide === -1 ? currentSlide : nextSlide;
-      });
-    }, 4000);
+    const hero = heroRef.current;
+    if (!hero) return;
 
-    return () => window.clearInterval(intervalId);
-  }, [availableSlideCount, failedSlides]);
-
-  const handleSlideError = (index) => {
-    setFailedSlides((current) => {
-      if (current[index]) {
-        return current;
-      }
-
-      const nextFailedSlides = { ...current, [index]: true };
-
-      if (index === activeSlide) {
-        window.setTimeout(() => {
-          const nextSlide = getNextAvailableSlide(index, nextFailedSlides);
-
-          if (nextSlide !== -1 && nextSlide !== index) {
-            setActiveSlide(nextSlide);
-          }
-        }, 0);
-      }
-
-      return nextFailedSlides;
+    // GSAP quickTo setters for 60fps buttery smooth performance
+    const setHeadphoneX = gsap.quickTo(mouseHeadphoneRef.current, "x", {
+      duration: 0.6,
+      ease: "power2.out",
     });
-  };
+    const setHeadphoneY = gsap.quickTo(mouseHeadphoneRef.current, "y", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
+    const setHeadphoneRotY = gsap.quickTo(mouseHeadphoneRef.current, "rotateY", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
+    const setHeadphoneRotX = gsap.quickTo(mouseHeadphoneRef.current, "rotateX", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
 
-  const hasVisibleSlides = availableSlideCount > 0;
+    const setHeadlineX = gsap.quickTo(mouseHeadlineRef.current, "x", {
+      duration: 0.7,
+      ease: "power2.out",
+    });
+    const setHeadlineY = gsap.quickTo(mouseHeadlineRef.current, "y", {
+      duration: 0.7,
+      ease: "power2.out",
+    });
+
+    const setLeftX = gsap.quickTo(mouseLeftCardRef.current, "x", {
+      duration: 0.5,
+      ease: "power2.out",
+    });
+    const setLeftY = gsap.quickTo(mouseLeftCardRef.current, "y", {
+      duration: 0.5,
+      ease: "power2.out",
+    });
+
+    const setRightX = gsap.quickTo(mouseRightCardRef.current, "x", {
+      duration: 0.5,
+      ease: "power2.out",
+    });
+    const setRightY = gsap.quickTo(mouseRightCardRef.current, "y", {
+      duration: 0.5,
+      ease: "power2.out",
+    });
+
+    const onMouseMove = (e) => {
+      const rect = hero.getBoundingClientRect();
+      const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2; // -1 to 1
+      const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2; // -1 to 1
+
+      // Headphone: 3–6px movement with subtle 3D tilt
+      setHeadphoneX(normX * 5);
+      setHeadphoneY(normY * 5);
+      setHeadphoneRotY(normX * 2);
+      setHeadphoneRotX(-normY * 2);
+
+      // Headline: 1–3px movement
+      setHeadlineX(normX * 2);
+      setHeadlineY(normY * 1.5);
+
+      // Floating cards: 5–8px movement
+      setLeftX(normX * -6);
+      setLeftY(normY * -5);
+      setRightX(normX * -7);
+      setRightY(normY * -6);
+    };
+
+    const onMouseLeave = () => {
+      setHeadphoneX(0);
+      setHeadphoneY(0);
+      setHeadphoneRotY(0);
+      setHeadphoneRotX(0);
+      setHeadlineX(0);
+      setHeadlineY(0);
+      setLeftX(0);
+      setLeftY(0);
+      setRightX(0);
+      setRightY(0);
+    };
+
+    hero.addEventListener("mousemove", onMouseMove);
+    hero.addEventListener("mouseleave", onMouseLeave);
+
+    return () => {
+      hero.removeEventListener("mousemove", onMouseMove);
+      hero.removeEventListener("mouseleave", onMouseLeave);
+    };
+  }, []);
+
+  // ── Cinematic Scroll Sequence ──
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        isDesktop: "(min-width: 1024px)",
+        isTablet: "(min-width: 640px) and (max-width: 1023px)",
+        isMobile: "(max-width: 639px)",
+        reduceMotion: "(prefers-reduced-motion: reduce)",
+      },
+      (context) => {
+        const { isDesktop, isTablet, isMobile, reduceMotion } = context.conditions;
+
+        if (reduceMotion) {
+          // Accessibility: respect reduced motion preferences
+          return;
+        }
+
+        const pinDistance = isDesktop ? "+=150%" : isTablet ? "+=125%" : "+=85%";
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: pinDistance,
+            pin: true,
+            pinSpacing: false, // Next section smoothly reveals underneath / covers hero
+            scrub: 1.2,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const idleEl = document.querySelector(".headphone-idle-float");
+              if (idleEl) {
+                if (self.progress > 0.02) {
+                  idleEl.style.animationPlayState = "paused";
+                } else {
+                  idleEl.style.animationPlayState = "running";
+                }
+              }
+            },
+          },
+        });
+
+        // 1. Background Headline: moves horizontally slightly, scales backward, reduces opacity gradually
+        tl.to(
+          headlineRef.current,
+          {
+            x: isMobile ? -16 : -32,
+            y: -24,
+            scale: 0.92,
+            opacity: 0.08,
+            ease: "power2.out",
+            duration: 0.45,
+          },
+          0
+        );
+
+        // 2. Editorial badge & top feature icons move upward slightly, fade gradually
+        tl.to(
+          badgeRef.current,
+          {
+            y: -22,
+            opacity: 0,
+            ease: "power2.out",
+            duration: 0.28,
+          },
+          0
+        );
+
+        // 3. CTA ("Shop Now"): slightly scale down, move upward, fade toward end
+        tl.to(
+          ctaRef.current,
+          {
+            scale: 0.88,
+            y: -24,
+            opacity: 0,
+            ease: "power2.out",
+            duration: 0.32,
+          },
+          0
+        );
+
+        // 4. Floating Left Product Card: moves slightly left + upward, fades to 0
+        if (leftCardRef.current) {
+          tl.to(
+            leftCardRef.current,
+            {
+              x: -85,
+              y: -25,
+              opacity: 0,
+              rotate: -6,
+              ease: "power2.out",
+              duration: 0.35,
+            },
+            0
+          );
+        }
+
+        // 5. Floating Right Information Card: moves slightly right + upward, fades to 0
+        if (rightCardRef.current) {
+          tl.to(
+            rightCardRef.current,
+            {
+              x: 85,
+              y: -25,
+              opacity: 0,
+              rotate: 6,
+              ease: "power2.out",
+              duration: 0.35,
+            },
+            0
+          );
+        }
+
+        // 6. Bottom trust highlights & ticker strip
+        if (highlightsRef.current) {
+          tl.to(
+            highlightsRef.current,
+            {
+              opacity: 0,
+              y: 20,
+              ease: "power2.out",
+              duration: 0.25,
+            },
+            0
+          );
+        }
+
+        if (tickerRef.current) {
+          tl.to(
+            tickerRef.current,
+            {
+              opacity: 0,
+              y: 20,
+              ease: "power2.out",
+              duration: 0.25,
+            },
+            0
+          );
+        }
+
+        // 7. Ambient atmospheric glows: subtle parallax depth
+        tl.to(
+          ".ambient-glow-layer",
+          {
+            y: 20,
+            opacity: 0.25,
+            ease: "none",
+            duration: 1,
+          },
+          0
+        );
+
+        // 8. Ground shadow: softens and blurs as headphone elevates
+        if (shadowRef.current) {
+          tl.to(
+            shadowRef.current,
+            {
+              scaleX: 1.45,
+              scaleY: 0.6,
+              opacity: 0.08,
+              y: 24,
+              ease: "power1.out",
+              duration: 0.55,
+            },
+            0
+          );
+          tl.to(
+            shadowRef.current,
+            {
+              opacity: 0,
+              ease: "power1.out",
+              duration: 0.3,
+            },
+            0.6
+          );
+        }
+
+        // 9. MAIN HEADPHONE 3D SCROLL MOTION SEQUENCE:
+        if (isDesktop) {
+          // Progress 0.0 -> 0.35: (Middle: scale 1.3, subtle circular 3D rotation, moves slightly upward)
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.3,
+              rotateZ: 8,
+              rotateY: 8,
+              rotateX: -3,
+              y: -18,
+              opacity: 1,
+              ease: "power1.inOut",
+              duration: 0.35,
+            },
+            0
+          );
+
+          // Progress 0.35 -> 0.65: (Later: scale 1.6, circular dimensional rotation)
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.6,
+              rotateZ: 14,
+              rotateY: 12,
+              rotateX: -5,
+              y: -30,
+              opacity: 1,
+              ease: "power1.inOut",
+              duration: 0.3,
+            },
+            0.35
+          );
+
+          // Progress 0.65 -> 0.90: (End: scale 1.95 - moving toward the camera/screen)
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.98,
+              rotateZ: 18,
+              rotateY: 14,
+              rotateX: -6,
+              y: -40,
+              opacity: 1,
+              ease: "power1.out",
+              duration: 0.25,
+            },
+            0.65
+          );
+
+          // Progress 0.85 -> 1.0: (Next section smoothly reveals underneath: clean dissolve as product completes zoom)
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              opacity: 0,
+              scale: 2.15,
+              ease: "power2.inOut",
+              duration: 0.15,
+            },
+            0.85
+          );
+        } else if (isTablet) {
+          // Tablet
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.25,
+              rotateZ: 5,
+              rotateY: 6,
+              rotateX: -2,
+              y: -14,
+              opacity: 1,
+              ease: "power1.inOut",
+              duration: 0.45,
+            },
+            0
+          );
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.55,
+              rotateZ: 10,
+              rotateY: 8,
+              rotateX: -3,
+              y: -24,
+              opacity: 1,
+              ease: "power1.out",
+              duration: 0.4,
+            },
+            0.45
+          );
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              opacity: 0,
+              scale: 1.68,
+              ease: "power2.inOut",
+              duration: 0.15,
+            },
+            0.85
+          );
+        } else {
+          // Mobile (simple scale + fade + slight rotation, no heavy 3D)
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              scale: 1.35,
+              rotateZ: 6,
+              rotateY: 0,
+              rotateX: 0,
+              y: -16,
+              opacity: 1,
+              ease: "power1.inOut",
+              duration: 0.75,
+            },
+            0
+          );
+          tl.to(
+            headphoneBoxRef.current,
+            {
+              opacity: 0,
+              scale: 1.45,
+              ease: "power2.inOut",
+              duration: 0.25,
+            },
+            0.75
+          );
+        }
+      }
+    );
+
+    return () => mm.revert();
+  }, []);
 
   return (
     <section
-      className="relative flex min-h-[calc(100svh-68px)] flex-col overflow-hidden bg-white"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      ref={heroRef}
+      className="relative flex min-h-[calc(100svh-68px)] sm:min-h-[calc(100svh-78px)] flex-col justify-between overflow-hidden bg-[#FBF8FC] text-slate-900 selection:bg-[#B35FA3] selection:text-white"
     >
-      <video
-        src={heroVideo}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 h-full w-full object-cover"
-        style={{ opacity: 0.26, zIndex: 0 }}
-      />
+      {/* Ambient Atmospheric Glows */}
+      <div className="ambient-glow-layer pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div
+          className="absolute -left-16 top-4 h-[320px] w-[320px] sm:h-[450px] sm:w-[450px] rounded-full opacity-55 blur-[90px] sm:blur-[120px]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(179,95,163,0.18) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute right-0 top-0 h-[360px] w-[360px] sm:h-[500px] sm:w-[500px] rounded-full opacity-50 blur-[100px] sm:blur-[130px]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(74,13,79,0.12) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute left-1/2 top-1/2 h-[450px] w-[450px] sm:h-[600px] sm:w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-35 blur-[110px] sm:blur-[150px]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(179,95,163,0.14) 0%, transparent 70%)",
+          }}
+        />
+      </div>
 
-      <div
-        className="absolute inset-0"
-        style={{
-          zIndex: 1,
-          background:
-            "linear-gradient(135deg, rgba(74,13,79,0.20) 0%, rgba(255,255,255,0.32) 45%, rgba(255,255,255,0.08) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          zIndex: 1,
-          background:
-            "linear-gradient(to bottom, rgba(74,13,79,0.12) 0%, rgba(255,255,255,0.16) 55%, rgba(255,255,255,0.08) 100%)",
-        }}
-      />
-
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 items-center gap-8 px-4 pb-14 pt-16 sm:px-6 sm:pb-16 sm:pt-20 md:px-8 lg:grid-cols-[1fr_400px] lg:gap-10 lg:px-12 lg:pb-20 lg:pt-24">
-        <div className="flex flex-col gap-7">
-          <div
-            className="flex w-fit items-center gap-2 rounded-full px-4 py-2 shadow-sm"
-            style={{ borderColor: ACCENT, backgroundColor: "#f4e8f3" }}
-          >
+      {/* Main Hero Content Area (Cleanly structured for all screen sizes) */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-between px-3 sm:px-6 lg:px-8 pt-1.5 sm:pt-2">
+        {/* Top Editorial Badge */}
+        <div
+          ref={badgeRef}
+          className="flex justify-center pt-0.5 pb-1 will-change-transform"
+        >
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-purple-200/80 bg-white/95 px-3 sm:px-4 py-1 shadow-[0_2px_10px_rgba(74,13,79,0.05)] backdrop-blur-md">
+            <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#B35FA3] animate-pulse" />
             <span
-              className="text-xs font-bold uppercase tracking-[.12em]"
+              className="text-[9px] xs:text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[.14em] sm:tracking-[.18em]"
               style={{ color: PRIMARY }}
             >
-              India&apos;s #1 Gadget Marketplace
+              India&apos;s #1 Gadget & Rare Tech Marketplace
             </span>
           </div>
+        </div>
 
-          <h1
-            className="leading-[.95] tracking-wide"
-            style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+        {/* ========================================================================= */}
+        {/* HERO STAGE: BALANCED HEADLINE + HEADPHONE + VISIBLE BOTTOM BUTTON         */}
+        {/* ========================================================================= */}
+        <div className="relative mx-auto flex w-full max-w-5xl flex-1 items-center justify-center min-h-[360px] xs:min-h-[400px] sm:min-h-[480px] md:min-h-[520px] lg:min-h-[560px] my-auto">
+          {/* LAYER 1: HEADPHONE (3D PERSPECTIVE SCROLL REVEAL STAGE) */}
+          <div
+            ref={headphoneStageRef}
+            className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+            style={{ perspective: "1200px" }}
           >
-            <span className="block text-[clamp(48px,6.5vw,84px)] text-slate-900">
-              SELL YOUR
-            </span>
-            <span
-              className="block text-[clamp(56px,7.5vw,98px)]"
-              style={{ color: PRIMARY }}
+            {/* Soft ground ambient shadow */}
+            <div
+              ref={shadowRef}
+              className="absolute -bottom-2 sm:-bottom-5 h-6 sm:h-14 w-36 xs:w-52 sm:w-80 rounded-full bg-[#4A0D4F]/25 blur-lg sm:blur-2xl pointer-events-none"
+              style={{
+                transform: "scaleY(0.5)",
+                willChange: "transform, opacity",
+              }}
+            />
+
+            {/* GSAP Controlled 3D Transform Box (Scroll Driven) */}
+            <div
+              ref={headphoneBoxRef}
+              className="relative flex items-center justify-center pointer-events-none"
+              style={{
+                transformOrigin: "center center",
+                transformStyle: "preserve-3d",
+                willChange: "transform, opacity",
+              }}
             >
-              GADGETS
-            </span>
-            <span className="block text-[clamp(48px,6.5vw,84px)] text-slate-900">
-              REACH{" "}
-              <span
-                style={{ WebkitTextStroke: "2.2px #4A0D4F", color: "white" }}
-              >
-                MILLIONS
-              </span>
-            </span>
-          </h1>
-
-          <p className="max-w-[540px] text-[15px] leading-[1.7] text-slate-700 sm:text-[17px]">
-            List your products. Run{" "}
-            <span className="font-semibold text-slate-900">hyper-local ads</span>
-            . Deliver within hours. ShivraTech connects your store with{" "}
-            <span className="font-semibold text-slate-900">
-              real buyers nearby
-            </span>{" "}
-            and routes them into a cleaner marketplace flow.
-          </p>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Link
-                to="/login"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full px-8 py-4 text-[15px] font-black text-white shadow-lg transition hover:-translate-y-[3px] sm:w-auto"
+              {/* Desktop Subtle Mouse-Follow Parallax Wrapper (3-6px movement) */}
+              <div
+                ref={mouseHeadphoneRef}
+                className="relative flex items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg,#4A0D4F,#B35FA3)",
-                  boxShadow: "0 12px 28px rgba(74,13,79,0.35)",
+                  transformOrigin: "center center",
+                  transformStyle: "preserve-3d",
+                  willChange: "transform",
                 }}
               >
-                Start selling free
-                <ArrowRight size={17} />
-              </Link>
-              <Link
-                to="/shop"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full border px-7 py-4 text-[15px] font-semibold transition hover:bg-[#f4e8f3] sm:w-auto"
-                style={{ borderColor: ACCENT, color: PRIMARY }}
-              >
-                Browse products
-                <ArrowUpRight size={17} />
-              </Link>
-            </div>
-
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-              {sellerHighlights.map((item, index) => (
-                <Fragment key={item}>
-                  <div className="flex items-center gap-2 text-[13px]">
-                    <div
-                      className="flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: "#f4e8f3" }}
-                    >
-                      <CheckCircle2 size={10} style={{ color: PRIMARY }} />
-                    </div>
-                    <span className="font-semibold text-slate-600">{item}</span>
-                  </div>
-                  {index < sellerHighlights.length - 1 ? (
-                    <div
-                      className="hidden h-3.5 w-px sm:block"
-                      style={{ backgroundColor: "#f4e8f3" }}
+                <div className="headphone-idle-float flex items-center justify-center">
+                  {robotLoaded && (
+                    <img
+                      src={heroRobot}
+                      alt="Shivra AI Robot"
+                      onLoad={() => ScrollTrigger.refresh()}
+                      onError={() => setRobotLoaded(false)}
+                      className="h-[270px] xs:h-[310px] sm:h-[410px] md:h-[490px] lg:h-[550px] xl:h-[600px] w-auto max-w-full object-contain drop-shadow-[0_24px_50px_rgba(74,13,79,0.25)] select-none pointer-events-auto"
+                      style={{ backfaceVisibility: "hidden" }}
                     />
-                  ) : null}
-                </Fragment>
-              ))}
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* LAYER 2: OVERSIZED HEADING (FADES & MOVES HORIZONTALLY / BACKWARD ON SCROLL) */}
+          <div
+            ref={headlineRef}
+            className="pointer-events-none absolute inset-x-0 top-[18%] xs:top-[20%] sm:top-[26%] md:top-[28%] -translate-y-1/2 z-10 mx-auto max-w-4xl select-none text-center px-2 will-change-transform"
+          >
+            {/* Desktop Subtle Mouse-Follow Parallax Wrapper (1-3px movement) */}
+            <div ref={mouseHeadlineRef} className="will-change-transform">
+              <h1
+                className="flex flex-col items-center justify-center font-black uppercase tracking-tight leading-[0.88] sm:leading-[0.84]"
+                style={{
+                  fontFamily: "'Bebas Neue', 'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                {/* Top Headline Line */}
+                <span className="block text-[clamp(28px,7.5vw,96px)] text-[#26052B] tracking-[0.02em] drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">
+                  AESTHETIC GADGETS
+                </span>
+
+                {/* Bottom Headline Line (Solid Rich Purple with Drop Shadow) */}
+                <span className="block text-[clamp(24px,6.8vw,86px)] text-[#4A0D4F] tracking-[0.04em] drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">
+                  UNBOUND
+                </span>
+              </h1>
+            </div>
+          </div>
+
+          {/* LAYER 3: SHOP NOW BUTTON (CLEARLY VISIBLE ON SCREEN UNDER HEADPHONES) */}
+          <div
+            ref={ctaRef}
+            className="absolute z-30 flex items-center justify-center bottom-1 xs:bottom-2 sm:bottom-4 md:bottom-6 will-change-transform"
+          >
+            <Link
+              to="/shop"
+              className="group flex items-center gap-2 sm:gap-3 rounded-full bg-white/95 px-5 sm:px-7 py-2 sm:py-2.5 text-[12.5px] sm:text-[14px] font-extrabold text-slate-900 shadow-[0_8px_24px_rgba(74,13,79,0.18)] border border-purple-200/90 backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:shadow-[0_14px_36px_rgba(74,13,79,0.26)] active:scale-95"
+            >
+              <span>Shop Now</span>
+              <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-[#4A0D4F] text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-[#B35FA3]">
+                <ArrowUpRight size={13} strokeWidth={2.5} />
+              </span>
+            </Link>
+          </div>
+
+          {/* LAYER 4: FLOATING LEFT PREVIEW CARD (DESKTOP ONLY WITH SCROLL REACTION) */}
+          <div
+            ref={leftCardRef}
+            className="hidden lg:block absolute left-1 xl:left-4 bottom-4 xl:bottom-8 z-25 will-change-transform"
+          >
+            {/* Desktop Subtle Mouse-Follow Parallax Wrapper (5-8px movement) */}
+            <div ref={mouseLeftCardRef} className="will-change-transform">
+              <div className="left-card-float">
+                <Link
+                  to="/shop"
+                  className="group block w-44 xl:w-48 overflow-hidden rounded-[22px] border border-purple-200/80 bg-white/90 p-3 shadow-[0_16px_40px_rgba(74,13,79,0.1)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(74,13,79,0.18)]"
+                >
+                  <div className="relative h-28 xl:h-32 w-full overflow-hidden rounded-2xl bg-purple-50">
+                    <img
+                      src={floatingEarbudsCard}
+                      alt="Aura Pods Pro Drop"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-[#4A0D4F] shadow-sm backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#4A0D4F] group-hover:text-white">
+                      <ArrowUpRight size={13} strokeWidth={2.5} />
+                    </div>
+                  </div>
+
+                  <div className="mt-2 px-0.5">
+                    <span className="text-[9.5px] font-extrabold uppercase tracking-widest text-[#B35FA3]">
+                      Featured Drop
+                    </span>
+                    <p className="mt-0.5 text-xs font-bold text-slate-900">
+                      Aura Pods ANC
+                    </p>
+                    <p className="text-[10px] font-medium text-slate-500">
+                      Pro Audio Series
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* LAYER 5: FLOATING RIGHT SUPPORTING ELEMENTS (DESKTOP ONLY WITH SCROLL REACTION) */}
+          <div
+            ref={rightCardRef}
+            className="hidden lg:flex absolute right-1 xl:right-4 top-2 xl:top-4 z-25 flex-col items-end gap-3.5 max-w-[210px] xl:max-w-[240px] will-change-transform"
+          >
+            {/* Desktop Subtle Mouse-Follow Parallax Wrapper (5-8px movement) */}
+            <div ref={mouseRightCardRef} className="will-change-transform flex flex-col items-end gap-3.5">
+              <div className="right-card-float flex flex-col items-end gap-3.5">
+                {/* Circular Channel Icons */}
+                <div className="flex items-center gap-1.5 rounded-full border border-purple-200/70 bg-white/85 p-1.5 shadow-[0_8px_24px_rgba(74,13,79,0.06)] backdrop-blur-xl">
+                  {channelIcons.map((item, idx) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <div
+                        key={idx}
+                        title={item.label}
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-50/80 text-[#4A0D4F] transition-all duration-200 hover:scale-110 hover:bg-[#4A0D4F] hover:text-white cursor-pointer"
+                      >
+                        <IconComponent size={14} strokeWidth={2.2} />
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Editorial Quote Block */}
+                <div className="rounded-[22px] border border-purple-200/80 bg-white/90 p-3.5 xl:p-4 text-left shadow-[0_14px_36px_rgba(74,13,79,0.08)] backdrop-blur-xl transition hover:border-purple-300">
+                  <Quote
+                    size={16}
+                    className="text-[#B35FA3] mb-1.5 rotate-180 opacity-80"
+                  />
+                  <p className="text-[11.5px] xl:text-[12.5px] font-medium leading-[1.6] text-slate-700">
+                    Perfect blend of cutting-edge technology and verified seller
+                    craftsmanship across India.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <div
-            className="relative w-full max-w-sm overflow-hidden rounded-3xl p-4 shadow-[0_20px_48px_rgba(74,13,79,0.22)] sm:max-w-md sm:p-5 lg:max-w-lg"
-            style={{
-              background: `linear-gradient(150deg, ${PRIMARY} 0%, ${ACCENT} 65%, ${PRIMARY} 100%)`,
-            }}
-          >
-            <div className="absolute inset-6 rounded-2xl border border-white/15" />
-            <div className="relative z-10 h-[280px] w-full overflow-hidden sm:h-[340px] lg:h-[420px]">
-              {heroSlides.map(({ src, alt }, index) =>
-                failedSlides[index] ? null : (
-                  <img
-                    key={src}
-                    src={src}
-                    alt={alt}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    onError={() => handleSlideError(index)}
-                    className="absolute inset-0 h-full w-full object-contain drop-shadow-2xl transition-all duration-700"
-                    style={{
-                      opacity: activeSlide === index ? 1 : 0,
-                      transform:
-                        activeSlide === index ? "scale(1)" : "scale(0.98)",
-                    }}
-                  />
-                ),
-              )}
-
-              {!hasVisibleSlides ? (
-                <div className="absolute inset-0 flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-8 text-center backdrop-blur-sm">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
-                      Featured preview
-                    </p>
-                    <p className="mt-2 text-2xl font-bold text-white">
-                      Product visuals are loading.
-                    </p>
-                    <p className="mt-2 text-sm text-white/80">
-                      Please check back in a moment.
-                    </p>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            <div className="relative z-10 mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80">
-                  Featured drop
-                </p>
-                <p className="text-lg font-bold text-white">Endurance bundle</p>
-                <p className="text-sm text-white/80">
-                  45W Fast - 7000mAh - 5G ready
-                </p>
-              </div>
-              <Link
-                to="/shop"
-                className="w-full rounded-full bg-white px-5 py-2 text-center text-sm font-semibold text-[#4A0D4F] shadow-md transition hover:-translate-y-0.5 sm:w-auto"
+        {/* ========================================================================= */}
+        {/* BOTTOM SECTION: COMPACT CLEAN SINGLE-ROW TRUST BADGES ON MOBILE           */}
+        {/* ========================================================================= */}
+        <div
+          ref={highlightsRef}
+          className="pt-1 pb-2 sm:pb-3 text-center max-w-2xl mx-auto will-change-transform"
+        >
+          <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 px-1">
+            {sellerHighlights.map((item) => (
+              <div
+                key={item}
+                className="flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg sm:rounded-none bg-purple-100/50 sm:bg-transparent py-1 px-1.5 sm:p-0 text-[9px] xs:text-[10px] sm:text-xs"
               >
-                Buy now
-              </Link>
-            </div>
+                <div className="flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full bg-[#4A0D4F] text-white sm:bg-purple-100 sm:text-[#4A0D4F] flex-shrink-0">
+                  <CheckCircle2 size={9} strokeWidth={2.8} />
+                </div>
+                <span className="font-bold text-slate-800 leading-tight text-center truncate sm:whitespace-nowrap">
+                  {item}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
+      {/* Live Market Highlights Ticker Strip */}
       <div
-        className="relative z-10 overflow-hidden border-t py-3"
-        style={{ borderColor: ACCENT, backgroundColor: "#f4e8f3" }}
+        ref={tickerRef}
+        className="relative z-20 overflow-hidden border-y py-2 sm:py-2.5 will-change-transform"
+        style={{ borderColor: `${ACCENT}30`, backgroundColor: "#F3E8F5" }}
       >
         <div
           className="flex w-max"
-          style={{ animation: "heroTicker 28s linear infinite" }}
+          style={{ animation: "heroTicker 30s linear infinite" }}
         >
           {[...tickers, ...tickers].map((item, index) => (
             <span
               key={`${item}-${index}`}
-              className="inline-flex items-center gap-2.5 whitespace-nowrap px-5 text-[11px] font-bold uppercase tracking-[.07em] sm:px-8 sm:text-[12px]"
+              className="inline-flex items-center gap-2.5 sm:gap-3 whitespace-nowrap px-4 sm:px-6 text-[10px] sm:text-xs font-extrabold uppercase tracking-[.09em]"
               style={{ color: PRIMARY }}
             >
               {item}
               <span
-                className="h-[5px] w-[5px] flex-shrink-0 rounded-full"
+                className="h-1.5 w-1.5 flex-shrink-0 rounded-full"
                 style={{ backgroundColor: ACCENT }}
               />
             </span>
@@ -314,14 +748,55 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Custom Keyframe Animations */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        /* Subtle breathing idle float when at rest */
+        @keyframes headphoneIdleFloat {
+          0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-8px) rotate(0.6deg);
+          }
+        }
+
+        .headphone-idle-float {
+          animation: headphoneIdleFloat 7s ease-in-out infinite;
+          will-change: transform;
+        }
+
+        /* Subtle floating for left preview card */
+        @keyframes leftCardFloat {
+          0%, 100% {
+            transform: translateY(0px) rotate(-1deg);
+          }
+          50% {
+            transform: translateY(-8px) rotate(0.5deg);
+          }
+        }
+
+        .left-card-float {
+          animation: leftCardFloat 7s ease-in-out infinite;
+        }
+
+        /* Subtle floating for right quote card */
+        @keyframes rightCardFloat {
+          0%, 100% {
+            transform: translateY(0px) rotate(1deg);
+          }
+          50% {
+            transform: translateY(-7px) rotate(-0.5deg);
+          }
+        }
+
+        .right-card-float {
+          animation: rightCardFloat 8s ease-in-out infinite;
+        }
 
         @keyframes heroTicker {
           from {
             transform: translateX(0);
           }
-
           to {
             transform: translateX(-50%);
           }

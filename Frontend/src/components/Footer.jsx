@@ -24,6 +24,7 @@ const companyLinks = [
   { label: "About us", to: "/about" },
   { label: "Contact us", to: "/contact" },
   { label: "Our Blog", to: "/shop#insights" },
+  { label: "Admin Portal", href: "http://localhost:5175" },
 ];
 
 const shopLinks = [
@@ -122,15 +123,27 @@ const Footer = () => {
               />
             </div>
             <div className="space-y-3 text-[15px] text-slate-600 sm:space-y-4 sm:text-[17px]">
-              {companyLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  className="block transition hover:text-slate-900"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {companyLinks.map((item) =>
+                item.href ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block transition hover:text-slate-900"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    className="block transition hover:text-slate-900"
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
 

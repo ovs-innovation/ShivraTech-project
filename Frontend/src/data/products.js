@@ -1,6 +1,13 @@
 import rightHero from "../assets/rightHero.png";
 import rightHero1 from "../assets/rightHero1.png";
 import rightHero2 from "../assets/rightHero2.png";
+import categoryLaptop from "../assets/categoryLaptop.jpg";
+import categoryMouse from "../assets/categoryMouse.jpg";
+import categoryMonitor from "../assets/categoryMonitor.jpg";
+import categoryPhone from "../assets/categoryPhone.jpg";
+import categoryWatch from "../assets/categoryWatch.jpg";
+import heroCenterHeadphone from "../assets/heroCenterHeadphone.png";
+import floatingEarbudsCard from "../assets/floatingEarbudsCard.jpg";
 
 const slugify = (value) =>
   value
@@ -405,23 +412,307 @@ export const productSections = rawProductSections.map((section) => ({
   cards: section.cards.map((card) => enrichProduct(card, section)),
 }));
 
-export const allProducts = productSections.flatMap((section) =>
-  section.cards.map((card, index) => ({
-    ...card,
-    key: `${section.key}-${index}`,
-    sectionKey: section.key,
-    sectionTitle: section.title,
-  })),
-);
+export const showcaseItems = [
+  {
+    slug: "asus-zenbook-14-oled",
+    title: "Asus Zenbook 14 OLED Core Ultra 7",
+    price: "Rs. 65,200",
+    mrp: "Rs. 70,200",
+    spec: "16/512GB",
+    rating: 4.8,
+    reviews: 142,
+    img: categoryLaptop,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Asus Zenbook 14 OLED is engineered for premium mobile productivity and vivid entertainment.",
+    highlights: ["OLED 120Hz display", "Core Ultra 7 AI processor", "All-day battery", "Sleek aluminum chassis"],
+    specs: [["Processor", "Core Ultra 7"], ["RAM", "16GB LPDDR5X"], ["Storage", "512GB NVMe SSD"], ["Display", "14-inch 2.8K OLED"]],
+    searchText: "asus zenbook 14 oled core ultra 7 laptop pc accessories",
+  },
+  {
+    slug: "macbook-air-m3",
+    title: "Ultra Slim Book 14 IPS Quad HD 16GB",
+    price: "Rs. 58,999",
+    mrp: "Rs. 64,500",
+    spec: "16/512GB",
+    rating: 4.9,
+    reviews: 198,
+    img: categoryLaptop,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Ultra Slim Book 14 offers unmatched efficiency and quiet fanless everyday speed.",
+    highlights: ["Quad HD Retina display", "18-hour battery life", "Instant wake & Touch ID", "Precision glass trackpad"],
+    specs: [["Processor", "Octa-Core Pro"], ["Memory", "16GB Unified"], ["Storage", "512GB SSD"], ["Weight", "1.24 kg"]],
+    searchText: "ultra slim book 14 ips quad hd 16gb macbook laptop pc accessories",
+  },
+  {
+    slug: "hp-spectre-pro",
+    title: "Creator Studio Pro 15.6 FHD Ryzen 7",
+    price: "Rs. 62,400",
+    mrp: "Rs. 68,000",
+    spec: "16/1TB",
+    rating: 4.7,
+    reviews: 95,
+    img: categoryLaptop,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Creator Studio Pro delivers multi-core rendering muscle for video editing and multitasking.",
+    highlights: ["Ryzen 7 8-core CPU", "1TB High-speed NVMe", "Anti-glare FHD IPS panel", "Fast USB-C charging"],
+    specs: [["Processor", "AMD Ryzen 7"], ["RAM", "16GB DDR5"], ["Storage", "1TB SSD"], ["Display", "15.6 inch FHD 100% sRGB"]],
+    searchText: "creator studio pro 15.6 fhd ryzen 7 laptop pc accessories",
+  },
+  {
+    slug: "wireless-ergonomic-mouse",
+    title: "Titanium Precision Wireless Ergonomic Mouse",
+    price: "Rs. 3,499",
+    mrp: "Rs. 4,299",
+    spec: "4000 DPI",
+    rating: 4.8,
+    reviews: 164,
+    img: categoryMouse,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Titanium Precision Wireless Ergonomic Mouse reduces wrist strain during prolonged desk work.",
+    highlights: ["4000 DPI Optical Sensor", "Silent click switches", "Multi-device Bluetooth", "Rechargeable via USB-C"],
+    specs: [["Sensor", "High-precision Optical"], ["DPI", "Up to 4000 DPI"], ["Connectivity", "2.4GHz + BT 5.2"], ["Battery", "Up to 70 days"]],
+    searchText: "titanium precision wireless ergonomic mouse pc accessories",
+  },
+  {
+    slug: "curved-gaming-monitor",
+    title: "27-inch Frameless Ultra-Wide 165Hz IPS Monitor",
+    price: "Rs. 24,900",
+    mrp: "Rs. 29,999",
+    spec: "165Hz 1ms",
+    rating: 4.8,
+    reviews: 112,
+    img: categoryMonitor,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Immerse yourself in fluid gameplay and crystal clear workspace graphics with 165Hz IPS visuals.",
+    highlights: ["165Hz Refresh Rate", "1ms Response Time", "Frameless 3-side border", "HDR400 certification"],
+    specs: [["Panel", "27-inch Fast IPS"], ["Resolution", "2560 x 1440 QHD"], ["Ports", "2x HDMI 2.1, 1x DP 1.4"], ["Sync", "FreeSync & G-Sync Compatible"]],
+    searchText: "27-inch frameless ultra-wide 165hz ips monitor curved gaming pc accessories",
+  },
+  {
+    slug: "wireless-studio-headphones",
+    title: "Shivra Aura Studio Wireless ANC Headphones",
+    price: "Rs. 18,999",
+    mrp: "Rs. 22,999",
+    spec: "Hi-Res ANC",
+    rating: 4.9,
+    reviews: 245,
+    img: heroCenterHeadphone,
+    categorySlug: "audio",
+    categoryName: "Audio",
+    shortDescription: "Shivra Aura Studio Headphones combine hybrid active noise cancellation with studio acoustics.",
+    highlights: ["Hybrid ANC up to 40dB", "40mm custom bio-cellulose drivers", "55-hour battery life", "Multipoint connection"],
+    specs: [["Driver Size", "40mm Bio-cellulose"], ["Bluetooth", "v5.3 with LDAC"], ["Battery", "55 Hours (ANC off)"], ["Charging", "10 min for 5 hours"]],
+    searchText: "shivra aura studio wireless anc headphones audio",
+  },
+  {
+    slug: "pro-audio-headset",
+    title: "Deep Bass Bluetooth Headset with Spatial Mic",
+    price: "Rs. 12,499",
+    mrp: "Rs. 15,999",
+    spec: "40h Play",
+    rating: 4.8,
+    reviews: 188,
+    img: rightHero,
+    categorySlug: "audio",
+    categoryName: "Audio",
+    shortDescription: "Experience punchy deep bass and crystal clear call capture with AI spatial microphone array.",
+    highlights: ["Dynamic bass boost", "Dual ENC beamforming mics", "Ultra-soft memory foam pads", "Low latency gaming mode"],
+    specs: [["Battery", "40 Hours"], ["Latency", "45ms Game Mode"], ["Weight", "220g"], ["Warranty", "1 Year"]],
+    searchText: "deep bass bluetooth headset with spatial mic audio",
+  },
+  {
+    slug: "smart-watch-titanium",
+    title: "Aura Smart Watch Pro AMOLED with Heart Track",
+    price: "Rs. 14,999",
+    mrp: "Rs. 17,999",
+    spec: "AMOLED GPS",
+    rating: 4.8,
+    reviews: 176,
+    img: categoryWatch,
+    categorySlug: "lifestyle",
+    categoryName: "Lifestyle",
+    shortDescription: "Aura Smart Watch Pro tracks continuous health, heart rate, GPS activity, and notifications.",
+    highlights: ["1.43-inch Always-on AMOLED", "Built-in Dual-band GPS", "SpO2 & continuous heart tracking", "5ATM water resistant"],
+    specs: [["Display", "1.43\" AMOLED 466x466"], ["Battery", "12 Days typical"], ["Case", "Titanium alloy bezel"], ["Sensors", "PPG, SpO2, Barometer, Gyro"]],
+    searchText: "aura smart watch pro amoled with heart track lifestyle",
+  },
+  {
+    slug: "flagship-smartphone-pro",
+    title: "Titanium Pro 5G Flagship Dual SIM 256GB",
+    price: "Rs. 79,900",
+    mrp: "Rs. 89,900",
+    spec: "256GB 5G",
+    rating: 4.9,
+    reviews: 320,
+    img: categoryPhone,
+    categorySlug: "mobile-accessories",
+    categoryName: "Mobile Accessories",
+    shortDescription: "Flagship 5G smartphone packed with pro grade optical cameras and titanium frame resilience.",
+    highlights: ["Snapdragon 8 Gen 3", "200MP OIS Quad camera", "6.78-inch 120Hz LTPO display", "100W HyperCharge"],
+    specs: [["Processor", "Snapdragon 8 Gen 3"], ["Display", "6.78\" 120Hz LTPO AMOLED"], ["Storage", "256GB UFS 4.0"], ["Battery", "5400mAh with 100W wired"]],
+    searchText: "titanium pro 5g flagship dual sim 256gb mobile phone",
+  },
+  {
+    slug: "precision-rgb-mouse",
+    title: "Optical Speed Sensor Gaming Mouse Silent Clicks",
+    price: "Rs. 2,999",
+    mrp: "Rs. 3,799",
+    spec: "Silent Click",
+    rating: 4.7,
+    reviews: 130,
+    img: categoryMouse,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Swift tracking, zero click noise, and customizable RGB accents make this mouse a desk staple.",
+    highlights: ["Silent micro-switches", "RGB underglow lighting", "Teflon glide feet", "Braided paracord cable"],
+    specs: [["DPI", "6400 DPI"], ["Weight", "68g Ultralight"], ["Switches", "20M Silent Click"], ["Cable", "1.8m Paracord"]],
+    searchText: "optical speed sensor gaming mouse silent clicks pc accessories",
+  },
+  {
+    slug: "aura-pods-anc",
+    title: "Aura Pods ANC Pro with Smart Case Display",
+    price: "Rs. 9,999",
+    mrp: "Rs. 12,999",
+    spec: "ANC 32dB",
+    rating: 4.9,
+    reviews: 210,
+    img: floatingEarbudsCard,
+    categorySlug: "audio",
+    categoryName: "Audio",
+    shortDescription: "Next-gen earbuds with interactive touch screen charging case and high fidelity audio.",
+    highlights: ["Touchscreen Smart Case", "32dB Hybrid ANC", "Spatial 360 Audio", "32-hour combined playtime"],
+    specs: [["ANC", "32dB"], ["Playtime", "8h + 24h case"], ["Bluetooth", "v5.3"], ["Water Resistance", "IPX5"]],
+    searchText: "aura pods anc pro with smart case display audio",
+  },
+  {
+    slug: "fast-charge-car-kit",
+    title: "Smart Drive Media Kit & Magnetic Car Power",
+    price: "Rs. 21,999",
+    mrp: "Rs. 24,000",
+    spec: "65W Fast",
+    rating: 4.8,
+    reviews: 84,
+    img: rightHero1,
+    categorySlug: "car-accessories",
+    categoryName: "Car Accessories",
+    shortDescription: "All-in-one car mount, 65W rapid magnetic charging, and hands-free FM/Bluetooth streamer.",
+    highlights: ["65W Dual Output", "Auto-clamping magnetic mount", "FM Transmitter & Hands-free mic", "Overheat protection"],
+    specs: [["Power", "65W (PD 45W + QC 20W)"], ["Mount Type", "Air vent / Dashboard"], ["Compatibility", "Universal Qi & MagSafe"]],
+    searchText: "smart drive media kit magnetic car power car accessories",
+  },
+  {
+    slug: "desk-setup-bundle",
+    title: "Mechanical Pro Keypad & Creator Desk Hub",
+    price: "Rs. 18,499",
+    mrp: "Rs. 22,499",
+    spec: "Multi-Hub",
+    rating: 4.8,
+    reviews: 92,
+    img: rightHero2,
+    categorySlug: "pc-accessories",
+    categoryName: "PC Accessories",
+    shortDescription: "Custom hot-swappable tactile numpad combined with a 9-in-1 desktop connectivity hub.",
+    highlights: ["Gateron Yellow switches", "4K 60Hz HDMI + 100W PD pass-through", "CNC Anodized aluminum frame", "Rotary volume knob"],
+    specs: [["Hub Ports", "9 Ports"], ["Keys", "21 Keys + Knob"], ["Connection", "Detachable Type-C"], ["Backlight", "Per-key RGB"]],
+    searchText: "mechanical pro keypad creator desk hub pc accessories",
+  },
+  {
+    slug: "smart-audio-pod",
+    title: "Compact Room Sound Pod 360 Party Bass",
+    price: "Rs. 17,999",
+    mrp: "Rs. 19,999",
+    spec: "360 Audio",
+    rating: 4.7,
+    reviews: 115,
+    img: rightHero1,
+    categorySlug: "audio",
+    categoryName: "Audio",
+    shortDescription: "Fills bedrooms and living spaces with expansive 360-degree acoustic fidelity.",
+    highlights: ["Omnidirectional Sound", "Stereo pairing capable", "16-hour rechargeable battery", "Water resistant IPX6"],
+    specs: [["Power", "30W RMS"], ["Battery", "16 Hours"], ["Wireless", "Bluetooth 5.3 + AUX"], ["Weight", "850g"]],
+    searchText: "compact room sound pod 360 party bass audio",
+  },
+  {
+    slug: "travel-smart-watch-bundle",
+    title: "Endurance Lifestyle Watch with Braided Straps",
+    price: "Rs. 19,999",
+    mrp: "Rs. 21,999",
+    spec: "7-Day Bat",
+    rating: 4.9,
+    reviews: 140,
+    img: rightHero2,
+    categorySlug: "lifestyle",
+    categoryName: "Lifestyle",
+    shortDescription: "Rugged outdoors watch bundle including magnetic charger and 2 extra braided nylon bands.",
+    highlights: ["7-Day battery endurance", "MIL-STD-810H durability", "Dual-band satellite tracking", "Offline terrain mapping"],
+    specs: [["Battery", "7 Days (GPS on: 30h)"], ["Glass", "Sapphire Crystal"], ["Water Resistance", "10 ATM"], ["Sensors", "Altimeter, Compass, PPG"]],
+    searchText: "endurance lifestyle watch with braided straps lifestyle",
+  },
+];
+
+export const allProducts = [
+  ...productSections.flatMap((section) =>
+    section.cards.map((card, index) => ({
+      ...card,
+      key: `${section.key}-${index}`,
+      sectionKey: section.key,
+      sectionTitle: section.title,
+    })),
+  ),
+  ...showcaseItems,
+];
 
 export const parsePrice = (price) =>
-  Number(price.replace(/[^0-9.]/g, "")) || 0;
+  Number(String(price).replace(/[^0-9.]/g, "")) || 0;
 
 export const formatPrice = (value) =>
   `Rs. ${value.toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+
+export const normalizeApiProduct = (product) => {
+  const price = Number(product.price) || 0;
+  const mrp = Number(product.mrp) || price;
+  const specifications = String(product.keySpecifications || product.spec || "")
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const highlights = [product.spec, ...(product.tags || [])].filter(Boolean).slice(0, 4);
+  const specs = [
+    ["Brand", product.brand],
+    ["Subcategory", product.subcategory],
+    ["SKU", product.sku],
+    ["Weight", product.weight],
+    ["Warranty", product.warranty],
+    ["Return policy", product.returnPolicy],
+    ...specifications.map((item, index) => [`Specification ${index + 1}`, item]),
+  ].filter(([, value]) => value);
+
+  return {
+    ...product,
+    price: formatPrice(price),
+    mrp: formatPrice(mrp),
+    img: product.mainImage || product.images?.[0] || rightHero,
+    rating: Number(product.rating) || 0,
+    reviews: Number(product.numReviews) || product.reviews?.length || 0,
+    shortDescription: product.shortDescription || product.description || "",
+    fullDescription: product.description || "",
+    highlights: highlights.length ? highlights : ["Vendor listed product"],
+    specs,
+    promo: product.stock > 0 ? "In stock and ready to ship" : "Currently out of stock",
+    off: mrp > price ? `${Math.round(((mrp - price) / mrp) * 100)}% OFF` : "",
+    searchText: [product.title, product.categoryName, product.spec, ...(product.tags || [])]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase(),
+  };
+};
 
 export const findProductBySlug = (slug) =>
   allProducts.find((product) => product.slug === slug);

@@ -1,84 +1,73 @@
 import React from "react";
-import { CreditCard, Headphones, ShieldCheck, Truck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { RotateCcw, ShieldCheck, Truck, Wallet } from "lucide-react";
+import { motion } from "framer-motion";
 
 const features = [
   {
-    icon: <Truck size={28} />,
-    title: "Fast delivery",
-    desc: "Get products from nearby vendors quickly.",
+    icon: Truck,
+    title: "Nationwide Delivery",
+    desc: "Delivery in hours & express shipping across India.",
   },
   {
-    icon: <ShieldCheck size={28} />,
-    title: "Secure shopping",
-    desc: "Verified stores, protected payments, no surprises.",
+    icon: Wallet,
+    title: "Money Back",
+    desc: "100% Escrow protected refund within 7 days.",
   },
   {
-    icon: <Headphones size={28} />,
-    title: "24/7 support",
-    desc: "We are always here to help across chat and call.",
+    icon: ShieldCheck,
+    title: "Authentic Product",
+    desc: "100% Original from verified gadget stores.",
   },
   {
-    icon: <CreditCard size={28} />,
-    title: "Easy payments",
-    desc: "Cards, UPI, BNPL, and COD all supported.",
+    icon: RotateCcw,
+    title: "Easy Return",
+    desc: "Easy doorstep return & replacement system.",
   },
 ];
 
 const Features = () => {
   return (
-    <section className="bg-white px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-2">
-            <p
-              className="text-xs font-semibold uppercase tracking-[0.22em]"
-              style={{ color: "#4A0D4F" }}
-            >
-              Why ShivraTech
-            </p>
-            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
-              Built to be reliable
-            </h2>
-            <p className="text-sm text-slate-600">
-              Modern infra, local partners, and thoughtful support keep orders
-              moving.
-            </p>
-          </div>
-          <Link
-            to="/support/faqs"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
-            style={{ borderColor: "#B35FA3", color: "#4A0D4F" }}
-          >
-            View service levels
-          </Link>
-        </div>
-
-        <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-          {features.map((item) => (
-            <div
-              key={item.title}
-              className="group relative overflow-hidden rounded-2xl border bg-white p-4 shadow-lg shadow-[#B35FA3]/20 transition hover:-translate-y-1 hover:border-[#B35FA3] hover:shadow-[#B35FA3]/30 sm:p-5"
-              style={{ borderColor: "#B35FA3" }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#4A0D4F]/25 via-[#B35FA3]/12 to-[#4A0D4F]/25 opacity-0 blur-3xl transition group-hover:opacity-100 group-hover:blur-2xl" />
-              <div
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ backgroundColor: "#f4e8f3", color: "#4A0D4F" }}
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="bg-white py-8 sm:py-12 border-t border-purple-100/80 overflow-hidden"
+    >
+      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+          {features.map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="group flex items-center gap-3 rounded-2xl border border-purple-100/90 bg-[#F4EBF5]/80 p-3 sm:p-4 transition-all duration-300 hover:bg-[#F2E5F3] hover:shadow-md"
               >
-                {item.icon}
-              </div>
-              <h3 className="relative mt-4 text-lg font-semibold text-slate-900">
-                {item.title}
-              </h3>
-              <p className="relative mt-2 text-sm text-slate-600">
-                {item.desc}
-              </p>
-            </div>
-          ))}
+                {/* Circular Navy/Purple Icon Container (Matching Reference 3) */}
+                <div className="flex h-9 w-9 sm:h-11 sm:w-11 flex-shrink-0 items-center justify-center rounded-full bg-[#26052B] text-white shadow-xs transition-transform duration-300 group-hover:scale-105 group-hover:bg-[#4A0D4F]">
+                  <IconComponent size={17} strokeWidth={2.2} />
+                </div>
+
+                {/* Text Content */}
+                <div className="space-y-0.5 min-w-0 flex-1">
+                  <h3 className="text-xs sm:text-[13.5px] font-bold text-slate-900 leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-[10px] sm:text-[11px] text-slate-600 leading-snug line-clamp-2">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
