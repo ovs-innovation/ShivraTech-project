@@ -1,33 +1,46 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  CreditCard,
   Grid,
   LayoutDashboard,
+  LifeBuoy,
   LogOut,
   Menu,
   Moon,
   Package,
   ShoppingBag,
+  Sparkles,
   Store,
   Sun,
+  TicketPercent,
   Users,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { Toast, ConfirmDialog } from "../components/UI";
+import { apiGetVendors, apiGetTickets } from "../api";
 import logo from "../assets/logo.png";
 import OverviewTab from "./tabs/OverviewTab";
 import VendorsTab from "./tabs/VendorsTab";
 import CustomersTab from "./tabs/CustomersTab";
 import ProductsTab from "./tabs/ProductsTab";
 import OrdersTab from "./tabs/OrdersTab";
+import TransactionsTab from "./tabs/TransactionsTab";
 import CategoriesTab from "./tabs/CategoriesTab";
+import CouponsTab from "./tabs/CouponsTab";
+import HomepageTab from "./tabs/HomepageTab";
+import DisputesTab from "./tabs/DisputesTab";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "vendors", label: "Vendors", icon: Store },
+  { id: "vendors", label: "Vendor Approvals", icon: Store },
+  { id: "tickets", label: "Support & Disputes", icon: LifeBuoy },
   { id: "customers", label: "Customers", icon: Users },
   { id: "products", label: "Products", icon: Package },
   { id: "orders", label: "Orders", icon: ShoppingBag },
+  { id: "transactions", label: "Transactions", icon: CreditCard },
+  { id: "coupons", label: "Coupons & Offers", icon: TicketPercent },
+  { id: "homepage", label: "Homepage & Banners", icon: Sparkles },
   { id: "categories", label: "Categories", icon: Grid },
 ];
 
@@ -38,7 +51,41 @@ export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState(null);
   const [confirm, setConfirm] = useState(null);
+  const [pendingVendors, setPendingVendors] = useState(0);
+  const [openTickets, setOpenTickets] = useState(0);
   const toastTimer = useRef(null);
+
+  const fetchPendingVendors = useCallback(async () => {
+    try {
+      const res = await apiGetVendors("status=pending&limit=1");
+      if (res.data?.counts?.pending !== undefined) {
+        setPendingVendors(res.data.counts.pending);
+      }
+    } catch {
+      // ignore background poll error
+    }
+  }, []);
+
+  const fetchOpenTickets = useCallback(async () => {
+    try {
+      const res = await apiGetTickets("status=open&limit=1");
+      if (res.data?.counts?.open !== undefined) {
+        setOpenTickets(res.data.counts.open);
+      }
+    } catch {
+      // ignore background poll error
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPendingVendors();
+    fetchOpenTickets();
+    const timer = setInterval(() => {
+      fetchPendingVendors();
+      fetchOpenTickets();
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [fetchPendingVendors, fetchOpenTickets]);
 
   const showToast = useCallback((msg, type = "success") => {
     setToast({ msg, type });
@@ -56,7 +103,7 @@ export default function DashboardPage() {
     });
   }, []);
 
-  const tabProps = { showToast, showConfirm };
+  const tabProps = { showToast, showConfirm, refreshPendingCount: fetchPendingVendors };
 
   return (
     <div
@@ -187,7 +234,67 @@ export default function DashboardPage() {
                 }}
               >
                 <tab.icon size={18} style={{ flexShrink: 0 }} />
-                {!collapsed && <span>{tab.label}</span>}
+                {!collapsed && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flex: 1, gap: "6px" }}>
+                    <span>{tab.label}</span>
+                    {tab.id === "vendors" && pendingVendors > 0 && (
+                      <span
+                        style={{
+                          background: "#f59e0b",
+                          color: "#fff",
+                          fontSize: "10.5px",
+                          fontWeight: 800,
+                          padding: "1px 6px",
+                          borderRadius: "10px",
+                          marginLeft: "auto",
+                        }}
+                      >
+                        {pendingVendors}
+                      </span>
+                    )}
+                    {tab.id === "tickets" && openTickets > 0 && (
+                      <span
+                        style={{
+                          background: "#ef4444",
+                          color: "#fff",
+                          fontSize: "10.5px",
+                          fontWeight: 800,
+                          padding: "1px 6px",
+                          borderRadius: "10px",
+                          marginLeft: "auto",
+                        }}
+                      >
+                        {openTickets}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {collapsed && tab.id === "vendors" && pendingVendors > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 6,
+                      right: 6,
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: "#f59e0b",
+                    }}
+                  />
+                )}
+                {collapsed && tab.id === "tickets" && openTickets > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 6,
+                      right: 6,
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: "#ef4444",
+                    }}
+                  />
+                )}
               </button>
             );
           })}
@@ -444,9 +551,15 @@ export default function DashboardPage() {
         <main style={{ flex: 1, overflowY: "auto", padding: "28px" }}>
           {activeTab === "overview" && <OverviewTab {...tabProps} />}
           {activeTab === "vendors" && <VendorsTab {...tabProps} />}
+          {activeTab === "tickets" && (
+            <DisputesTab {...tabProps} refreshOpenCount={fetchOpenTickets} />
+          )}
           {activeTab === "customers" && <CustomersTab {...tabProps} />}
           {activeTab === "products" && <ProductsTab {...tabProps} />}
           {activeTab === "orders" && <OrdersTab {...tabProps} />}
+          {activeTab === "transactions" && <TransactionsTab {...tabProps} />}
+          {activeTab === "coupons" && <CouponsTab {...tabProps} />}
+          {activeTab === "homepage" && <HomepageTab {...tabProps} />}
           {activeTab === "categories" && <CategoriesTab {...tabProps} />}
         </main>
       </div>

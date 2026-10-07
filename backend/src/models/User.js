@@ -43,6 +43,79 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // Vendor Approval & Verification Fields
+    vendorStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected", "suspended"],
+      default: function () {
+        return this.role === "seller" ? "pending" : "approved";
+      },
+    },
+    storeStatus: {
+      type: String,
+      enum: ["active", "pending_approval", "suspended", "rejected"],
+      default: function () {
+        return this.role === "seller" ? "pending_approval" : "active";
+      },
+    },
+    businessType: {
+      type: String,
+      default: "Individual / Sole Proprietor",
+    },
+    businessAddress: {
+      type: String,
+      default: "",
+    },
+    gstNumber: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    panNumber: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    idProofUrl: {
+      type: String,
+      default: "",
+    },
+    idProofType: {
+      type: String,
+      default: "Aadhaar / Voter ID / Passport",
+    },
+    businessDocUrl: {
+      type: String,
+      default: "",
+    },
+    businessDocType: {
+      type: String,
+      default: "GST Certificate / Business License",
+    },
+    documentVerificationStatus: {
+      type: String,
+      enum: ["unsubmitted", "pending", "verified", "rejected"],
+      default: function () {
+        return this.role === "seller" ? "pending" : "unsubmitted";
+      },
+    },
+    rejectionReason: {
+      type: String,
+      default: "",
+    },
+    suspensionReason: {
+      type: String,
+      default: "",
+    },
+    approvedAt: {
+      type: Date,
+    },
+    rejectedAt: {
+      type: Date,
+    },
+    suspendedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

@@ -210,14 +210,18 @@ const ProductDetails = () => {
             >
               <div className="flex flex-wrap items-end gap-3">
                 <span className="text-3xl font-black text-slate-900">
-                  {product.price}
+                  {product.priceFormatted || (typeof product.price === "number" ? formatPrice(product.price) : product.price)}
                 </span>
-                <span className="text-lg font-semibold text-emerald-600">
-                  {product.off}
-                </span>
-                <span className="text-sm text-slate-400 line-through">
-                  MRP {product.mrp}
-                </span>
+                {product.off && (
+                  <span className="text-lg font-semibold text-emerald-600">
+                    {product.off}
+                  </span>
+                )}
+                {(product.mrpFormatted || product.mrp) && (
+                  <span className="text-sm text-slate-400 line-through">
+                    MRP {product.mrpFormatted || (typeof product.mrp === "number" ? formatPrice(product.mrp) : product.mrp)}
+                  </span>
+                )}
               </div>
               <p className="mt-4 text-sm leading-7 text-slate-600">
                 {product.shortDescription}

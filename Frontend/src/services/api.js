@@ -64,6 +64,8 @@ export const apiGetProducts = (params = "") => {
   return apiFetch(`/products${params ? `?${params}` : ""}`);
 };
 
+export const apiGetCategories = () => apiFetch("/categories");
+
 export const apiGetProductBySlug = (slug) => {
   return apiFetch(`/products/${slug}`);
 };
@@ -241,4 +243,62 @@ export const apiAdminUpdateCategory = (id, data) =>
   });
 export const apiAdminDeleteCategory = (id) =>
   apiFetch(`/admin/categories/${id}`, { method: "DELETE" });
+
+// ==================== COUPONS & OFFERS APIs ====================
+
+// Customer / Public
+export const apiGetActiveCoupons = (params = "") =>
+  apiFetch(`/coupons/active${params ? `?${params}` : ""}`);
+
+export const apiValidateCoupon = (payload) =>
+  apiFetch("/coupons/validate", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+// Vendor / Seller Coupon Management
+export const apiGetVendorCoupons = () =>
+  apiFetch("/coupons/vendor/my-coupons");
+
+export const apiCreateVendorCoupon = (data) =>
+  apiFetch("/coupons/vendor", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const apiUpdateVendorCoupon = (id, data) =>
+  apiFetch(`/coupons/vendor/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+
+export const apiDeleteVendorCoupon = (id) =>
+  apiFetch(`/coupons/vendor/${id}`, {
+    method: "DELETE",
+  });
+
+export const apiToggleVendorCoupon = (id) =>
+  apiFetch(`/coupons/vendor/${id}/toggle`, {
+    method: "PATCH",
+  });
+
+// ==================== BANNERS & HOMEPAGE CONTENT APIs ====================
+export const apiGetBanners = (params = "") =>
+  apiFetch(`/banners${params ? `?${params}` : ""}`);
+
+export const apiRecordBannerClick = (id) =>
+  apiFetch(`/banners/${id}/click`, {
+    method: "POST",
+  });
+
+// ==================== SUPPORT & DISPUTES APIs ====================
+export const apiCreateTicket = (data) =>
+  apiFetch("/tickets", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const apiGetMyTickets = () =>
+  apiFetch("/tickets/my-tickets");
+
 

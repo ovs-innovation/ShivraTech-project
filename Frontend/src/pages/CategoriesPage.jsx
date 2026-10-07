@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { categories } from "../data/catalog";
+import useCategories from "../hooks/useCategories";
 import { allProducts } from "../data/products";
 
 const PRIMARY = "#4A0D4F";
@@ -23,9 +23,16 @@ const iconMap = {
 };
 
 const CategoriesPage = () => {
+  const { categories, error } = useCategories();
+
   return (
     <section className="px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
       <div className="mx-auto max-w-6xl space-y-10">
+        {error && (
+          <p className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700" role="alert">
+            {error}
+          </p>
+        )}
         <div
           className="rounded-[32px] border px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-12"
           style={{
@@ -106,7 +113,11 @@ const CategoriesPage = () => {
                     <div className="absolute inset-0 bg-gradient-to-br from-[#240428]/82 via-[#4A0D4F]/58 to-[#B35FA3]/30" />
                     <div className="absolute left-6 top-6 flex items-center gap-3">
                       <div className="rounded-full bg-white/15 p-3 text-white backdrop-blur-sm">
-                        {React.createElement(Icon, { size: 20, strokeWidth: 2.3 })}
+                        {category.icon ? (
+                          <span className="text-xl" aria-hidden="true">{category.icon}</span>
+                        ) : (
+                          React.createElement(Icon, { size: 20, strokeWidth: 2.3 })
+                        )}
                       </div>
                       <span className="rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
                         {category.focus}

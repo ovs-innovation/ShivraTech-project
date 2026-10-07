@@ -667,8 +667,11 @@ export const allProducts = [
   ...showcaseItems,
 ];
 
-export const parsePrice = (price) =>
-  Number(String(price).replace(/[^0-9.]/g, "")) || 0;
+export const parsePrice = (price) => {
+  if (typeof price === "number") return isNaN(price) ? 0 : price;
+  if (!price) return 0;
+  return Number(String(price).replace(/[^0-9.]/g, "")) || 0;
+};
 
 export const formatPrice = (value) =>
   `Rs. ${value.toLocaleString("en-IN", {
@@ -696,8 +699,10 @@ export const normalizeApiProduct = (product) => {
 
   return {
     ...product,
-    price: formatPrice(price),
-    mrp: formatPrice(mrp),
+    price,                          // keep as NUMBER for reliable cart arithmetic
+    mrp,                            // keep as NUMBER
+    priceFormatted: formatPrice(price),   // formatted string for display
+    mrpFormatted: mrp > 0 ? formatPrice(mrp) : "",
     img: product.mainImage || product.images?.[0] || rightHero,
     rating: Number(product.rating) || 0,
     reviews: Number(product.numReviews) || product.reviews?.length || 0,

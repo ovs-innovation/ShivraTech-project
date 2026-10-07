@@ -1,5 +1,7 @@
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
+import User from "../models/User.js";
+import Coupon from "../models/Coupon.js";
 import { ApiResponse, ApiError } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -13,6 +15,10 @@ export const createOrder = asyncHandler(async (req, res) => {
     paymentMethod,
     itemsPrice,
     shippingPrice,
+    couponCode,
+    couponDiscount,
+    couponId,
+    couponType,
     totalAmount,
   } = req.body;
 
@@ -24,27 +30,72 @@ export const createOrder = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Shipping address is incomplete");
   }
 
-  // Populate vendor info from products if not provided
+  // Populate vendor and store info from products/users if not provided
   const processedItems = await Promise.all(
     items.map(async (item) => {
       let seller = item.seller;
       let sellerName = item.sellerName;
+      let storeName = item.storeName;
 
-      if (!seller && item.slug) {
+      if ((!seller || !storeName) && item.slug) {
         const prod = await Product.findOne({ slug: item.slug });
         if (prod) {
-          seller = prod.seller;
-          sellerName = prod.sellerName;
+          seller = seller || prod.seller;
+          sellerName = sellerName || prod.sellerName;
+        }
+      }
+
+      if (seller && !storeName) {
+        const sellerUser = await User.findById(seller).select("storeName name");
+        if (sellerUser) {
+          storeName = sellerUser.storeName || sellerUser.name;
+          if (!sellerName) sellerName = sellerUser.storeName || sellerUser.name;
         }
       }
 
       return {
         ...item,
         seller: seller || req.user._id,
-        sellerName: sellerName || "Shivra Partner",
+        sellerName: sellerName || storeName || "Shivra Partner",
+        storeName: storeName || sellerName || "Shivra Store",
       };
     })
   );
+
+  const isCOD = (paymentMethod || "COD") === "COD";
+  const defaultPayId = isCOD
+    ? `cod_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`
+    : `pay_rzp_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
+
+  let validatedCoupon = null;
+  let appliedDiscount = Number(couponDiscount || 0);
+
+  if (couponCode && typeof couponCode === "string" && couponCode.trim()) {
+    try {
+      const cleanCode = couponCode.trim().toUpperCase();
+      const cp = await Coupon.findOne({ code: cleanCode });
+      if (cp && cp.status === "active") {
+        validatedCoupon = cp;
+        // Increment usage count
+        cp.usageCount = (cp.usageCount || 0) + 1;
+        // Track user usage
+        if (req.user?._id) {
+          const userRec = cp.usedBy?.find(
+            (u) => u.user && u.user.toString() === req.user._id.toString()
+          );
+          if (userRec) {
+            userRec.count = (userRec.count || 1) + 1;
+          } else {
+            cp.usedBy = cp.usedBy || [];
+            cp.usedBy.push({ user: req.user._id, count: 1 });
+          }
+        }
+        await cp.save();
+      }
+    } catch (err) {
+      console.warn("[createOrder] Coupon tracking non-fatal error:", err.message);
+    }
+  }
 
   const order = await Order.create({
     user: req.user._id,
@@ -53,11 +104,18 @@ export const createOrder = asyncHandler(async (req, res) => {
     items: processedItems,
     shippingAddress,
     paymentMethod: paymentMethod || "COD",
-    paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
-    isPaid: paymentMethod !== "COD",
-    paidAt: paymentMethod !== "COD" ? new Date() : undefined,
+    paymentStatus: req.body.paymentStatus || (isCOD ? "Pending" : "Paid"),
+    paymentId: req.body.paymentId || defaultPayId,
+    gateway: req.body.gateway || (isCOD ? "Cash on Delivery" : "Razorpay"),
+    gatewayStatus: req.body.gatewayStatus || (isCOD ? "pending" : "captured"),
+    isPaid: req.body.paymentStatus === "Paid" || !isCOD,
+    paidAt: req.body.paymentStatus === "Paid" || !isCOD ? new Date() : undefined,
     itemsPrice: Number(itemsPrice || totalAmount),
     shippingPrice: Number(shippingPrice || 0),
+    couponCode: validatedCoupon?.code || couponCode || "",
+    couponDiscount: appliedDiscount,
+    couponId: validatedCoupon?._id || couponId || null,
+    couponType: validatedCoupon?.type || couponType || "",
     totalAmount: Number(totalAmount),
     orderStatus: "Placed",
   });

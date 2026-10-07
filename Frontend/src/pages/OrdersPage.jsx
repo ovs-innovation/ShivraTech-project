@@ -3,6 +3,7 @@ import {
   AlertCircle,
   ArrowRight,
   CheckCircle2,
+  LifeBuoy,
   Package,
   RotateCcw,
   ShieldCheck,
@@ -17,6 +18,7 @@ import { useShop } from "../context/useShop";
 import {
   apiAddProductReview,
   apiCancelOrder,
+  apiCreateTicket,
   apiGetMyOrders,
   apiReturnOrder,
 } from "../services/api";
@@ -82,6 +84,54 @@ const OrdersPage = () => {
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [returnOrderId, setReturnOrderId] = useState(null);
   const [returnReason, setReturnReason] = useState("Aesthetic preference / wanted different model");
+
+  // Dispute Modal State
+  const [showDisputeModal, setShowDisputeModal] = useState(false);
+  const [disputeOrder, setDisputeOrder] = useState(null);
+  const [disputeCategory, setDisputeCategory] = useState("order");
+  const [disputeSubject, setDisputeSubject] = useState("");
+  const [disputeDescription, setDisputeDescription] = useState("");
+  const [disputeSubmitting, setDisputeSubmitting] = useState(false);
+
+  const openDisputeModal = (order) => {
+    setDisputeOrder(order);
+    setDisputeCategory("order");
+    setDisputeSubject(`Issue with Order ${order.orderId}`);
+    setDisputeDescription("");
+    setShowDisputeModal(true);
+  };
+
+  const handleRaiseDispute = async (e) => {
+    e.preventDefault();
+    if (!disputeDescription.trim()) {
+      showToast("Please provide details about your issue");
+      return;
+    }
+    setDisputeSubmitting(true);
+    try {
+      const res = await apiCreateTicket({
+        category: disputeCategory,
+        subject: disputeSubject,
+        description: disputeDescription,
+        orderId: disputeOrder?.orderId || "",
+        paymentId: disputeOrder?.paymentId || "",
+        name:
+          disputeOrder?.customerName ||
+          disputeOrder?.shippingAddress?.fullName ||
+          "",
+        email: disputeOrder?.customerEmail || "",
+        priority: disputeCategory === "payment" ? "urgent" : "high",
+      });
+      showToast(
+        `Dispute ticket ${res.data?.ticketId || ""} raised to Admin!`
+      );
+      setShowDisputeModal(false);
+    } catch (err) {
+      showToast(err.message || "Failed to raise dispute ticket");
+    } finally {
+      setDisputeSubmitting(false);
+    }
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -429,7 +479,17 @@ const OrdersPage = () => {
                     <span>100% Buyer Escrow Protection</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => openDisputeModal(order)}
+                      className="rounded-full border border-purple-200 bg-purple-50/60 px-3.5 py-1.5 text-xs font-bold text-[#4A0D4F] hover:bg-purple-100 transition flex items-center gap-1.5"
+                      title="Report an issue or dispute to Admin"
+                    >
+                      <LifeBuoy size={13} />
+                      <span>Need Help / Dispute</span>
+                    </button>
+
                     {canCancel && (
                       <button
                         type="button"
@@ -630,6 +690,116 @@ const OrdersPage = () => {
                 {actionLoading ? "Processing..." : "Schedule Return Pickup"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* RAISE DISPUTE / SUPPORT TICKET MODAL                                      */}
+      {/* ========================================================================= */}
+      {showDisputeModal && disputeOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
+          <div className="relative w-full max-w-lg rounded-[28px] border border-purple-200 bg-white p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-purple-100 pb-3 mb-4">
+              <div className="flex items-center gap-2 text-[#4A0D4F]">
+                <LifeBuoy size={20} />
+                <h3 className="text-lg font-black text-slate-900">
+                  Raise Dispute / Order Issue
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDisputeModal(false)}
+                className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 mb-4">
+              Escalate issues directly to ShivraTech Admin for order fulfillment, double payment deduction, or return mediation.
+            </p>
+
+            <form onSubmit={handleRaiseDispute} className="space-y-3.5">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-xl bg-purple-50/60 p-2.5 border border-purple-100">
+                  <span className="block text-[10.5px] font-bold text-slate-400 uppercase">
+                    Order Reference
+                  </span>
+                  <span className="font-mono text-xs font-bold text-[#4A0D4F]">
+                    {disputeOrder.orderId}
+                  </span>
+                </div>
+                <div className="rounded-xl bg-purple-50/60 p-2.5 border border-purple-100">
+                  <span className="block text-[10.5px] font-bold text-slate-400 uppercase">
+                    Payment Status
+                  </span>
+                  <span className="text-xs font-bold text-slate-800">
+                    {disputeOrder.paymentStatus} ({disputeOrder.paymentMethod})
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Issue Category *
+                </label>
+                <select
+                  value={disputeCategory}
+                  onChange={(e) => setDisputeCategory(e.target.value)}
+                  className="w-full rounded-xl border border-purple-100 bg-purple-50/20 px-3.5 py-2.5 text-xs outline-none focus:border-[#B35FA3]"
+                >
+                  <option value="order">Order Delivery & Tracking Delay</option>
+                  <option value="payment">Payment Issue / Amount Deducted Twice</option>
+                  <option value="customer">Damaged / Wrong Item / Missing Accessories</option>
+                  <option value="general">Escrow Refund / Cancellation Mediation</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Subject *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={disputeSubject}
+                  onChange={(e) => setDisputeSubject(e.target.value)}
+                  className="w-full rounded-xl border border-purple-100 bg-purple-50/20 px-3.5 py-2 text-xs outline-none focus:border-[#B35FA3]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Describe what went wrong *
+                </label>
+                <textarea
+                  required
+                  rows={4}
+                  value={disputeDescription}
+                  onChange={(e) => setDisputeDescription(e.target.value)}
+                  placeholder="Explain the problem in detail (e.g. Courier marked delivered but not received, money deducted twice from bank account, or received defective product)..."
+                  className="w-full rounded-xl border border-purple-100 bg-purple-50/20 p-3 text-xs outline-none focus:border-[#B35FA3] resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-purple-50">
+                <button
+                  type="button"
+                  onClick={() => setShowDisputeModal(false)}
+                  className="rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={disputeSubmitting}
+                  className="rounded-full bg-[#4A0D4F] hover:bg-[#380B3C] px-5 py-2 text-xs font-bold text-white shadow-sm transition disabled:opacity-50"
+                >
+                  {disputeSubmitting ? "Submitting Ticket..." : "Submit to Admin"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

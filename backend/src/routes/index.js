@@ -5,6 +5,9 @@ import categoryRoutes from "./categoryRoutes.js";
 import orderRoutes from "./orderRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import adminRoutes from "./adminRoutes.js";
+import couponRoutes from "./couponRoutes.js";
+import bannerRoutes from "./bannerRoutes.js";
+import ticketRoutes from "./ticketRoutes.js";
 
 const router = Router();
 
@@ -14,6 +17,9 @@ router.use("/categories", categoryRoutes);
 router.use("/orders", orderRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/admin", adminRoutes);
+router.use("/coupons", couponRoutes);
+router.use("/banners", bannerRoutes);
+router.use("/tickets", ticketRoutes);
 
 router.get("/health", (req, res) => {
   res.status(200).json({

@@ -20,10 +20,10 @@ import {
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "../context/useShop";
-import { categories } from "../data/catalog";
 import { allProducts, normalizeApiProduct, parsePrice, formatPrice } from "../data/products";
 import { ModernProductCard } from "../components/ProductsShowcase";
 import { apiGetProducts } from "../services/api";
+import useCategories from "../hooks/useCategories";
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
@@ -63,6 +63,7 @@ const PRICE_BRACKETS = [
 
 const Shop = () => {
   const { categorySlug } = useParams();
+  const { categories, error: categoriesError } = useCategories();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -114,6 +115,8 @@ const Shop = () => {
       setSelectedCategory(categorySlug);
     } else if (searchParams.get("category")) {
       setSelectedCategory(searchParams.get("category"));
+    } else {
+      setSelectedCategory("all");
     }
     if (searchParams.get("q")) {
       setSearchQuery(searchParams.get("q"));
@@ -240,6 +243,11 @@ const Shop = () => {
   return (
     <div className="min-h-screen bg-[#FAF8FC] py-6 sm:py-10">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+        {categoriesError && (
+          <p className="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm font-semibold text-rose-700" role="alert">
+            {categoriesError}
+          </p>
+        )}
 
         {/* ========================================================================= */}
         {/* CATEGORY / SHOP HERO BANNER                                               */}

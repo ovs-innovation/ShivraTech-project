@@ -1,6 +1,7 @@
-import React, { useDeferredValue, useEffect, useRef, useState } from "react";
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
+  Bot,
   CarFront,
   ChevronDown,
   Headphones,
@@ -22,8 +23,9 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
 import { useShop } from "../context/useShop";
-import { categories } from "../data/catalog";
-import { searchProducts } from "../data/products";
+import useCategories from "../hooks/useCategories";
+import { searchProducts, formatPrice, allProducts, normalizeApiProduct } from "../data/products";
+import { apiGetProducts, apiGetBanners, apiRecordBannerClick } from "../services/api";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -38,9 +40,12 @@ const categoryIcons = {
   "pc-accessories": LaptopMinimal,
   "car-accessories": CarFront,
   lifestyle: Sparkles,
+  robo: Bot,
+  robotics: Bot,
 };
 
 const Navbar = () => {
+  const { categories, loading: categoriesLoading } = useCategories();
   const [catOpen, setCatOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -55,8 +60,50 @@ const Navbar = () => {
   const { user, isAuthenticated, isVendor, logout } = useAuth();
   const deferredSearchValue = useDeferredValue(searchValue);
   const trimmedSearch = deferredSearchValue.trim();
+
+  // Top announcement banner
+  const [topBanner, setTopBanner] = useState(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  useEffect(() => {
+    apiGetBanners("type=top_strip")
+      .then((res) => {
+        const strips = Array.isArray(res?.data) ? res.data : (res?.data?.banners || []);
+        if (strips.length > 0) {
+          setTopBanner(strips[0]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Backend products loaded once for search suggestions
+  const [backendProducts, setBackendProducts] = useState([]);
+  useEffect(() => {
+    apiGetProducts("limit=500")
+      .then((res) => {
+        setBackendProducts((res.data?.products || []).map(normalizeApiProduct));
+      })
+      .catch(() => {}); // silently ignore if backend is down
+  }, []);
+
+  // Merge static + backend products for search suggestions
+  const allSearchableProducts = useMemo(
+    () => [...allProducts, ...backendProducts],
+    [backendProducts]
+  );
+
   const suggestions = trimmedSearch
-    ? searchProducts(trimmedSearch).slice(0, 5)
+    ? allSearchableProducts
+        .filter((p) => {
+          const q = trimmedSearch.toLowerCase();
+          return (
+            p.title?.toLowerCase().includes(q) ||
+            p.categoryName?.toLowerCase().includes(q) ||
+            p.spec?.toLowerCase().includes(q) ||
+            p.searchText?.includes(q)
+          );
+        })
+        .slice(0, 6)
     : [];
 
   useEffect(() => {
@@ -97,6 +144,42 @@ const Navbar = () => {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-[100] transition-all duration-300">
+        {topBanner && !bannerDismissed && (
+          <aside
+            aria-label="Announcement"
+            className="w-full text-xs sm:text-[13px] font-medium py-1.5 px-3 sm:px-6 flex items-center justify-between shadow-xs relative z-50 transition-all border-b border-black/5"
+            style={{
+              backgroundColor: topBanner.bgColor || "#4A0D4F",
+              color: topBanner.textColor || "#ffffff",
+            }}
+          >
+            <div className="flex-1 flex items-center justify-center gap-2 sm:gap-3 text-center truncate">
+              {topBanner.badge && (
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-white/20">
+                  {topBanner.badge}
+                </span>
+              )}
+              <span className="truncate font-semibold">{topBanner.title}</span>
+              {topBanner.link && (
+                <Link
+                  to={topBanner.link}
+                  onClick={() => apiRecordBannerClick(topBanner._id).catch(() => {})}
+                  className="inline-flex items-center gap-1 font-bold underline underline-offset-2 hover:opacity-85 transition-opacity ml-1.5 flex-shrink-0"
+                >
+                  {topBanner.buttonText || "Shop Now"} &rarr;
+                </Link>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setBannerDismissed(true)}
+              className="p-1 rounded-full hover:bg-black/10 transition-colors ml-2 flex-shrink-0 text-current opacity-80 hover:opacity-100"
+              aria-label="Dismiss banner"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </aside>
+        )}
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-2.5 sm:pt-3">
           <nav className="flex h-[64px] items-center justify-between gap-4 rounded-full border border-purple-200/80 bg-white/95 px-4 sm:px-6 shadow-[0_8px_30px_rgba(74,13,79,0.06)] backdrop-blur-md transition-all duration-300 hover:border-purple-300/80">
             {/* Logo */}
@@ -174,47 +257,78 @@ const Navbar = () => {
 
                 {catOpen && (
                   <div
-                    className="absolute left-1/2 top-[calc(100%+14px)] w-[600px] -translate-x-1/2 rounded-3xl border border-purple-200 bg-white p-5 shadow-[0_28px_70px_rgba(74,13,79,0.22)]"
+                    className="absolute left-1/2 top-[calc(100%+14px)] w-[360px] sm:w-[540px] -translate-x-1/2 rounded-3xl border border-purple-200 bg-white p-5 shadow-[0_28px_70px_rgba(74,13,79,0.22)]"
                     style={{ zIndex: 1000 }}
                   >
                     <div className="mb-3 flex items-center justify-between px-1">
                       <p className="text-[11px] font-bold uppercase tracking-[.14em] text-[#4A0D4F]">
                         Explore Categories
                       </p>
-                      <span className="text-[11px] font-medium text-slate-400">
-                        Top Trending Gadgets
-                      </span>
+                      <Link
+                        to="/categories"
+                        onClick={() => setCatOpen(false)}
+                        className="text-[11px] font-semibold text-[#B35FA3] hover:underline"
+                      >
+                        View All
+                      </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
-                      {categories.map((category) => {
-                        const Icon = categoryIcons[category.slug] ?? Sparkles;
-                        return (
-                          <Link
-                            key={category.slug}
-                            to={`/categories/${category.slug}`}
-                            onClick={() => setCatOpen(false)}
-                            className="group flex items-center gap-3 rounded-2xl border border-transparent p-2.5 transition-all duration-200 hover:border-purple-100 hover:bg-[#F9F2FB]"
-                          >
-                            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-purple-100/60 text-[#4A0D4F] transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#4A0D4F] group-hover:text-white">
-                              <Icon size={18} strokeWidth={2} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[13px] font-bold text-slate-900 group-hover:text-[#4A0D4F]">
-                                {category.name}
-                              </p>
-                              <p className="truncate text-[11px] text-slate-500">
-                                {category.desc}
-                              </p>
-                            </div>
-                            <ArrowRight
-                              size={13}
-                              className="flex-shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#B35FA3]"
-                            />
-                          </Link>
-                        );
-                      })}
-                    </div>
+                    {categoriesLoading && categories.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-slate-400">
+                        Loading categories...
+                      </div>
+                    ) : categories.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-slate-400">
+                        No categories found
+                      </div>
+                    ) : (
+                      <div
+                        className={`grid gap-2 ${
+                          categories.length === 1
+                            ? "grid-cols-1"
+                            : "grid-cols-1 sm:grid-cols-2"
+                        }`}
+                      >
+                        {categories.map((category) => {
+                          const Icon =
+                            categoryIcons[category.slug?.toLowerCase()] ??
+                            categoryIcons[category.name?.toLowerCase()] ??
+                            Sparkles;
+                          return (
+                            <Link
+                              key={category.slug || category._id}
+                              to={`/categories/${category.slug}`}
+                              onClick={() => setCatOpen(false)}
+                              className="group flex items-center gap-3 rounded-2xl border border-transparent p-2.5 transition-all duration-200 hover:border-purple-100 hover:bg-[#F9F2FB]"
+                            >
+                              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-purple-100/60 text-[#4A0D4F] overflow-hidden transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#4A0D4F] group-hover:text-white">
+                                {category.image ? (
+                                  <img
+                                    src={category.image}
+                                    alt={category.name}
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  <Icon size={18} strokeWidth={2} />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[13px] font-bold text-slate-900 group-hover:text-[#4A0D4F] truncate">
+                                  {category.name}
+                                </p>
+                                <p className="truncate text-[11px] text-slate-500">
+                                  {category.desc || "Explore gadgets & tech"}
+                                </p>
+                              </div>
+                              <ArrowRight
+                                size={13}
+                                className="flex-shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#B35FA3]"
+                              />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -311,7 +425,7 @@ const Navbar = () => {
                             </p>
                           </div>
                           <span className="text-xs font-bold text-[#4A0D4F]">
-                            {product.price}
+                            {product.priceFormatted || (typeof product.price === "number" ? formatPrice(product.price) : product.price)}
                           </span>
                         </Link>
                       ))}

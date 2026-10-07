@@ -15,6 +15,7 @@ const orderItemSchema = new mongoose.Schema({
     ref: "User",
   },
   sellerName: { type: String, default: "Shivra Seller" },
+  storeName: { type: String, default: "" },
 });
 
 const orderSchema = new mongoose.Schema(
@@ -51,6 +52,57 @@ const orderSchema = new mongoose.Schema(
       enum: ["Pending", "Paid", "Refunded", "Failed"],
       default: "Pending",
     },
+    paymentId: {
+      type: String,
+      default: function () {
+        const prefix = this.paymentMethod === "COD" ? "cod" : "pay_rzp";
+        return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
+      },
+      index: true,
+    },
+    gateway: {
+      type: String,
+      default: function () {
+        return this.paymentMethod === "COD" ? "Cash on Delivery" : "Razorpay";
+      },
+    },
+    gatewayStatus: {
+      type: String,
+      enum: ["captured", "authorized", "failed", "refunded", "pending"],
+      default: function () {
+        if (this.paymentStatus === "Paid") return "captured";
+        if (this.paymentStatus === "Failed") return "failed";
+        if (this.paymentStatus === "Refunded") return "refunded";
+        return "pending";
+      },
+    },
+    currency: {
+      type: String,
+      default: "INR",
+    },
+    failureReason: {
+      type: String,
+      default: "",
+    },
+    failureCode: {
+      type: String,
+      default: "",
+    },
+    refundId: {
+      type: String,
+      default: "",
+    },
+    refundAmount: {
+      type: Number,
+      default: 0,
+    },
+    refundReason: {
+      type: String,
+      default: "",
+    },
+    refundedAt: {
+      type: Date,
+    },
     orderStatus: {
       type: String,
       enum: [
@@ -70,6 +122,10 @@ const orderSchema = new mongoose.Schema(
     trackingUrl: { type: String, default: "" },
     itemsPrice: { type: Number, required: true, default: 0.0 },
     shippingPrice: { type: Number, required: true, default: 0.0 },
+    couponCode: { type: String, default: "" },
+    couponDiscount: { type: Number, default: 0.0 },
+    couponId: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", default: null },
+    couponType: { type: String, enum: ["platform", "vendor", ""], default: "" },
     totalAmount: { type: Number, required: true, default: 0.0 },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },

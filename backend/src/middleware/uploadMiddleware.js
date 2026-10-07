@@ -23,8 +23,8 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpe?g|png|webp|svg/;
-  const mimetypes = /image\/jpe?g|image\/png|image\/webp|image\/svg\+xml/;
+  const filetypes = /jpe?g|png|webp|svg|pdf/;
+  const mimetypes = /image\/(jpe?g|png|webp|svg\+xml)|application\/pdf/;
 
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = mimetypes.test(file.mimetype);
@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new ApiError(400, "Only image files (jpg, jpeg, png, webp, svg) are allowed!"), false);
+    cb(new ApiError(400, "Only images (jpg, png, webp, svg) and PDF documents are allowed!"), false);
   }
 };
 

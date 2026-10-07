@@ -3,7 +3,8 @@ import { ArrowRight, ChevronLeft, ChevronRight, Heart, Plus, Sparkles, Star } fr
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useShop } from "../context/useShop";
-import { categories } from "../data/catalog";
+import { formatPrice, normalizeApiProduct } from "../data/products";
+import { apiGetProducts } from "../services/api";
 import categoryLaptop from "../assets/categoryLaptop.jpg";
 import categoryMouse from "../assets/categoryMouse.jpg";
 import categoryMonitor from "../assets/categoryMonitor.jpg";
@@ -107,11 +108,11 @@ export const ModernProductCard = ({
         <div className="pt-1.5 flex items-center justify-between border-t border-slate-50">
           <div>
             <span className="block text-xs xs:text-[13.5px] sm:text-base font-black text-slate-900">
-              {card.price}
+              {card.priceFormatted || (typeof card.price === "number" ? formatPrice(card.price) : card.price)}
             </span>
-            {card.mrp && (
+            {(card.mrpFormatted || card.mrp) && (
               <span className="block text-[9px] xs:text-[10px] font-medium text-slate-400 line-through">
-                {card.mrp}
+                {card.mrpFormatted || (typeof card.mrp === "number" ? formatPrice(card.mrp) : card.mrp)}
               </span>
             )}
           </div>
@@ -138,6 +139,62 @@ export const ModernProductCard = ({
         </div>
       </div>
     </motion.article>
+  );
+};
+
+const ProductCarousel = ({ products, ariaLabel }) => {
+  const carouselRef = useRef(null);
+
+  const scroll = (direction) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollBy({
+      left: direction * carousel.clientWidth * 0.8,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="relative">
+      <div
+        ref={carouselRef}
+        className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto scroll-smooth pb-2 scrollbar-none"
+        style={{ scrollbarWidth: "none" }}
+      >
+        {products.map((card, index) => (
+          <div
+            key={card.slug}
+            className="w-[calc(50%-7px)] shrink-0 snap-start sm:w-[calc(33.333%-10px)] lg:w-[calc(25%-11px)] xl:w-[calc(20%-12px)]"
+          >
+            <ModernProductCard
+              card={card}
+              spec={card.spec}
+              rating={card.rating}
+              index={index}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-end gap-2 pt-2">
+        <button
+          type="button"
+          onClick={() => scroll(-1)}
+          aria-label={`Scroll ${ariaLabel} left`}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-200 bg-white text-[#4A0D4F] shadow-sm transition hover:border-[#4A0D4F] hover:bg-purple-50"
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <button
+          type="button"
+          onClick={() => scroll(1)}
+          aria-label={`Scroll ${ariaLabel} right`}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-200 bg-white text-[#4A0D4F] shadow-sm transition hover:border-[#4A0D4F] hover:bg-purple-50"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -324,8 +381,75 @@ const newArrivalsList = [
 ];
 
 const ProductsShowcase = ({ shopOnly = false }) => {
+  const [productSections, setProductSections] = useState({
+    flashSale: flashSaleList,
+    featured: featuredList,
+    newArrivals: newArrivalsList,
+  });
+  const [productSectionsError, setProductSectionsError] = useState("");
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    Promise.all([
+      apiGetProducts("flashSale=true&limit=1000"),
+      apiGetProducts("featured=true&limit=1000"),
+      apiGetProducts("newArrival=true&limit=1000"),
+    ])
+      .then(([flashSaleResponse, featuredResponse, newArrivalsResponse]) => {
+        const responseProducts = [
+          flashSaleResponse.data?.products,
+          featuredResponse.data?.products,
+          newArrivalsResponse.data?.products,
+        ];
+        if (responseProducts.some((products) => !Array.isArray(products))) {
+          throw new Error("The products response is invalid.");
+        }
+
+        const liveSections = {
+          flashSale: responseProducts[0].map(normalizeApiProduct),
+          featured: responseProducts[1].map(normalizeApiProduct),
+          newArrivals: responseProducts[2].map(normalizeApiProduct),
+        };
+
+        if (isCurrent) {
+          setProductSections({
+            flashSale: liveSections.flashSale.length
+              ? liveSections.flashSale
+              : flashSaleList,
+            featured: liveSections.featured.length
+              ? liveSections.featured
+              : featuredList,
+            newArrivals: liveSections.newArrivals.length
+              ? liveSections.newArrivals
+              : newArrivalsList,
+          });
+          setProductSectionsError("");
+        }
+      })
+      .catch((error) => {
+        if (isCurrent) {
+          setProductSectionsError(
+            error.message || "Unable to load updated showcase products.",
+          );
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
+
   return (
     <div className="bg-[#FAF8FC] py-10 sm:py-16 space-y-12 sm:space-y-16 overflow-hidden">
+      {productSectionsError && (
+        <p
+          className="mx-auto max-w-7xl px-4 text-sm font-semibold text-rose-600 sm:px-6 lg:px-8"
+          role="status"
+        >
+          {productSectionsError}
+        </p>
+      )}
       
       {/* 1. FLASH SALE SECTION (MATCHING REFERENCE IMAGE 2 TOP) */}
       <motion.section
@@ -352,17 +476,7 @@ const ProductsShowcase = ({ shopOnly = false }) => {
           </Link>
         </div>
 
-        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {flashSaleList.map((card, idx) => (
-            <ModernProductCard
-              key={card.slug}
-              card={card}
-              spec={card.spec}
-              rating={card.rating}
-              index={idx}
-            />
-          ))}
-        </div>
+        <ProductCarousel products={productSections.flashSale} ariaLabel="flash sale products" />
       </motion.section>
 
       {/* 2. FEATURED PRODUCT SECTION (MATCHING REFERENCE IMAGE 2 BOTTOM) */}
@@ -389,17 +503,7 @@ const ProductsShowcase = ({ shopOnly = false }) => {
           </Link>
         </div>
 
-        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {featuredList.map((card, idx) => (
-            <ModernProductCard
-              key={card.slug}
-              card={card}
-              spec={card.spec}
-              rating={card.rating}
-              index={idx}
-            />
-          ))}
-        </div>
+        <ProductCarousel products={productSections.featured} ariaLabel="featured products" />
       </motion.section>
 
       {/* 3. NEW ARRIVALS SECTION */}
@@ -427,17 +531,7 @@ const ProductsShowcase = ({ shopOnly = false }) => {
           </Link>
         </div>
 
-        <div className="grid gap-3.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {newArrivalsList.map((card, idx) => (
-            <ModernProductCard
-              key={card.slug}
-              card={card}
-              spec={card.spec}
-              rating={card.rating}
-              index={idx}
-            />
-          ))}
-        </div>
+        <ProductCarousel products={productSections.newArrivals} ariaLabel="new arrival products" />
       </motion.section>
 
     </div>

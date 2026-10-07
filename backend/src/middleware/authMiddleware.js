@@ -39,3 +39,27 @@ export const authorize = (...roles) => {
     next();
   };
 };
+
+export const optionalProtect = asyncHandler(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "shivratech_secret");
+    req.user = await User.findById(decoded.id).select("-password");
+  } catch (error) {
+    // Ignore invalid token for optional auth
+  }
+  next();
+});
+
+

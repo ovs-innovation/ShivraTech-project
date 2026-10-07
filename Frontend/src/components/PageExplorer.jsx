@@ -7,44 +7,45 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { categories } from "../data/catalog";
+import useCategories from "../hooks/useCategories";
 import { allProducts } from "../data/products";
-
-const quickActions = [
-  {
-    title: "Shop Products",
-    desc: "Browse all available gadgets and accessory listings in one place.",
-    to: "/shop",
-    Icon: ShoppingBag,
-    badge: `${allProducts.length} products`,
-  },
-  {
-    title: "Explore Categories",
-    desc: "Jump straight into product groups like audio, mobile, PC, and car tech.",
-    to: "/categories",
-    Icon: Grid3X3,
-    badge: `${categories.length} categories`,
-  },
-  {
-    title: "Sell on ShivraTech",
-    desc: "Open the seller login flow and get started with showcasing inventory.",
-    to: "/login",
-    Icon: LogIn,
-    badge: "Vendor access",
-  },
-  {
-    title: "Talk to Us",
-    desc: "Reach out for product help, support, promotions, or onboarding.",
-    to: "/contact",
-    Icon: Mail,
-    badge: "Quick support",
-  },
-];
 
 const PRIMARY = "#4A0D4F";
 const ACCENT = "#B35FA3";
 
 const PageExplorer = () => {
+  const { categories } = useCategories();
+
+  const quickActions = [
+    {
+      title: "Shop Products",
+      desc: "Browse all available gadgets and accessory listings in one place.",
+      to: "/shop",
+      Icon: ShoppingBag,
+      badge: `${allProducts.length} products`,
+    },
+    {
+      title: "Explore Categories",
+      desc: "Jump straight into product groups like audio, mobile, PC, and car tech.",
+      to: "/categories",
+      Icon: Grid3X3,
+      badge: `${categories.length} categories`,
+    },
+    {
+      title: "Sell on ShivraTech",
+      desc: "Open the seller login flow and get started with showcasing inventory.",
+      to: "/login",
+      Icon: LogIn,
+      badge: "Vendor access",
+    },
+    {
+      title: "Talk to Us",
+      desc: "Reach out for product help, support, promotions, or onboarding.",
+      to: "/contact",
+      Icon: Mail,
+      badge: "Quick support",
+    },
+  ];
   return (
     <section className="bg-white px-4 py-12 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-6xl space-y-8">

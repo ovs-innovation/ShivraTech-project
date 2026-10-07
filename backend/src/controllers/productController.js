@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import User from "../models/User.js";
 import { ApiResponse, ApiError } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -20,6 +21,16 @@ export const getProducts = asyncHandler(async (req, res) => {
   } = req.query;
 
   const filter = {};
+
+  // Exclude products from suspended or unapproved sellers in public store
+  const inactiveVendors = await User.find({
+    role: "seller",
+    vendorStatus: { $in: ["suspended", "rejected"] },
+  }).distinct("_id");
+
+  if (inactiveVendors.length > 0) {
+    filter.seller = { $nin: inactiveVendors };
+  }
 
   if (keyword) {
     filter.$or = [
@@ -99,6 +110,16 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
 // @route   POST /api/v1/products
 // @access  Private/Seller
 export const createProduct = asyncHandler(async (req, res) => {
+  if (req.user.role === "seller" && req.user.vendorStatus !== "approved") {
+    const statusMsg =
+      req.user.vendorStatus === "pending"
+        ? "Your vendor account is currently pending approval by administration. Product creation will be enabled once your account is verified."
+        : req.user.vendorStatus === "suspended"
+        ? `Your vendor account has been suspended: ${req.user.suspensionReason || "Contact administration."}`
+        : `Your vendor application was rejected: ${req.user.rejectionReason || "Please update your documents."}`;
+    throw new ApiError(403, statusMsg);
+  }
+
   const {
     title,
     shortDescription,
@@ -229,6 +250,16 @@ export const updateProduct = asyncHandler(async (req, res) => {
   // Check ownership
   if (product.seller.toString() !== req.user._id.toString() && req.user.role !== "admin") {
     throw new ApiError(403, "Not authorized to update this product");
+  }
+
+  // Suspended or non-approved vendors cannot update products
+  if (req.user.role === "seller" && req.user.vendorStatus !== "approved") {
+    throw new ApiError(
+      403,
+      req.user.vendorStatus === "suspended"
+        ? `Your vendor store is suspended: ${req.user.suspensionReason || "Contact administration."}`
+        : "Your vendor account is not approved to update products."
+    );
   }
 
   const updates = { ...req.body };
