@@ -809,54 +809,54 @@ const VendorDashboard = () => {
         )}
 
         {/* Dashboard Header Banner */}
-        <div className="relative overflow-hidden rounded-[28px] border border-purple-200/80 bg-white p-5 sm:p-7 shadow-[0_12px_40px_rgba(74,13,79,0.06)] mb-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#4A0D4F] to-[#B35FA3] text-white shadow-md">
-                <Store size={26} strokeWidth={2.2} />
+        <div className="relative overflow-hidden rounded-[24px] sm:rounded-[28px] border border-purple-200/80 bg-white p-4 sm:p-7 shadow-[0_12px_40px_rgba(74,13,79,0.06)] mb-4 sm:mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#4A0D4F] to-[#B35FA3] text-white shadow-md flex-shrink-0">
+                <Store size={22} className="sm:w-[26px] sm:h-[26px]" strokeWidth={2.2} />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black text-slate-900">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <h1 className="text-lg sm:text-2xl font-black text-slate-900 truncate">
                     {user?.storeName || user?.name || "Vendor Store"}
                   </h1>
                   {isApproved && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
-                      <ShieldCheck size={12} />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] sm:text-[10.5px] font-bold text-emerald-700">
+                      <ShieldCheck size={11} />
                       <span>Active & Verified Store</span>
                     </span>
                   )}
                   {isPending && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10.5px] font-bold text-amber-700">
-                      <Clock size={12} />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] sm:text-[10.5px] font-bold text-amber-700">
+                      <Clock size={11} />
                       <span>Pending Admin Approval</span>
                     </span>
                   )}
                   {isRejected && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 border border-rose-200 px-2.5 py-0.5 text-[10.5px] font-bold text-rose-700">
-                      <X size={12} />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 border border-rose-200 px-2 py-0.5 text-[10px] sm:text-[10.5px] font-bold text-rose-700">
+                      <X size={11} />
                       <span>Application Rejected</span>
                     </span>
                   )}
                   {isSuspended && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-300 px-2.5 py-0.5 text-[10.5px] font-bold text-slate-700">
-                      <Ban size={12} />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-300 px-2 py-0.5 text-[10px] sm:text-[10.5px] font-bold text-slate-700">
+                      <Ban size={11} />
                       <span>Store Suspended</span>
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate">
                   Logged in as <span className="font-semibold text-slate-700">{user?.email}</span>
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex items-center gap-2 w-full md:w-auto">
               <button
                 type="button"
                 onClick={openCreateModal}
                 disabled={!isApproved}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition ${
+                className={`flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition ${
                   isApproved
                     ? "bg-[#4A0D4F] hover:bg-[#380B3C] active:scale-95"
                     : "bg-slate-400 cursor-not-allowed opacity-70"
@@ -869,33 +869,32 @@ const VendorDashboard = () => {
                     : "Add New Product"
                 }
               >
-                <Plus size={16} strokeWidth={2.5} />
-                <span>Add New Product</span>
-              </button>
-              <button
-                type="button"
-                onClick={fetchVendorData}
-                className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 transition"
-                title="Refresh data"
-              >
-                <RefreshCcw size={14} />
-                <span className="hidden sm:inline">Refresh</span>
+                <Plus size={15} strokeWidth={2.5} />
+                <span className="whitespace-nowrap">Add Product</span>
               </button>
               <button
                 type="button"
                 onClick={handleOpenCreateCoupon}
                 disabled={!isApproved}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#B35FA3]/30 bg-purple-50 px-3.5 py-2.5 text-xs sm:text-sm font-bold text-[#4A0D4F] hover:bg-purple-100 transition disabled:opacity-50"
+                className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full border border-[#B35FA3]/30 bg-purple-50 px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-[#4A0D4F] hover:bg-purple-100 transition disabled:opacity-50"
                 title="Create Store Promotional Coupon"
               >
-                <TicketPercent size={15} />
-                <span>+ Promo Coupon</span>
+                <TicketPercent size={14} />
+                <span className="whitespace-nowrap">+ Coupon</span>
+              </button>
+              <button
+                type="button"
+                onClick={fetchVendorData}
+                className="flex-shrink-0 inline-flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 rounded-full border border-purple-200 bg-white text-slate-700 hover:bg-purple-50 transition"
+                title="Refresh data"
+              >
+                <RefreshCcw size={14} />
               </button>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="mt-6 flex gap-2 border-t border-purple-100 pt-4 overflow-x-auto scrollbar-none">
+          <div className="mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 flex gap-1.5 sm:gap-2 border-t border-purple-100 pt-3 sm:pt-4 overflow-x-auto scrollbar-none">
             {[
               { id: "overview", label: "Overview & Analytics", icon: TrendingUp },
               { id: "orders", label: `Customer Orders (${orders.length})`, icon: ShoppingBag },
@@ -911,12 +910,13 @@ const VendorDashboard = () => {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-xs sm:text-sm font-bold transition ${isActive
-                    ? "bg-[#4A0D4F] text-white shadow-sm"
-                    : "text-slate-600 hover:bg-purple-50 hover:text-slate-900"
-                    }`}
+                  className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold transition flex-shrink-0 ${
+                    isActive
+                      ? "bg-[#4A0D4F] text-white shadow-sm"
+                      : "text-slate-600 hover:bg-purple-50 hover:text-slate-900 bg-purple-50/40 sm:bg-transparent"
+                  }`}
                 >
-                  <Icon size={15} />
+                  <Icon size={14} />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -983,67 +983,75 @@ const VendorDashboard = () => {
         {/* TAB 1: OVERVIEW & SALES ANALYTICS                                         */}
         {/* ========================================================================= */}
         {activeTab === "overview" && (
-          <div className="space-y-6">
-            {/* Metric KPI Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="rounded-2xl border border-purple-100 bg-white p-4 sm:p-5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">Total Earnings</span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F]">
-                    <DollarSign size={16} />
+          <div className="space-y-5 sm:space-y-6">
+            {/* Metric KPI Cards - 2 Column Grid on Mobile, 4 Column on Desktop */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+              <div className="rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-500 leading-tight">Total Earnings</span>
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F] flex-shrink-0">
+                    <DollarSign size={14} className="sm:w-4 sm:h-4" />
                   </div>
                 </div>
-                <p className="mt-2 text-xl sm:text-2xl font-black text-slate-900">
-                  {formatRupees(analytics?.totalEarnings || 0)}
-                </p>
-                <p className="mt-0.5 text-[10px] sm:text-xs text-emerald-600 font-semibold">
-                  From delivered orders
-                </p>
+                <div className="mt-2">
+                  <p className="text-base sm:text-2xl font-black text-slate-900 truncate">
+                    {formatRupees(analytics?.totalEarnings || 0)}
+                  </p>
+                  <p className="mt-0.5 text-[9.5px] sm:text-xs text-emerald-600 font-semibold truncate">
+                    From delivered orders
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-purple-100 bg-white p-4 sm:p-5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">Total Orders</span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F]">
-                    <ShoppingBag size={16} />
+              <div className="rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-500 leading-tight">Total Orders</span>
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F] flex-shrink-0">
+                    <ShoppingBag size={14} className="sm:w-4 sm:h-4" />
                   </div>
                 </div>
-                <p className="mt-2 text-xl sm:text-2xl font-black text-slate-900">
-                  {analytics?.totalOrders || orders.length}
-                </p>
-                <p className="mt-0.5 text-[10px] sm:text-xs text-slate-500 font-semibold">
-                  {analytics?.completedOrders || 0} Delivered
-                </p>
+                <div className="mt-2">
+                  <p className="text-base sm:text-2xl font-black text-slate-900 truncate">
+                    {analytics?.totalOrders || orders.length}
+                  </p>
+                  <p className="mt-0.5 text-[9.5px] sm:text-xs text-slate-500 font-semibold truncate">
+                    {analytics?.completedOrders || 0} Delivered
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-purple-100 bg-white p-4 sm:p-5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">Pending Dispatch</span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                    <Clock size={16} />
+              <div className="rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-500 leading-tight">Pending Dispatch</span>
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-700 flex-shrink-0">
+                    <Clock size={14} className="sm:w-4 sm:h-4" />
                   </div>
                 </div>
-                <p className="mt-2 text-xl sm:text-2xl font-black text-amber-600">
-                  {analytics?.pendingOrders || 0}
-                </p>
-                <p className="mt-0.5 text-[10px] sm:text-xs text-slate-500 font-semibold">
-                  Needs packing/shipping
-                </p>
+                <div className="mt-2">
+                  <p className="text-base sm:text-2xl font-black text-amber-600 truncate">
+                    {analytics?.pendingOrders || 0}
+                  </p>
+                  <p className="mt-0.5 text-[9.5px] sm:text-xs text-slate-500 font-semibold truncate">
+                    Needs packing/shipping
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-purple-100 bg-white p-4 sm:p-5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">Active Listings</span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F]">
-                    <Boxes size={16} />
+              <div className="rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-500 leading-tight">Active Listings</span>
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-purple-100 text-[#4A0D4F] flex-shrink-0">
+                    <Boxes size={14} className="sm:w-4 sm:h-4" />
                   </div>
                 </div>
-                <p className="mt-2 text-xl sm:text-2xl font-black text-slate-900">
-                  {products.length}
-                </p>
-                <p className="mt-0.5 text-[10px] sm:text-xs text-purple-700 font-semibold">
-                  Live on marketplace
-                </p>
+                <div className="mt-2">
+                  <p className="text-base sm:text-2xl font-black text-slate-900 truncate">
+                    {products.length}
+                  </p>
+                  <p className="mt-0.5 text-[9.5px] sm:text-xs text-purple-700 font-semibold truncate">
+                    Live on marketplace
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1147,13 +1155,13 @@ const VendorDashboard = () => {
         {activeTab === "orders" && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-purple-100 bg-white p-3.5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 rounded-[22px] sm:rounded-2xl border border-purple-100 bg-white p-3 sm:p-4 shadow-xs">
               <div className="flex items-center gap-2">
-                <Filter size={15} className="text-slate-400" />
+                <Filter size={14} className="text-slate-400" />
                 <span className="text-xs font-bold text-slate-700">Filter Status:</span>
               </div>
 
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none -mx-1 px-1 py-0.5 max-w-full">
                 {[
                   "All",
                   "Placed",
@@ -1169,10 +1177,11 @@ const VendorDashboard = () => {
                     key={st}
                     type="button"
                     onClick={() => setOrderStatusFilter(st)}
-                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${orderStatusFilter === st
-                      ? "bg-[#4A0D4F] text-white"
-                      : "bg-purple-50/70 text-slate-600 hover:bg-purple-100"
-                      }`}
+                    className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold transition flex-shrink-0 ${
+                      orderStatusFilter === st
+                        ? "bg-[#4A0D4F] text-white"
+                        : "bg-purple-50/70 text-slate-600 hover:bg-purple-100"
+                    }`}
                   >
                     {st}
                   </button>
@@ -1182,7 +1191,7 @@ const VendorDashboard = () => {
 
             {/* Orders List */}
             {filteredOrders.length === 0 ? (
-              <div className="rounded-[28px] border border-purple-100 bg-white py-12 text-center text-slate-400">
+              <div className="rounded-[24px] sm:rounded-[28px] border border-purple-100 bg-white py-12 text-center text-slate-400">
                 <ShoppingBag size={36} className="mx-auto mb-2 opacity-50" />
                 <p className="text-sm font-bold text-slate-700">No orders matching &quot;{orderStatusFilter}&quot;</p>
                 <p className="text-xs text-slate-400 mt-1">Customer orders will appear here when placed.</p>
@@ -1192,16 +1201,16 @@ const VendorDashboard = () => {
                 {filteredOrders.map((order) => (
                   <div
                     key={order._id || order.orderId}
-                    className="rounded-[24px] border border-purple-100/90 bg-white p-4 sm:p-6 shadow-xs transition hover:shadow-sm"
+                    className="rounded-[20px] sm:rounded-[24px] border border-purple-100/90 bg-white p-3.5 sm:p-6 shadow-xs transition hover:shadow-sm"
                   >
                     {/* Header Row */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-purple-50">
                       <div>
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-sm font-black text-[#4A0D4F]">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs sm:text-sm font-black text-[#4A0D4F]">
                             Order #{order.orderId || order._id?.slice(-8)}
                           </span>
-                          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold ${order.orderStatus === "Delivered"
+                          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10.5px] sm:text-[11px] font-bold ${order.orderStatus === "Delivered"
                             ? "bg-emerald-100 text-emerald-800"
                             : order.orderStatus === "Shipped"
                               ? "bg-blue-100 text-blue-800"
@@ -1214,16 +1223,16 @@ const VendorDashboard = () => {
                             {order.orderStatus}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
                           Placed on {new Date(order.createdAt).toLocaleString()}
                         </p>
                       </div>
 
-                      <div className="text-left sm:text-right">
+                      <div className="flex items-center justify-between sm:block text-left sm:text-right pt-1 sm:pt-0 border-t sm:border-t-0 border-purple-50">
                         <span className="text-sm font-black text-slate-900">
                           {formatRupees(order.totalAmount)}
                         </span>
-                        <p className="text-[11px] font-semibold text-slate-500">
+                        <p className="text-[10.5px] sm:text-[11px] font-semibold text-slate-500">
                           Payment: {order.paymentMethod} ({order.paymentStatus})
                         </p>
                       </div>
@@ -1279,7 +1288,7 @@ const VendorDashboard = () => {
                           type="button"
                           disabled={actionLoading}
                           onClick={() => handleUpdateStatus(order._id, "Accepted")}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#380B3C] transition"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#380B3C] transition"
                         >
                           <CheckCircle2 size={14} />
                           <span>Accept Order</span>
@@ -1291,7 +1300,7 @@ const VendorDashboard = () => {
                           type="button"
                           disabled={actionLoading}
                           onClick={() => handleUpdateStatus(order._id, "Packed")}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-purple-700 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-purple-800 transition"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-purple-700 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-purple-800 transition"
                         >
                           <PackageCheck size={14} />
                           <span>Mark as Packed</span>
@@ -1303,7 +1312,7 @@ const VendorDashboard = () => {
                           type="button"
                           disabled={actionLoading}
                           onClick={() => handleUpdateStatus(order._id, "Ready for Dispatch")}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-amber-700 transition"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-amber-700 transition"
                         >
                           <Truck size={14} />
                           <span>Ready for Dispatch</span>
@@ -1320,7 +1329,7 @@ const VendorDashboard = () => {
                             setTrackingNumber(`SHV-${Math.floor(10000000 + Math.random() * 90000000)}`);
                             setShowDispatchModal(true);
                           }}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition"
                         >
                           <Truck size={14} />
                           <span>Add Tracking & Mark Shipped</span>
@@ -1332,7 +1341,7 @@ const VendorDashboard = () => {
                           type="button"
                           disabled={actionLoading}
                           onClick={() => handleUpdateStatus(order._id, "Delivered")}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition"
                         >
                           <CheckCircle2 size={14} />
                           <span>Mark as Delivered</span>
@@ -1352,7 +1361,7 @@ const VendorDashboard = () => {
         {activeTab === "products" && (
           <div className="space-y-4">
             {/* Search & Add Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-purple-100 bg-white p-3.5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-[22px] sm:rounded-2xl border border-purple-100 bg-white p-3.5 shadow-xs">
               <div className="relative flex-1 max-w-md">
                 <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -1367,7 +1376,7 @@ const VendorDashboard = () => {
               <button
                 type="button"
                 onClick={openCreateModal}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-[#380B3C] transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0D4F] px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-[#380B3C] transition"
               >
                 <Plus size={15} strokeWidth={2.5} />
                 <span>Add Product</span>
@@ -1376,7 +1385,7 @@ const VendorDashboard = () => {
 
             {/* Products Grid / Table */}
             {filteredProducts.length === 0 ? (
-              <div className="rounded-[28px] border border-purple-100 bg-white py-12 text-center text-slate-400">
+              <div className="rounded-[24px] sm:rounded-[28px] border border-purple-100 bg-white py-12 text-center text-slate-400">
                 <Package size={36} className="mx-auto mb-2 opacity-50" />
                 <p className="text-sm font-bold text-slate-700">No products found</p>
                 <button
@@ -1389,15 +1398,15 @@ const VendorDashboard = () => {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
                 {filteredProducts.map((prod) => (
                   <div
                     key={prod._id}
-                    className="flex flex-col justify-between rounded-2xl border border-purple-100 bg-white p-4 shadow-xs transition hover:shadow-md"
+                    className="flex flex-col justify-between rounded-[20px] sm:rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-4 shadow-xs transition hover:shadow-md"
                   >
                     <div>
                       {/* Image & Badges */}
-                      <div className="relative flex h-36 w-full items-center justify-center rounded-xl bg-purple-50/40 p-2 mb-3">
+                      <div className="relative flex h-32 sm:h-36 w-full items-center justify-center rounded-xl bg-purple-50/40 p-2 mb-3">
                         <img
                           src={prod.mainImage || (prod.images && prod.images[0])}
                           alt={prod.title}
@@ -1431,14 +1440,14 @@ const VendorDashboard = () => {
                     </div>
 
                     {/* Action Bar */}
-                    <div className="flex items-center justify-between border-t border-purple-50 pt-3 mt-3">
+                    <div className="flex items-center justify-between border-t border-purple-50 pt-2.5 mt-2.5">
                       <Link
                         to={`/product/${prod.slug}`}
                         target="_blank"
                         className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-[#4A0D4F]"
                       >
                         <Eye size={13} />
-                        <span>View Store Page</span>
+                        <span>View</span>
                       </Link>
 
                       <div className="flex items-center gap-1.5">
@@ -2175,75 +2184,74 @@ const VendorDashboard = () => {
         {/* TAB 6: SUPPORT & DISPUTES TICKETS                                         */}
         {/* ========================================================================= */}
         {activeTab === "disputes" && (
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Header / Actions Card */}
-            <div className="rounded-[24px] border border-purple-100 bg-white p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="rounded-[22px] sm:rounded-[24px] border border-purple-100 bg-white p-4 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[#4A0D4F] font-bold text-xs uppercase tracking-wider mb-1">
                   <LifeBuoy size={16} />
                   <span>Vendor Support & Disputes</span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                <h2 className="text-lg sm:text-2xl font-black text-slate-900">
                   Direct Admin Resolution Center
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
                   Raise tickets to ShivraTech Admin for payout/settlement issues, order disputes, customer chargebacks, or store verification queries.
                 </p>
               </div>
-              <div className="flex items-center gap-2.5 flex-shrink-0">
+              <div className="flex items-center gap-2 w-full md:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setShowTicketModal(true)}
+                  className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0D4F] px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#380B3C] transition active:scale-95"
+                >
+                  <Plus size={16} strokeWidth={2.5} />
+                  <span>Raise Ticket</span>
+                </button>
                 <button
                   type="button"
                   onClick={fetchTickets}
                   disabled={ticketsLoading}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 transition"
+                  className="flex-shrink-0 inline-flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 rounded-full border border-purple-200 bg-white text-slate-700 hover:bg-purple-50 transition"
                   title="Refresh tickets"
                 >
                   <RefreshCcw size={13} className={ticketsLoading ? "animate-spin" : ""} />
-                  <span>Refresh</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowTicketModal(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#4A0D4F] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#380B3C] transition active:scale-95"
-                >
-                  <Plus size={16} strokeWidth={2.5} />
-                  <span>Raise Ticket to Admin</span>
                 </button>
               </div>
             </div>
 
             {/* Quick Summary KPI Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="rounded-2xl border border-purple-100 bg-white p-4 shadow-xs">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+              <div className="rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-4 shadow-xs">
                 <span className="text-[11px] font-bold text-slate-400">Total Tickets</span>
-                <p className="mt-1 text-2xl font-black text-slate-900">{vendorTickets.length}</p>
-                <p className="text-[10.5px] font-semibold text-slate-500 mt-0.5">Submitted history</p>
+                <p className="mt-1 text-xl sm:text-2xl font-black text-slate-900">{vendorTickets.length}</p>
+                <p className="text-[10px] sm:text-[10.5px] font-semibold text-slate-500 mt-0.5">Submitted history</p>
               </div>
-              <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-4 shadow-xs">
+              <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-3.5 sm:p-4 shadow-xs">
                 <span className="text-[11px] font-bold text-amber-700">Open Tickets</span>
-                <p className="mt-1 text-2xl font-black text-amber-800">
+                <p className="mt-1 text-xl sm:text-2xl font-black text-amber-800">
                   {vendorTickets.filter((t) => t.status === "open").length}
                 </p>
-                <p className="text-[10.5px] font-semibold text-amber-600 mt-0.5">Pending admin review</p>
+                <p className="text-[10px] sm:text-[10.5px] font-semibold text-amber-600 mt-0.5">Pending review</p>
               </div>
-              <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4 shadow-xs">
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-3.5 sm:p-4 shadow-xs">
                 <span className="text-[11px] font-bold text-blue-700">In Progress</span>
-                <p className="mt-1 text-2xl font-black text-blue-800">
+                <p className="mt-1 text-xl sm:text-2xl font-black text-blue-800">
                   {vendorTickets.filter((t) => t.status === "in_progress").length}
                 </p>
-                <p className="text-[10.5px] font-semibold text-blue-600 mt-0.5">Being investigated</p>
+                <p className="text-[10px] sm:text-[10.5px] font-semibold text-blue-600 mt-0.5">Investigating</p>
               </div>
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-xs">
+              <div className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-3.5 sm:p-4 shadow-xs">
                 <span className="text-[11px] font-bold text-emerald-700">Resolved</span>
-                <p className="mt-1 text-2xl font-black text-emerald-800">
+                <p className="mt-1 text-xl sm:text-2xl font-black text-emerald-800">
                   {vendorTickets.filter((t) => t.status === "resolved").length}
                 </p>
-                <p className="text-[10.5px] font-semibold text-emerald-600 mt-0.5">Successfully closed</p>
+                <p className="text-[10px] sm:text-[10.5px] font-semibold text-emerald-600 mt-0.5">Closed tickets</p>
               </div>
             </div>
 
             {/* Filter Bar */}
-            <div className="rounded-2xl border border-purple-100 bg-white p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="rounded-[20px] sm:rounded-2xl border border-purple-100 bg-white p-3.5 sm:p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
               <div className="relative flex-1">
                 <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -2255,7 +2263,7 @@ const VendorDashboard = () => {
                 />
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="grid grid-cols-2 gap-2 w-full sm:w-auto">
                 <select
                   value={ticketStatusFilter}
                   onChange={(e) => setTicketStatusFilter(e.target.value)}
